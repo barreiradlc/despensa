@@ -376,3 +376,64 @@ export default App;
 //   }
 // }
 
+
+
+
+
+// const handleSubmit = (e) => {
+//   e.preventDefault()
+//   setShowWait(true)
+
+//   console.debug({ lancamento })
+
+//   let valuesParcelas = convertParcelas(parcelas)
+//   let values = convertValues(lancamento)
+//   // let valuesUsuario = convertValues(usuario)
+
+//   console.debug('values')
+//   console.debug(JSON.stringify(values))
+//   console.debug('values', edit)
+
+//   let options = {
+//     mutation: CREATE_MUTATION,
+//     variables: {
+//       lancamento: values,
+//       parcelas: valuesParcelas,
+//       usuario: usuario
+//     }
+//   }
+//   if (edit) {
+
+//     options = {
+//       mutation: UPDATE_MUTATION,
+//       variables: {
+//         id: values.id,
+//         lancamento: values
+//       }
+//     }
+//   }
+//   console.debug({ options })
+
+//   client.mutate(options)
+//     .then(({ errors, data }) => {
+//       setShowWait(false)
+//       if (errors !== undefined && errors.length > 0) {
+//         console.warn({ errors })
+//         setErrors(errors)
+//       } else {
+//         console.debug("Done mutate - " + JSON.stringify(data))
+//         if (edit) {
+//           let { updateLancamento: { lancamento } } = data
+//           showMessageSuccessAndRedirect('Lançamento alterado com sucesso.', lancamento)
+//         } else {
+//           let { createLancamento: { lancamento } } = data
+//           showMessageSuccessAndRedirect('Lançamento cadastrado com sucesso.', lancamento)
+//         }
+//       }
+//     })
+//     .catch((ex) => {
+//       setShowWait(false)
+//       console.debug(ex)
+//       alert('Ocorrreu um erro não esperado.');
+//     })
+// }
