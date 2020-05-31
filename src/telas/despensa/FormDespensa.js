@@ -132,7 +132,7 @@ function FormDespensa({route, navigation}) {
                 <FormButton onPress={handleSubmit} active>
                     <FormButtonLabel active>{edit ? 'Editar' : 'Gravar'}</FormButtonLabel>
                 </FormButton>
-                {edit && 
+                {__DEV__ && edit && 
                     <FormButton onPress={handleSubmit} >
                         <FormButtonLabel >limpar Itens</FormButtonLabel>
                     </FormButton>

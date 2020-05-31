@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import gql from 'graphql-tag';
 
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { Container, CardRow, EditItem, DeleteItem, PlusItemReceita, MinusItem, Card, CardBody, CardTitle, CardTouchable } from '../../components/styled/Geral';
 import { FloatingAction } from "react-native-floating-action";
 import { LoadingOverlay } from '../../components/utils/Components'
+
+import * as LocalStorage from '../../services/LocalStorage';
+
 
 const actions = [
     {
@@ -24,18 +27,59 @@ const actions = [
 ];
 
 const GET = gql`
-    query getreceitas($q: String){
-        receitas(query:$q){
+    query receitasPossiveis($provimentos: [Int!]){
+        receitasPossiveis(provimentos: $provimentos) {
             id
             nome
             descricao
+            ingredientes {
+                provimento {
+                    id
+                }
+            }
         }
     }
 `;
 
 
-function List({navigation, route}) {
-    const { data, error, loading, refetch, subscribeToMore } = useQuery(GET);
+function ListReceitasPossiveis({navigation, route}) {
+
+    navigation.setOptions({ title: `Receitas possíveis` })
+
+    const [provimentos, setProvimentos ] = useState()
+
+    useEffect(() => {
+        getStorageIngredientes()
+    }, [])
+
+    function getStorageIngredientes(){
+        LocalStorage.getProvimentos()
+        .then(( res ) => {
+                res.map(( r ) => {
+                    console.debug(r.id)
+                })
+                if(res){
+                    console.debug(JSON.stringify(res))
+                    let listIds = []
+                    res.map(( p ) => {
+                        let existente = listIds.filter(( i ) => i === p.id)[0]
+
+                        if(p.id !== null && !existente){
+                            listIds.push(p.id)
+                        }
+                    })
+                    console.debug({listIds})
+                    setProvimentos(listIds)
+                }
+                
+            })
+            .catch(( err ) => {
+                console.debug(err)
+            })
+    }
+
+
+    const { data, error, loading, refetch, subscribeToMore } = useQuery(GET, { variables: { provimentos } });
 
     useEffect(() => {
         console.debug(JSON.stringify(data))
@@ -100,8 +144,8 @@ function List({navigation, route}) {
 
     return (
         <>
-            <Container>
-                {data && data.receitas.map((receita) =>
+            <Container style={{ marginBottom:0 }}>
+                {data && data.receitasPossiveis.map((receita) =>
                     <Item receita={receita} />
                 )}
             </Container>
@@ -117,4 +161,4 @@ function List({navigation, route}) {
     )
 }
 
-export default List
+export default ListReceitasPossiveis

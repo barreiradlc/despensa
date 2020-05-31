@@ -17,20 +17,32 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const logo = '../assets/logo.png'
 
-const AUTH = gql`
-    mutation setCredentials($attributes: CredentialsInput!) {
-        signIn(attributes: $attributes) {
-            token
-            user {
+const UPDATE_PROFILE = gql`
+    mutation updatePerfilMutation($perfil: CredentialsInput!){
+        updatePerfilMutation(perfil: $perfil){
+            user{
                 id
-                fullName
+                username
                 email
+                firstName
+                lastName
             }
         }
     }
-`
+    `
 
 function Perfil({ navigation }) {
+
+    async function getUser() {
+        let u = await AsyncStorage.getItem('@user');
+        console.log(u)
+        if (u) {
+            u = JSON.parse(u)
+            delete u.id
+            delete u.fullName
+            setUser(u)
+        }
+    }
 
     const ref_input1 = useRef();
     const ref_input2 = useRef();
@@ -51,32 +63,19 @@ function Perfil({ navigation }) {
     })
 
     useEffect(() => {
+
         LocalStorage.getDespensas()
             .then((d) => {
                 setDespensas(d)
             })
 
-        if (__DEV__) {
-            setUser({
-                // JOHN
-                // "email": "john.doe@example.com",
-                // "username": "John",
-                // "password": "Doe123123"
-
-                // JANE
-                "email": "jane.doe@example.com",
-                "username": "Jane",
-                "password": "Doe123123"
-            })
-        }
-
         navigation.setOptions({
             title: 'Editar Perfil'
         });
-
+        getUser()
     }, [])
 
-    const [auth, { data, error, loading }] = useMutation(AUTH);
+    const [setProfile, { data, error, loading }] = useMutation(UPDATE_PROFILE);
 
     useEffect(() => {
         if (error) {
@@ -88,25 +87,18 @@ function Perfil({ navigation }) {
 
     useEffect(() => {
         if (data && !error) {
-
-            if (data.signIn) {
-                if (data.signIn.token) {
-                    handleWelcome()
-                } else {
-                    Utils.sweetalert('Usuário inválido')
-                    // Utils.toast('Usuário inválido')
-                }
-            }
+            console.debug(data)
             setAguarde(false)
+            handleSuccess()
         } else {
             console.log('noths')
         }
     }, [data])
 
-    async function handleWelcome() {
-        let token = await data.signIn.token
-        console.log(`JWT:  ${token}`)
-        await AsyncStorage.setItem('@token', token)
+
+    async function handleSuccess() {
+        await AsyncStorage.setItem('@user', JSON.stringify(data.updatePerfilMutation.user))
+        Utils.sweetalert('', 'success', `\n\n\nPerfil atualizado com sucesso`)
         navigation.replace('Home')
     }
 
@@ -114,18 +106,10 @@ function Perfil({ navigation }) {
         setErrors()
     }
 
-    function handleLogin() {
-        const credentials = {
-            password: user.password,
-            email: user.email,
-        }
+    function handleEditProfile() {
+        setAguarde(true)
 
-        if (user.password && user.username) {
-            setAguarde(true)
-            auth({ variables: { attributes: credentials } });
-        } else {
-            alert('Preencha seus dados para continuar')
-        }
+        setProfile({ variables: { perfil: user } });
     }
 
     function register(credentials) {
@@ -152,7 +136,7 @@ function Perfil({ navigation }) {
                 if (res.errors) {
                     setErrors(res.errors)
                 } else {
-                    handleLogin()
+                    handleEditProfile()
                 }
                 console.log({ register: res })
                 setAguarde(false)
@@ -186,7 +170,7 @@ function Perfil({ navigation }) {
 
             <FormInput
                 autoFocus
-                onChange={(event) => { handleSetUser(event, 'username') }}
+                onChange={(event) => { handleSetUser(event, 'firstName') }}
                 // autoFocus
                 value={user.firstName}
                 placeholder='Nome'
@@ -196,7 +180,7 @@ function Perfil({ navigation }) {
             />
 
             <FormInput
-                onChange={(event) => { handleSetUser(event, 'username') }}
+                onChange={(event) => { handleSetUser(event, 'lastName') }}
                 // autoFocus
                 value={user.lastName}
                 placeholder='Sobrenome'
@@ -223,7 +207,7 @@ function Perfil({ navigation }) {
                 ref={ref_input4}
             />
 
-            <FormButton onPress={handleLogin} active={true}>
+            <FormButton onPress={handleEditProfile} active={true}>
                 <FormButtonLabel active={true}>Editar</FormButtonLabel>
             </FormButton>
 

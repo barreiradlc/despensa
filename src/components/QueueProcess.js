@@ -21,7 +21,6 @@ mutation handleDepensasMutation($despensas: [DespensaInput!]!){
                     id
                     nome
                 }
-                
             }        
         }
     }
@@ -44,18 +43,19 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
         setLoad(l)
     }
 
-    useImperativeHandle(ref , () => {
+    useImperativeHandle(ref, () => ({
         reload: (param) => {
-            console.debug('reload da listagem', param)
+            console.log(`RELOAD ${JSON.stringify(param)}`)
+            loadData()
         }
-    })
+    }))
 
     useEffect(() => {
         loadData()
     }, [reload])
 
     useEffect(() => {
-        if(connection && despensas){
+        if(connection && despensas.length > 0){
             setTimeout(() => {
                 changeDot()
             }, 1000)
@@ -69,7 +69,7 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
     }, [send])
     
     useEffect(() => {
-        if(despensas.length > 0){
+        if(despensas.length > 0 && !loading){
             console.log({despensas})
             sendData()
         }
@@ -82,6 +82,9 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
         console.log('Retorno')
         if(data){
             setSend(false)
+            // setTimeout(() => {
+                setDespensas([])
+            // }, 500)
             LocalStorage.storeDespensas(data.handleDespensaMutation.despensas)
             // .then((  ) => {
                 
@@ -94,8 +97,7 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
     async function sendData(){
         console.debug('enviando...')
         console.debug(JSON.stringify(despensas))
-        submit({ variables: { despensas: despensas } });
-        setDespensas([])
+        submit({ variables: { despensas: despensas } });        
     }
 
     function convertValues(obj){
@@ -129,6 +131,7 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
                 id: despensa.id,
                 nome: despensa.nome,
                 descricao: despensa.descricao,
+                deletedAt: despensa.deletedAt,
                 items: listItems
             }
 
@@ -165,7 +168,7 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
             })
     }
 
-    if(despensas && despensas.length > 0 && connection){
+    if(despensas.length > 0 && connection){
         return (
             <ConnectionTab>
                 <ConnectionLabel> Sincronizando Despensas {load}</ConnectionLabel>

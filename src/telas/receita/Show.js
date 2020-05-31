@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import moment from 'moment'
-import DateTimePicker from '@react-native-community/datetimepicker';
-import * as LocalStorage from '../../services/LocalStorage'
-import * as Utils from '../../components/utils/Utils'
-import { Alert } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-
-import ShowPasso from '../../components/receitas/ShowPasso'
-import FormInnerIngrediente from '../../components/receitas/FormInnerIngrediente'
-import InnerIngrediente from '../../components/receitas/InnerIngrediente'
-import { AddReceita, SafeContainer } from '../../components/styled/Geral'
-import { InnerText, RowInnerAdd, FormInputTextArea, FormInputReadOnly, Facebook, FormButtonLabel, FormButtonGroup, FormAsset, FormButton, FormContainerScroll, FormIconContainer, FormInput, FormLabel, FormTouchableAdd, FormTouchableIcon, Google, CardInnerTitle, CardInner, Wrap } from '../../components/styled/Form'
-import { useMutation, useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { LoadingOverlay } from '../../components/utils/Components'
+import { useQuery } from '@apollo/react-hooks';
+import { Alert } from 'react-native';
+
+import DeleteReceitaMutation from '../../components/mutations/DeleteReceitaMutation';
+import InnerIngrediente from '../../components/receitas/InnerIngrediente';
+import ShowPasso from '../../components/receitas/ShowPasso';
+import { CardInner, CardInnerTitle, FormButton, FormButtonGroup, FormButtonLabel, FormContainerScroll, Wrap } from '../../components/styled/Form';
+import { LoadingOverlay } from '../../components/utils/Components';
+import * as Utils from '../../components/utils/Utils';
+import * as LocalStorage from '../../services/LocalStorage';
 
 const GET = gql`
 query getReceita($id: ID!) {
@@ -29,6 +26,7 @@ query getReceita($id: ID!) {
         }
       }
       passos {
+        id
         descricao
         posicao
       }
@@ -69,11 +67,13 @@ mutation addReceita($receita: ReceitaInput!) {
 `
 
 
-function FormReceita({ route, navigation }) {
+function ShowReceita({ route, navigation }) {
+
+    const removeRef = useRef()
 
     const { id, nome } = route.params
 
-    const { data, error, loading, refetch, subscribeToMore } = useQuery(GET, { variables: { id: id }} );
+    const { data, error, loading, refetch, subscribeToMore } = useQuery(GET, { variables: { id: id } });
 
     const { edit, receita } = route.params;
 
@@ -81,7 +81,7 @@ function FormReceita({ route, navigation }) {
 
     const passo = {
         posicao: 1,
-        descricao:''
+        descricao: ''
     }
 
     // const INITIAL_VALUES = {
@@ -89,6 +89,7 @@ function FormReceita({ route, navigation }) {
     // }
 
     const INITIAL_VALUES = {
+        id: receita && receita.id,
         uuid: receita && receita.uuid,
         nome: receita && receita.nome,
         descricao: receita && receita.descricao,
@@ -100,22 +101,56 @@ function FormReceita({ route, navigation }) {
         }
     }
 
+    const [provimentos, setProvimentos] = useState([]);
     const [user, setUser] = useState(true);
     const [load, setLoad] = useState(true);
     const [addIgrediente, setAddIngrediente] = useState(false);
     const [values, setValues] = useState(INITIAL_VALUES)
 
     useEffect(() => {
-        if(data){
+        if (data) {
             setValues(data.receita)
             setLoad(false)
             getUser()
         }
     }, [data])
 
-    async function getUser(){
+    // useEffect(() => {
+    //     getProvimentos()
+    // }, [])
+
+    // function getProvimentos(){
+    //     LocalStorage.getProvimentos()
+    //         .then(( p ) => {
+    //             console.debug(p)
+    //             setProvimentos(p)
+    //         })
+    //         .catch(( e ) => {
+    //             console.log(e)
+    //         })
+    // }
+
+    function getStorageIngrediente(i){
+        LocalStorage.getProvimento(i)
+            .then(( res ) => {
+                if(res){
+                    if(res.id){
+                        console.log(res.id)
+                        return res.id
+                    }
+                    console.log('a')
+                }
+                return false
+            })
+            .catch(( err ) => {
+                return false
+                console.debug(err)
+            })
+    }
+
+    async function getUser() {
         const u = await AsyncStorage.getItem('@user');
-        console.log({u})
+        console.log({ u })
         setUser(JSON.parse(u))
     }
 
@@ -160,11 +195,11 @@ function FormReceita({ route, navigation }) {
         }
 
         setValues({ ...values, ingredientes: newList })
-        
+
         console.debug(value)
     }
 
-    function handleForm(){
+    function handleForm() {
         navigation.navigate('FormReceita', {
             edit: true,
             receita: values,
@@ -191,7 +226,7 @@ function FormReceita({ route, navigation }) {
         console.debug(value)
     }
 
-    function more(){
+    function more() {
         console.log('newList')
         const newList = values.passos
         console.log(newList)
@@ -202,61 +237,98 @@ function FormReceita({ route, navigation }) {
         setValues({ ...values, passos: newList })
     }
 
-    function addReceita(){
+    function addReceita() {
         delete values.uuid
         console.debug(values)
         add({ variables: { receita: values } });
     }
 
-    if(load){
+    function handleRemove() {
+        setLoad(true)
+        console.debug({ removeRef })
+
+        removeRef.current.mutate(values)
+    }
+
+    function removeReceita() {
+        Alert.alert(
+            'Atenção',
+            'Deseja mesmo remover esta receita?',
+            [
+                { text: 'SIM', onPress: () => handleRemove() },
+                {
+                    text: 'NÂO',
+                    style: 'cancel',
+                },
+            ],
+            { cancelable: false },
+        );
+    }
+
+    function handleSucess() {
+        setLoad(false)
+        navigation.navigate('Receitas', { refetch: true })
+        Utils.sweetalert('', 'success', `\n\n\nReceita removida com sucesso`)
+    }
+
+    if (loading) {
         return <LoadingOverlay />
     }
 
     return (
-        
-        <FormContainerScroll >
+        <>
 
-            <FormButtonLabel >{values.descricao}</FormButtonLabel>
+            {/* {load &&
+                <LoadingOverlay />
+            } */}
 
-            <CardInner>
-                <CardInnerTitle>Ingredientes</CardInnerTitle>
-                <Wrap>
+            <FormContainerScroll >
 
-                    {values.ingredientes && values.ingredientes.map((i) =>
-                        <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show />
+                <DeleteReceitaMutation ref={removeRef} success={handleSucess} />
+
+                <FormButtonLabel >{values.descricao}</FormButtonLabel>
+
+                <CardInner>
+                    <CardInnerTitle>Ingredientes</CardInnerTitle>
+                    <Wrap>
+
+                        {values.ingredientes && values.ingredientes.map((i) =>
+                            <InnerIngrediente  update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show />
+                        )}
+                    </Wrap>
+                </CardInner>
+
+                <CardInner>
+                    <CardInnerTitle>Passo a passo</CardInnerTitle>
+
+                    {values.passos.map((passo, i) =>
+                        <ShowPasso item={passo} index={i} add={handleNewPasso} />
                     )}
-                </Wrap>
-            </CardInner>
 
-            <CardInner>
-                <CardInnerTitle>Passo a passo</CardInnerTitle>
+                </CardInner>
 
-                {values.passos.map(( passo, i ) =>
-                    <ShowPasso item={passo} index={i} add={handleNewPasso}/>
-                )}
+                {!loading &&
+                    values.user.id && user.id ?
+                    <FormButtonGroup>
+                        {/* <FormButton onPress={handleDelete} > */}
+                        <FormButton onPress={handleForm}>
+                            <FormButtonLabel >Editar receita</FormButtonLabel>
+                        </FormButton>
+                        <FormButton active onPress={removeReceita}>
+                            <FormButtonLabel active>Excluir receita</FormButtonLabel>
+                        </FormButton>
+                    </FormButtonGroup>
+                    :
+                    <CardInnerTitle>Receita enviada por: {values.user.fullName}</CardInnerTitle>
+                }
 
-            </CardInner>
-            
-            {values.user.id && user.id ?
-                <FormButtonGroup>
-                    {/* <FormButton onPress={handleDelete} > */}
-                    <FormButton  onPress={handleForm}>
-                        <FormButtonLabel >Editar receita</FormButtonLabel>
-                    </FormButton>
-                    <FormButton active onPress={() => { alert('A implementar...') }}>
-                        <FormButtonLabel active>Excluir receita</FormButtonLabel>
-                    </FormButton>
+                <FormButtonGroup style={{ marginBottom: 50 }}>
+
                 </FormButtonGroup>
-                :
-                <CardInnerTitle>Receita enviada por: {values.user.fullName}</CardInnerTitle>
-            }
 
-            <FormButtonGroup style={{marginBottom:50}}>
-            
-            </FormButtonGroup>
-
-        </FormContainerScroll>
+            </FormContainerScroll>
+        </>
     )
 }
 
-export default FormReceita
+export default ShowReceita

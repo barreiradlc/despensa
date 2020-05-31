@@ -16,14 +16,13 @@ import FormDespensa from '../telas/despensa/FormDespensa'
 import SearchUser from '../telas/despensa/SearchUser'
 import FormReceita from '../telas/receita/FormReceita'
 import ListReceitas from '../telas/receita/List'
+import ListReceitasPossiveis from '../telas/receita/ListReceitasPossiveis'
 import ShowReceita from '../telas/receita/Show'
 
 import { IconsImage, TabContainer, TabLabel } from '../components/styled/Geral'
 import { HeaderBadge, HomeNotifications, HeaderTouchable, HeaderContainer, HomeMenuItem } from '../components/styled/Geral'
 import ContentDrawer from '../components/ContentDrawer'
 import UserContext from '../components/state/Context'
-
-
 
 const logo = '../assets/despensa.png'
 
@@ -66,6 +65,7 @@ function Sair({navigation}){
 function HomeScreen({ navigation }) {
 
   const [ conviteList, setConviteList ] = React.useState([])
+  const [ mount, setMount ] = React.useState(true)
 
   function handleNotifications(convites){
     console.log('Olar')
@@ -102,13 +102,17 @@ function HomeScreen({ navigation }) {
     )    
   })
 
+  function handleMountFinish(){
+    setMount(false)
+  }
+
   return (
     <Tab.Navigator
       tabBarOptions={{
         activeTintColor: 'tomato',
         inactiveTintColor: 'gray',
       }}>
-      <Tab.Screen name="Home" component={props => <Home handleNotifications={handleNotifications}  {...props} />} navigation={navigation} options={{
+      <Tab.Screen name="Home" component={props => <Home mount={mount} handleMountFinish={handleMountFinish} handleNotifications={handleNotifications}  {...props} />} navigation={navigation} options={{
         tabBarLabel: '',
         tabBarIcon: (props) => (
           <CustomComponent props={props} id='Despensa' />
@@ -248,6 +252,7 @@ function MyDrawer(props) {
     drawerContent={props =>  <ContentDrawer context={context} {...props} />}
     gestureHandlerProps={false}
     swipeEnabled={false}
+
     edgeWidth={0}
     drawerStyle={{
       backgroundColor: '#fff',
@@ -277,6 +282,7 @@ function Navigator(props) {
         <Stack.Screen name="FormDespensa" component={FormDespensa} />
         <Stack.Screen name="SearchUser" component={SearchUser} />
         <Stack.Screen name="FormReceita" component={FormReceita} />
+        <Stack.Screen name="ListReceitasPossiveis" component={ListReceitasPossiveis} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="ShowReceita" component={ShowReceita} />
         <Stack.Screen name="Estoque" component={Estoque} />

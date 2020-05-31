@@ -31,117 +31,124 @@ const CREATE_CONVITE = gql`
 `
 
 
-function SearchUser({route, navigation}) {
+function SearchUser({ route, navigation }) {
 
-    useEffect(() => {
-    }, [])
-    
     const { despensa } = route.params
     
     const client = useApolloClient()
     const [aguarde, setAguarde] = useState(false)
     const [query, setQuery] = useState('')
     const [user, setUser] = useState('')
-    
-    const { data, error, loading, refetch, subscribeToMore } = useQuery(SEARCH_USERS, { variables: { q: query }});
-    const [sendConvite] = useMutation(CREATE_CONVITE, {variables: { id: focus } });
-    
-    navigation.setOptions({ 
+
+    const { data, error, loading, refetch, subscribeToMore } = useQuery(SEARCH_USERS, {variables: {q: query}});
+    const [sendConvite] = useMutation(CREATE_CONVITE, { variables: { id: focus } });
+
+    navigation.setOptions({
         title: `Pesquisar usuário`
     })
-    
+
     const [focus, setFocus] = useState();
     const [values, setValues] = useState([])
-    
-    const  getUser = async() => {
+
+    const getUser = async () => {
         let u = await AsyncStorage.getItem('@user');
-        if(u){
+        if (u) {
             setUser(JSON.parse(u))
         }
     }
-    
+
     
     function handleInput(event, attr) {
         setValues({ ...values, [attr]: event.nativeEvent.text })
     }
-    
+
     async function handleSubmit() {
         setAguarde(true)
         console.log(focus)
-        sendConvite({ variables: { 
-            id: Number(focus),
-            convite: { 
-                mensagem: `${user.email} lhe convidou para fazer parte da despensa ${despensa.nome}` ,
-                despensaId: despensa.id
+        sendConvite({
+            variables: {
+                id: Number(focus),
+                convite: {
+                    mensagem: `${user.email} lhe convidou para fazer parte da despensa ${despensa.nome}`,
+                    despensaId: despensa.id
+                }
             }
-        } 
-    })
-    .then(( response ) => {
-        setAguarde(false)
-        console.debug(navigation)
-        navigation.goBack()
-        Utils.sweetalert('Convite enviado com successo', 'success', 'Successo')
-        console.debug(response)
-    })
-    .catch(( err ) => {
-        console.debug(err)
-    })
-}
+        })
+            .then((response) => {
+                setAguarde(false)
+                console.debug(navigation)
+                navigation.goBack()
+                Utils.sweetalert('Convite enviado com successo', 'success', 'Successo')
+                console.debug(response)
+            })
+            .catch((err) => {
+                console.debug(err)
+            })
+    }
+    
+    async function handleSelect(e) {
+        console.log('INDO')
+        setFocus(user.id)
+        console.log('FOI')
+    }
 
-async function handleSelect(user) {
-    setFocus(user.id)
-}
+    useEffect(() => {
+        if(query.length > 2){
+            refetch(null, {variables: { q: query }})
+        }
+        console.log(data)
+    }, [query])
     
     async function handleSearch(e) {
         setQuery(e.nativeEvent.text)
         setFocus()
     }
-
+    
     getUser()
     
     return (
         <>
-        {aguarde &&
-            <LoadingOverlay />
-        }
 
-        <FormContainerScroll>
-
-            <FormInput
-                onChange={handleSearch}
-                autoFocus
-                value={query}
-                placeholder='Nome'
-                returnKeyType="next"
-            />
-
-            {!data && loading &&
-                <LoadingSmall />
+            {aguarde &&
+                <LoadingOverlay />
             }
 
-            {query !== '' && 
-                (data  || !loading) && data.users && data.users.map(( u ) =>
-                    user.id !== u.id && 
-                        <FormButton key={u.id} flat onPress={() => handleSelect(u)} >
+            <FormContainerScroll>
+
+                <FormInput
+                    onChange={handleSearch}
+                    autoFocus
+                    value={query}
+                    placeholder='Nome'
+                    returnKeyType="next"
+                    />
+
+
+                {loading && !data ?
+                    <LoadingSmall />                
+                :
+                data && data.users.map((u) =>
+                    user.id !== u.id &&
+                        <FormButton key={u.id} flat onPress={() => handleSelect(u) } >
                             <CardInner flat active={focus === u.id} >
                                 <UserLabel active={focus === u.id} >{u.fullName}</UserLabel>
                                 <UserLabel active={focus === u.id} >{u.email}</UserLabel>
                             </CardInner>
                         </FormButton>
-                )
-            }
+                    )
+                }
 
 
 
-        </FormContainerScroll>
+            </FormContainerScroll>
 
-        {!loading && focus && 
-            <FormButtonGroup style={{ backgroundColor: '#c93b4a' }}>
+            {!loading && focus &&
+                <FormButtonGroup style={{ backgroundColor: '#c93b4a' }}>
                     <FloatTouchable active={focus} onPress={handleSubmit} >
                         <FormButtonLabel active={focus} >Enviar convite</FormButtonLabel>
                     </FloatTouchable>
-            </FormButtonGroup>
-        }
+                </FormButtonGroup>
+            }
 
         </>
     )

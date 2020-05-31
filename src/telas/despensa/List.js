@@ -17,7 +17,7 @@ function List(props, ref) {
             console.debug('IMPERATIVE')
             console.debug(queueRef)
             console.debug('IMPERATIVE')
-            // queueRef.current.reload('aaaaaa')
+            queueRef.current.reload('aaaaaa')
         }
         setReload(false)
     },[reload]);
@@ -86,9 +86,9 @@ function List(props, ref) {
                 })
     }
 
-    if (loading) {
-        return <LoadingOverlay />
-    }
+    // if (loading) {
+    //     return <LoadingOverlay />
+    // }
 
     function navigateEstoque(despensa) {
         navigation.navigate('Estoque', {
@@ -149,7 +149,7 @@ function List(props, ref) {
                 </FloatHome>
             </FloatTouchable>
 
-            <QueueProcess reload={reload} ref={queueRef} reloadQueue={reloadQueue} />
+            <QueueProcess  ref={queueRef} reloadQueue={reloadQueue} />
         </>
     )
 }

@@ -2,8 +2,17 @@ import Realm from 'realm'
 import { uuid } from '../components/utils/Utils'
 import realm from '../config/realm'
 
+export async function getProvimentos() {
+    return await realm.objects('Provimento')
+}
+
+export async function getProvimento(i) {
+    return await realm.objects('Provimento').filtered('id = $0', Number(i.provimento.id))[0]
+}
+
+
 export async function getQueueDespensa() {
-    let list = await realm.objects('Despensa').filtered('deletedAt = $0 AND fila = $1', null, true)
+    let list = await realm.objects('Despensa').filtered('fila = $0',  true)
     // let realm = await getRealm()    
     realm.write(async( ) => {
         list = list && list.map(( despensa ) => {
@@ -134,11 +143,11 @@ async function newProvimento(item) {
     const provimentoLocal = {
         // uuid: uuid(),
         // id: parseInt(item.nome),
-        nome: item.nome.trim(),
+        nome: item.provimento.nome.trim(),
     }
-    realm.write(async () => {
-        return await realm.create('Provimento', provimentoLocal, true)
-    })
+    
+    return await realm.create('Provimento', provimentoLocal, true)
+    
 
     return provimentoLocal
 
@@ -151,6 +160,10 @@ export async function removeDespensa(despensa) {
 
     realm.write(() => {
         despensaLocal.deletedAt = new Date()
+
+        if(despensaLocal.id){
+            despensaLocal.fila = true
+        }
     })
 
     return despensa
@@ -164,10 +177,10 @@ export async function editDespensa(despensa) {
 
     realm.write(() => {
         despensaLocal.nome = despensa.nome
-        despensaLocal.despensa = despensa.despensa
+        despensaLocal.descricao = despensa.descricao
         despensaLocal.fila = true
-
     })
+    
     return despensaLocal
 }
 
@@ -192,7 +205,7 @@ export async function editItem(item, despensaUuid) {
                 // realm.delete(itemLocal.provimento)
                 let provimentoLocal = realm.objects('Provimento').filtered('nome = $0', item.nome)[0]
                 if (!provimentoLocal) {
-                    provimentoLocal = await newProvimento(item)
+                    provimentoLocal = newProvimento(item)
                 }
                 itemLocal.provimento = provimentoLocal
             }
@@ -347,10 +360,12 @@ export async function storeDespensas(despensas) {
 
             despensas.map(async (despensa) => {
 
-                console.log('despensa?')
-                console.log(despensa.nome)
-
+                
                 let despensaLocal = await realm.objects('Despensa').filtered('uuid = $0 or id = $1', despensa.uuid, Number(despensa.id))[0]
+
+                console.log('despensa?')
+                console.log(despensaLocal)
+                // console.log(despensaLocal.nome)
 
                 if (!despensaLocal) {
                     despensaLocal = await saveDespensa(despensa)
@@ -371,7 +386,7 @@ export async function storeDespensas(despensas) {
 
                 despensa.items.forEach(async (item) => {
 
-                    let provimentoLocal = await realm.objects('Provimento').filtered('id = $0', parseInt(item.provimento.id))[0]
+                    let provimentoLocal = await realm.objects('Provimento').filtered('id = $0 OR nome = $1', parseInt(item.provimento.id), item.provimento.nome)[0]
                     let itemLocal = await realm.objects('Item').filtered('id = $0 or uuid = $1', parseInt(item.id), item.uuid)[0]
 
                     if (!provimentoLocal) {

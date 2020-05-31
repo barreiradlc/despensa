@@ -1,22 +1,24 @@
 import React, {useEffect, useState, useContext} from 'react'
+import AsyncStorage from '@react-native-community/async-storage';
 import { Alert, Button, TouchableWithoutFeedback, Text, View } from 'react-native';
 import { DrawerScrollContainer } from './styled/Geral'
-import AsyncStorage from '@react-native-community/async-storage';
-import * as LocalStorage from '../services/LocalStorage'
+import { useIsDrawerOpen } from '@react-navigation/drawer';
 
 import UserContext from '../components/state/Context'
-
 import DrawerItem from './DrawerItem'
-
+import * as LocalStorage from '../services/LocalStorage'
 
 function ContentDrawer({navigation, route}){
   
-  const [ user , setUser ] = useState({
-    fullName: ''
-  })
+    const isDrawerOpen = useIsDrawerOpen();
+
+    const [ user , setUser ] = useState({
+      fullName: ''
+    })
   
     const  getUser = async() => {
       let u = await AsyncStorage.getItem('@user');
+      console.log(u)
       if(u){
         setUser(JSON.parse(u))
       }
@@ -24,6 +26,14 @@ function ContentDrawer({navigation, route}){
   
     useEffect(() => {
       getUser()
+    }, [isDrawerOpen])
+
+    useEffect(() => {
+      console.debug({UserContext})
+      console.debug({user})
+      
+      getUser()
+      console.debug({user})
     }, [])
 
     function handleSair(){
@@ -58,11 +68,10 @@ function ContentDrawer({navigation, route}){
     }
     
     function handleProfile(){
-      if(__DEV__){
-        navigation.navigate('Perfil')
-      } else {
-        handleSoon()
-      }
+      navigation.navigate('Perfil')
+    }
+    function handleListReceitasPossiveis(){
+      navigation.navigate('ListReceitasPossiveis')
     }
 
     function handleSoon(){
@@ -76,13 +85,6 @@ function ContentDrawer({navigation, route}){
         {cancelable: false},
       );
     }
-
-
-    let name 
-    getUser()
-      .then(( n ) => {
-        name = n
-      })
   
     return (
       <DrawerScrollContainer>
@@ -90,8 +92,9 @@ function ContentDrawer({navigation, route}){
         
         <DrawerItem label='Home' icon='home' handleFunction={handleHome} />
         <DrawerItem label='Editar Perfil' icon='user' handleFunction={handleProfile} />
-        <DrawerItem label='Favoritos' icon='star-o' handleFunction={handleSoon} />
-        <DrawerItem label='Lista de compras' icon='th-list' handleFunction={handleSoon} />
+        <DrawerItem label='Receitas Disponiveis' icon='star-o' handleFunction={handleListReceitasPossiveis} />
+        {/* <DrawerItem label='Favoritos' icon='star-o' handleFunction={handleSoon} />
+        <DrawerItem label='Lista de compras' icon='th-list' handleFunction={handleSoon} /> */}
         <DrawerItem label='Sair' icon='power-off' handleFunction={handleSair} />
 
       </DrawerScrollContainer>

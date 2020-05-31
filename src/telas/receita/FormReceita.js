@@ -1,72 +1,22 @@
-import React, { useState, useEffect } from 'react'
-import moment from 'moment'
-import DateTimePicker from '@react-native-community/datetimepicker';
-import * as LocalStorage from '../../services/LocalStorage'
-import * as Utils from '../../components/utils/Utils'
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert } from 'react-native'
+import FormInnerIngrediente from '../../components/receitas/FormInnerIngrediente';
+import FormPasso from '../../components/receitas/FormPasso';
+import InnerIngrediente from '../../components/receitas/InnerIngrediente';
+import { CardInner, CardInnerTitle, FormButton, FormButtonGroup, FormButtonLabel, FormContainerScroll, FormInput, FormInputTextArea, FormTouchableAdd, InnerText, RowInnerAdd, Wrap } from '../../components/styled/Form';
+import { AddReceita } from '../../components/styled/Geral';
+import { LoadingOverlay } from '../../components/utils/Components';
+import * as Utils from '../../components/utils/Utils';
 
-import FormPasso from '../../components/receitas/FormPasso'
-import FormInnerIngrediente from '../../components/receitas/FormInnerIngrediente'
-import InnerIngrediente from '../../components/receitas/InnerIngrediente'
-import { AddReceita, SafeContainer } from '../../components/styled/Geral'
-import { InnerText, RowInnerAdd, FormInputTextArea, FormInputReadOnly, Facebook, FormButtonLabel, FormButtonGroup, FormAsset, FormButton, FormContainerScroll, FormIconContainer, FormInput, FormLabel, FormTouchableAdd, FormTouchableIcon, Google, CardInnerTitle, CardInner, Wrap } from '../../components/styled/Form'
-import { LoadingOverlay } from '../../components/utils/Components'
-import { useMutation, useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
-
-const ADD = gql`
-mutation addReceita($receita: ReceitaInput!) {
-    addReceitaMutation(receita: $receita) {
-      receitum {
-        id
-        createdAt
-        descricao
-        nome
-        updatedAt
-        ingredientes {
-          id
-          provimento {
-            nome
-          }
-        }
-        passos {
-          descricao
-          posicao
-        }
-      }
-    }
-}  
-`
-
-const EDIT = gql`
-mutation updateReceita($id: ID!, $receita: ReceitaInput!){
-  updateReceitaMutation(id: $id, receita: $receita){
-      receitum {
-        id
-        createdAt
-        descricao
-        nome
-        updatedAt
-        ingredientes {
-          id
-          provimento {
-            nome
-          }
-        }
-        passos {
-          descricao
-          posicao
-        }
-      }
-    }
-}  
-`
-
+import AddReceitaMutation from '../../components/mutations/AddReceitaMutation';
+import EditReceitaMutation from '../../components/mutations/EditReceitaMutation';
+import DeleteReceitaMutation from '../../components/mutations/DeleteReceitaMutation';
 
 function FormReceita({ route, navigation }) {
 
-    const [add, { data, error, loading }] = useMutation(edit ? EDIT : ADD);
-    // const [update, { data: EditData, error: editError }] = useMutation(EDIT);
+    const editRef = useRef()
+    const addRef = useRef()
+    const removeRef = useRef()
 
     const { edit, receita, id } = route.params;
 
@@ -77,42 +27,30 @@ function FormReceita({ route, navigation }) {
         descricao: ''
     }
 
+    const INITIAL_VALUES = {
+        id: receita && receita.id,
+        nome: receita && receita.nome,
+        descricao: receita && receita.descricao,
+        ingredientes: receita && receita.ingredientes,
+        passos: receita ? receita.passos : [passo]
+    }
+
+    const [focus, setFocus] = useState(true);
+    const [load, setLoad] = useState(true);
+    const [disable, setDisable] = useState(true);
+    const [erros, setErros] = useState([]);
+    const [addIgrediente, setAddIngrediente] = useState(false);
+    const [values, setValues] = useState(INITIAL_VALUES)
+
     useEffect(() => {
-        if (data) {
-            navigation.navigate('Receitas')
-            Utils.sweetalert(`Receita ${edit ? 'editada' : 'cadastrada'}\n\n com sucesso`, 'success', 'Sucesso')
-        }
-    }, [data])
+        setLoad(false)
+    }, [])
 
-    
-    // const INITIAL_VALUES = {
-        //     "ingredientes":[{"quantidade":1,"provimento":{"nome":"Ovo"}},{"quantidade":1,"provimento":{"nome":"Arroz "}}],"nome":"Hein","descricao":"Jogo","passos":[{"posicao":1,"descricao":"Passo 6em de bom more levava "},{"posicao":2,"descricao":"Buffon foi o seu dia meu amor e ja ate trabalhou 6anos no seu cabelo "}]
-        // }
-        
-        const INITIAL_VALUES = {
-            id: receita && receita.id,
-            uuid: receita && receita.uuid,
-            nome: receita && receita.nome,
-            descricao: receita && receita.descricao,
-            ingredientes: receita && receita.ingredientes,
-            passos: receita ? receita.passos : [passo]
-        }
-        
-        const [focus, setFocus] = useState(true);
-        const [load, setLoad] = useState(true);
-        
-        const [addIgrediente, setAddIngrediente] = useState(false);
-        const [values, setValues] = useState(INITIAL_VALUES)
-        
-        useEffect(() => {
-            setLoad(false)
-        }, [])
+    function handleInput(event, attr) {
+        setValues({ ...values, [attr]: event.nativeEvent.text })
+    }
 
-        function handleInput(event, attr) {
-            setValues({ ...values, [attr]: event.nativeEvent.text })
-        }
-        
-        function toggleIngrediente() {
+    function toggleIngrediente() {
         setAddIngrediente(!addIgrediente)
     }
 
@@ -122,7 +60,7 @@ function FormReceita({ route, navigation }) {
 
     function handleDeleteIngrediente(value) {
         let newList
-        if(!value.id){
+        if (!value.id) {
 
         }
         newList = values.ingredientes.filter(receita => receita.provimento.nome !== value.provimento.nome)
@@ -177,23 +115,16 @@ function FormReceita({ route, navigation }) {
 
     function more() {
         console.log('newList')
-        const newList = values.passos    
+        const newList = values.passos
         newList.push(passo)
         setValues({ ...values, passos: newList })
     }
 
-    function less(index){
+    function less(index) {
         console.log(index)
-        const newList = values.passos.filter(( passo, i ) => i !== index)
+        const newList = values.passos.filter((passo, i) => i !== index)
 
         setValues({ ...values, passos: newList })
-    }
-
-    function addReceita() {
-        delete values.uuid
-        delete values.id
-        console.debug(values)
-        add({ variables: { receita: values } });
     }
 
     function convertValues(receita) {
@@ -214,87 +145,176 @@ function FormReceita({ route, navigation }) {
         return result
     }
 
-    function editReceita() {
-        const result = convertValues(values)
-        // delete values.uuid
-
-        console.debug(values.id)
-        console.debug(JSON.stringify(result))
-        console.debug(result, id)
-        add({ variables: { id: Number(id), receita: result } });
+    function handleSucess(remove) {
+        setLoad(false)
+        navigation.navigate('Receitas', { refetch: true })
+        if (remove) {
+            return Utils.sweetalert('', 'success', `\n\n\nReceita removida com sucesso`)
+        }
+        Utils.sweetalert('', 'success', `\n\n\nReceita ${edit ? 'editada' : 'cadastrada'} com sucesso`)
     }
 
-    if(load){
+    function editReceita() {
+        if (disable) {
+            return erros.map((e, i) => {
+                setTimeout(() => {
+                    Utils.toast(e.message)
+                }, 500 * i)
+            })
+        }
+
+        setLoad(true)
+        const result = convertValues(values)
+
+        let variables = {
+            id: Number(id),
+            receita: result
+        }
+
+        editRef.current.mutate(variables)
+    }
+
+    function addReceita() {
+        if (disable) {
+            return erros.map((e, i) => {
+                setTimeout(() => {
+                    Utils.toast(e.message)
+                }, 500 * i)
+            })
+        }
+        setLoad(true)
+        addRef.current.mutate(values)
+    }
+
+    function handleRemove() {
+        setLoad(true)
+        removeRef.current.mutate(values)
+    }
+
+    function removeReceita() {
+        Alert.alert(
+            'Atenção',
+            'Deseja mesmo remover esta receita?',
+            [
+                { text: 'SIM', onPress: () => handleRemove() },
+                {
+                    text: 'NÂO',
+                    style: 'cancel',
+                },
+            ],
+            { cancelable: false },
+        );
+    }
+
+    if (!values) {
         return <LoadingOverlay />
     }
-    
+
+    useEffect(() => {
+        let e = validate()
+        if (e && e.length > 0) {
+            setErros(e)
+            setDisable(true)
+        } else {
+            setDisable(false)
+            setErros([])
+        }
+    }, [values])
+
+    function validate() {
+        let errors = []
+
+        if (!values.nome) {
+            errors.push({ message: 'Nome não pode ficar em branco' })
+        }
+        if ((!values.passos && values.passos.length > 0) || !values.passos[0].descricao) {
+            errors.push({ message: 'Deve haver ao menos um passo para registrar uma receita' })
+        }
+        if (!values.ingredientes || values.ingredientes.length === 0) {
+            errors.push({ message: 'Deve haver ao menos um ingrediente para registrar uma receita' })
+        }
+        console.log(values.ingredientes)
+
+        return errors
+    }
+
     return (
+        <>
 
-        <FormContainerScroll >
+            {load &&
+                <LoadingOverlay />
+            }
 
-            <FormInput
-                onChange={(event) => { handleInput(event, 'nome') }}
-                autoFocus={focus}
-                value={values.nome}
-                placeholder='Nome'
-                returnKeyType="next"
-            />
+            <FormContainerScroll >
 
-            <FormInputTextArea
-                onChange={(event) => { handleInput(event, 'descricao') }}
-                placeholder='Descricao'
-                value={values.descricao}
-                returnKeyType='none'
-                multiline
-            />
+                <EditReceitaMutation ref={editRef} success={handleSucess} />
+                <AddReceitaMutation ref={addRef} success={handleSucess} />
+                <DeleteReceitaMutation ref={removeRef} success={handleSucess} />
+
+                <FormInput
+                    onChange={(event) => { handleInput(event, 'nome') }}
+                    autoFocus={focus}
+                    value={values.nome}
+                    placeholder='Nome'
+                    returnKeyType="next"
+                />
+
+                <FormInputTextArea
+                    onChange={(event) => { handleInput(event, 'descricao') }}
+                    placeholder='Descricao'
+                    value={values.descricao}
+                    returnKeyType='none'
+                    multiline
+                />
 
 
-            <CardInner>
-                <CardInnerTitle>Ingredientes</CardInnerTitle>
-                <Wrap>
-                    <FormInnerIngrediente add={handleNewIngrediente} active={addIgrediente} toggle={toggleIngrediente} />
+                <CardInner>
+                    <CardInnerTitle>Ingredientes</CardInnerTitle>
+                    <Wrap>
+                        <FormInnerIngrediente add={handleNewIngrediente} active={addIgrediente} toggle={toggleIngrediente} />
 
-                    {values.ingredientes && values.ingredientes.map((i) =>
-                        <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} />
+                        {values.ingredientes && values.ingredientes.map((i) =>
+                            <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} />
+                        )}
+                    </Wrap>
+                </CardInner>
+
+                <CardInner>
+                    <CardInnerTitle>Passo a passo</CardInnerTitle>
+
+                    {values.passos && values.passos.map((passo, i) =>
+                        <FormPasso item={passo} index={i} add={handleNewPasso} remove={less} />
                     )}
-                </Wrap>
-            </CardInner>
 
-            <CardInner>
-                <CardInnerTitle>Passo a passo</CardInnerTitle>
+                    <FormTouchableAdd hitSlop={{ top: 20, bottom: 20, left: 20, right: 100 }}>
+                        <RowInnerAdd onPress={more}>
+                            <InnerText>Adicionar</InnerText>
+                            <AddReceita style={{ backgroundColor: '#fff' }} />
+                        </RowInnerAdd>
+                    </FormTouchableAdd>
+                </CardInner>
 
-                {values.passos.map((passo, i) =>
-                    <FormPasso item={passo} index={i} add={handleNewPasso} remove={less} />
-                )}
-
-                <FormTouchableAdd hitSlop={{ top: 20, bottom: 20, left: 20, right: 100 }}>
-                    <RowInnerAdd onPress={more}>
-                        <InnerText>Adicionar</InnerText>
-                        <AddReceita style={{ backgroundColor: '#fff' }} />
-                    </RowInnerAdd>
-                </FormTouchableAdd>
-            </CardInner>
-
-            <FormButtonGroup style={{ marginBottom: 70 }}>
-                {/* <FormButton onPress={handleDelete} > */}
-                {edit ?
-                    <>
-                        <FormButton active={true} onPress={editReceita}>
-                            <FormButtonLabel active={true}>Editar</FormButtonLabel>
+                <FormButtonGroup style={{ marginBottom: 70 }}>
+                    {/* <FormButton onPress={handleDelete} > */}
+                    {edit ?
+                        <>
+                            <FormButton active={true} onPress={editReceita}>
+                                <FormButtonLabel active={true}>Editar</FormButtonLabel>
+                            </FormButton>
+                            <FormButton onPress={removeReceita}>
+                                <FormButtonLabel >Excluir</FormButtonLabel>
+                            </FormButton>
+                        </>
+                        :
+                        <FormButton active onPress={addReceita}  >
+                            <FormButtonLabel active disable={disable} style={{ opacity: disable ? 0.5 : 1 }}> Gravar</FormButtonLabel>
                         </FormButton>
-                        <FormButton  >
-                            <FormButtonLabel >Excluir</FormButtonLabel>
-                        </FormButton>
-                    </>
-                    :
-                    <FormButton active={true} onPress={addReceita}>
-                        <FormButtonLabel active={true}> Gravar</FormButtonLabel>
-                    </FormButton>
-                }
+                    }
 
-            </FormButtonGroup>
+                </FormButtonGroup>
 
-        </FormContainerScroll>
+            </FormContainerScroll>
+        </>
     )
 }
 

@@ -28,6 +28,10 @@ export default function PerRowConfig(props) {
     const renderItem = (data, rowMap) => (
         <SwipeRow
             disableLeftSwipe={parseInt(data.item.key) % 2 === 0}
+            friction={65}
+            directionalDistanceChangeThreshold={5}
+            leftActionValue={10}
+            rightActionValue={-10}
             leftOpenValue={130}
             rightOpenValue={-150}
             style={{ backgroundColor: '#dedede' }}

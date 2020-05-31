@@ -9,12 +9,17 @@ import AsyncStorage from '@react-native-community/async-storage';
 import List from '../telas/despensa/List'
 import { LoadingOverlay } from '../components/utils/Components'
 
+
 const ME = gql`
     query me{
         me {
             id
             email
+            firstName
+            lastName
             fullName    
+            username
+            email
             despensas {
                 id
                 nome
@@ -39,23 +44,22 @@ const ME = gql`
     }
 `;
 
-function Home({ navigation , route, handleNotifications}) {
+function Home({ navigation , route, handleNotifications, mount, handleMountFinish }) {
     
     const listRef = useRef()
 
     const { data, error, loading, refetch, subscribeToMore } = useQuery(ME);
 
-    let edit
-
-    console.log({p:route.params})
-
     if(route.params){
         console.log('re render')
+        setRefresh(true)
         listRef.current.refresh()
     } else {
         console.log('no re render')
     }
 
+    const [ edit, setEdit ] = useState(true)
+    const [ refresh, setRefresh ] = useState(mount)
     const [ loadingList, setLoadingList ] = useState(true)
     const [ despensasList, setdespensasList ] = useState()
 
@@ -64,30 +68,27 @@ function Home({ navigation , route, handleNotifications}) {
     }
 
     useEffect(() => {
-        if (data) {
+        if (data && refresh) {
+            console.log({refresh})
             console.log({data})
-            // console.log(data.me.despensas.length)
-            
-            if (data.me) {
+            console.log('refresh!')
+            // console.log(data.me.despensas.length)            
+            if (data.me && refresh) {
                 loadData()
                 handleNotifications(data.me.convites)
             }
         } else {
+            console.log({refresh})
             console.log({data})
-            if(!error){
-                refetch(data)
-            }
+            console.log('!refresh')
+            // if(!error && refresh){
+            //     refetch()
+            // }
             // setLoadingList(false)
+            // setRefresh(false)
+            setLoadingList(false)
         }
     }, [data])
-
-    useEffect(() => {
-        setLoadingList(true)
-    }, [edit])
-
-    useEffect(() => {
-        console.debug('render')
-    }, [route])
 
     useEffect(() => {
         if(error){
@@ -96,17 +97,21 @@ function Home({ navigation , route, handleNotifications}) {
         }
     }, [error])
 
-
     function reloadData(){
         loadData()
     }
 
     async function loadData(){
         
+        console.log("load DATA")
+
         let userData = {
             id: data.me.id,
             email: data.me.email,
             fullName: data.me.fullName,
+            firstName: data.me.firstName,
+            lastName: data.me.lastName,
+            username: data.me.username,
         }
 
         await AsyncStorage.setItem('@user', JSON.stringify(userData))
@@ -117,13 +122,18 @@ function Home({ navigation , route, handleNotifications}) {
 
             LocalStorage.storeDespensas(data.me.despensas)
                 .then((res) => {
-                    console.log({res})
+                    console.log('RESPONSE')
+                    console.log(JSON.stringify(res))
                     setLoadingList(false)
+                    setEdit(false)
+                    setRefresh(false)
+                    handleMountFinish()
                    
                 })
                 .catch((err) => {
-                    console.log(err)
+                    console.log(`Erro aqui: ${err}`)
                 })
+
         } catch(err) {
             console.error('Algo de errado não está certo', err)
         }
@@ -133,7 +143,7 @@ function Home({ navigation , route, handleNotifications}) {
         return <LoadingOverlay />
     }
 
-    return <List items={despensasList} callQueue={callQueue} edit={edit} reload={reloadData} ref={listRef}/>
+    return <List items={despensasList} callQueue={callQueue} edit={edit} ref={listRef}/>
     
 }
 

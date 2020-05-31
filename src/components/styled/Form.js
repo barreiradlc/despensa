@@ -28,13 +28,13 @@ export const FormLabel = styled.Text`
 `
   
 export const FormButton = styled.TouchableOpacity`
-    textAlign: left
-    background: ${props => props.active ? cor1 : cor4 }
-    flex: 1
-    elevation: ${props => props.flat ? 0 : 5 }
-    borderRadius: 10px
+  textAlign: left
+  background: ${props => props.active ? cor1 : cor4 }
+  flex: 1
+  elevation: ${props => props.flat ? 0 : 5 }
+  borderRadius: 10px
 `
-
+    
 export const FormButtonLabel = styled.Text`
   fontSize: 20px
   fontWeight: ${props => props.active ? 'bold' : 'normal' }
@@ -43,7 +43,6 @@ export const FormButtonLabel = styled.Text`
   marginVertical: 10px
   width: 100%
   padding: 10px
-  
 `
 
 export const FormButtonGroup = styled.View`
@@ -198,49 +197,49 @@ export const CardInner = styled.View`
   padding: 25px
   borderRadius: 10px
   elevation: ${props => props.flat ? 0 : 3 }
-`
+  `
   
-export const CardInnerTitle = styled.Text`
+  export const CardInnerTitle = styled.Text`
   fontSize: 20px
   fontWeight: bold
   marginBottom: 15px
-`
-    
-export const Wrap = styled.View`
-    flexWrap: wrap
-    flexDirection:row
-`
-
-export const RowInner = styled.TouchableOpacity`
-    backgroundColor:${cor1}
-    flexDirection:row
-    alignItems: center
-    justify-content: center
-    padding:5px
-    margin: 5px
-    height:50px
-    borderRadius:5px
-`
-export const RowInnerAdd = styled.TouchableOpacity`
-    backgroundColor:${cor1}
-    flexDirection:row
-    alignItems: flex-end
-    justify-content: flex-end
-    padding:5px
-    margin:  5px
-    borderRadius:5px
-`
-
-export const InnerText = styled.Text`
-    fontWeight: bold
+  `
+  
+  export const Wrap = styled.View`
+  flexWrap: wrap
+  flexDirection:row
+  `
+  
+  export const RowInner = styled.TouchableOpacity`
+  backgroundColor:${props => props.active ? cor1 : cor3 }
+  flexDirection:row
+  alignItems: center
+  justify-content: center
+  padding:5px
+  margin: 5px
+  height:50px
+  borderRadius:5px
+  `
+  export const RowInnerAdd = styled.TouchableOpacity`
+  backgroundColor:${cor1}
+  flexDirection:row
+  alignItems: flex-end
+  justify-content: flex-end
+  padding:5px
+  margin:  5px
+  borderRadius:5px
+  `
+  
+  export const InnerText = styled.Text`
+  fontWeight: bold
     alignSelf:center
     paddingHorizontal: 20px
     borderRadius: 15px
     color: #fff
-  `
+    `
 export const InnerHeader = styled.Text`
-    fontWeight: bold
-    alignSelf:flex-start
+fontWeight: bold
+alignSelf:flex-start
     
     borderRadius: 15px
     color: #555
