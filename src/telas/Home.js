@@ -81,12 +81,10 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
             console.log({refresh})
             console.log({data})
             console.log('!refresh')
+            setLoadingList(false)
             // if(!error && refresh){
             //     refetch()
             // }
-            // setLoadingList(false)
-            // setRefresh(false)
-            setLoadingList(false)
         }
     }, [data])
 
