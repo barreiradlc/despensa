@@ -86,9 +86,9 @@ function List(props, ref) {
                 })
     }
 
-    // if (loading) {
-    //     return <LoadingOverlay />
-    // }
+    if (loading) {
+        return <LoadingOverlay />
+    }
 
     function navigateEstoque(despensa) {
         navigation.navigate('Estoque', {

@@ -38,7 +38,7 @@ function SearchUser({ route, navigation }) {
     const client = useApolloClient()
     const [aguarde, setAguarde] = useState(false)
     const [query, setQuery] = useState('')
-    const [user, setUser] = useState('')
+    const [user, setUser] = useState()
 
     const { data, error, loading, refetch, subscribeToMore } = useQuery(SEARCH_USERS, {variables: {q: query}});
     const [sendConvite] = useMutation(CREATE_CONVITE, { variables: { id: focus } });
@@ -63,13 +63,15 @@ function SearchUser({ route, navigation }) {
     }
 
     async function handleSubmit() {
+
+        console.log(user)
         setAguarde(true)
         console.log(focus)
         sendConvite({
             variables: {
                 id: Number(focus),
                 convite: {
-                    mensagem: `${user.email} lhe convidou para fazer parte da despensa ${despensa.nome}`,
+                    mensagem: `${user.fullName || user.email} lhe convidou para fazer parte da despensa ${despensa.nome}`,
                     despensaId: despensa.id
                 }
             }
@@ -82,25 +84,33 @@ function SearchUser({ route, navigation }) {
                 console.debug(response)
             })
             .catch((err) => {
+                setAguarde(false)
                 console.debug(err)
             })
-    }
-    
-    async function handleSelect(e) {
-        console.log('INDO')
-        setFocus(user.id)
-        console.log('FOI')
-    }
-
-    useEffect(() => {
-        if(query.length > 2){
-            refetch(null, {variables: { q: query }})
         }
-        console.log(data)
-    }, [query])
-    
-    async function handleSearch(e) {
-        setQuery(e.nativeEvent.text)
+        
+        async function handleSelect(user) {
+            console.log('INDO')
+            setFocus(user.id)
+            console.log('FOI')
+        }
+        
+        useEffect(() => {
+            if(query.length > 2){
+                refetch(null, {variables: { q: query }})
+            }
+            console.log(data)
+        }, [query])
+        
+        useEffect(() => {
+            if(error){
+                setAguarde(false)
+                Utils.sweetalert()
+            }
+        }, [error])
+        
+        async function handleSearch(e) {
+            setQuery(e.nativeEvent.text)
         setFocus()
     }
     
@@ -124,10 +134,11 @@ function SearchUser({ route, navigation }) {
                     />
 
 
-                {loading && !data ?
+                {loading &&
                     <LoadingSmall />                
-                :
-                data && data.users.map((u) =>
+                }
+
+                {!loading && data && data.users && data.users.map((u) =>
                     user.id !== u.id &&
                         <FormButton key={u.id} flat onPress={() => handleSelect(u) } >
                             <CardInner flat active={focus === u.id} >

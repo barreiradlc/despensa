@@ -81,7 +81,7 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
             console.log({refresh})
             console.log({data})
             console.log('!refresh')
-            setLoadingList(false)
+            // setLoadingList(false)
             // if(!error && refresh){
             //     refetch()
             // }
@@ -125,8 +125,7 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
                     setLoadingList(false)
                     setEdit(false)
                     setRefresh(false)
-                    handleMountFinish()
-                   
+                    handleMountFinish()                   
                 })
                 .catch((err) => {
                     console.log(`Erro aqui: ${err}`)
@@ -137,9 +136,9 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
         }
     }
 
-    if (loadingList) {
-        return <LoadingOverlay />
-    }
+    // if (loadingList) {
+    //     return <LoadingOverlay />
+    // }
 
     return <List items={despensasList} callQueue={callQueue} edit={edit} ref={listRef}/>
     
