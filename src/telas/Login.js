@@ -109,7 +109,7 @@ function Login({ navigation }) {
     function handleLogin() {
         const credentials = {
             password: user.password,
-            email: user.email,
+            username: user.username,
         }
 
         if (user.password && user.username) {

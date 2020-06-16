@@ -99,7 +99,7 @@ def enableSeparateBuildPerCPUArchitecture = true
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = true
+def enableProguardInReleaseBuilds = false
 
 /**
  * The preferred build flavor of JavaScriptCore.
@@ -134,10 +134,8 @@ android {
         applicationId "br.com.despensa"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 26
-
-        
-        versionName "1.0.26"
+        versionCode 28
+        versionName "1.0.28"
     }
     splits {
         abi {

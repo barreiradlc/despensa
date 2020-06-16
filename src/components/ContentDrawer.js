@@ -91,8 +91,8 @@ function ContentDrawer({navigation, route}){
         <DrawerItem bg label={`Bem vindo(a) ${user.fullName}\n \n${user.email}`} handleFunction={() =>  console.log('nada')}  />
         
         <DrawerItem label='Home' icon='home' handleFunction={handleHome} />
-        <DrawerItem label='Editar Perfil' icon='user' handleFunction={handleProfile} />
-        <DrawerItem label='Receitas Disponiveis' icon='star-o' handleFunction={handleListReceitasPossiveis} />
+        <DrawerItem label='Editar perfil' icon='user' handleFunction={handleProfile} />
+        <DrawerItem label='Receitas possíveis' icon='star-o' handleFunction={handleListReceitasPossiveis} />
         {/* <DrawerItem label='Favoritos' icon='star-o' handleFunction={handleSoon} />
         <DrawerItem label='Lista de compras' icon='th-list' handleFunction={handleSoon} /> */}
         <DrawerItem label='Sair' icon='power-off' handleFunction={handleSair} />
