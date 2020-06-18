@@ -15,6 +15,11 @@ moment.locale('pt-br');         // :|
 
 export default function PerRowConfig(props) {
 
+    let currentTime = new Date();
+
+    currentTime = currentTime.setDate(currentTime.getDate()+14)
+
+    let twoWeeks = new Date(currentTime)
 
     const closeRow = (rowMap, rowKey) => {
         console.log(rowMap)
@@ -75,7 +80,7 @@ export default function PerRowConfig(props) {
                     <CardRow>
                         <CardBody>{data.item.quantidade} unidade{data.item.quantidade > 1 && 's'}</CardBody>
                         {data.item.validade && 
-                            <CardBody>expira em: {moment(data.item.validade).format('L')}</CardBody>
+                            <CardBody vencimento={twoWeeks > data.item.validade}> expira em: {moment(data.item.validade).format('L')}</CardBody>
                         }
                     </CardRow>
                 </Card>

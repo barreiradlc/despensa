@@ -2,12 +2,24 @@ import Realm from 'realm'
 import { uuid } from '../components/utils/Utils'
 import realm from '../config/realm'
 
+export async function getItemsVencimento() {
+    let currentTime = new Date();
+
+    currentTime = currentTime.setDate(currentTime.getDate()+14)
+
+    let twoWeeks = new Date(currentTime)
+
+    console.debug({twoWeeks})
+
+    return await realm.objects('Item').filtered('validade <= $0', twoWeeks)
+}
+
 export async function getProvimentos() {
     return await realm.objects('Provimento')
 }
 
 export async function getProvimento(i) {
-    return await realm.objects('Provimento').filtered('id = $0', Number(i.provimento.id))[0]
+    return await realm.objects('Provimento').filtered('id = $0 or nome = $1', Number(i.provimento.id) ,i.provimento.nome)[0]
 }
 
 
@@ -63,6 +75,11 @@ export async function getDespensas() {
     console.debug(list.length)
 
     return list
+}
+
+export function getDespensaByUuid(uuid) {
+    // let realm = await getRealm()    
+    return realm.objectForPrimaryKey('Despensa', uuid)
 }
 
 export async function getDespensaItems(uuid, local) {
@@ -392,8 +409,7 @@ export async function storeDespensas(despensas) {
                     if (!provimentoLocal) {
                         provimentoLocal = await saveProvimento(item)
                     }
-
-                
+                                
                     const today = new Date()
 
                     console.log('itemLocal?', item.uuid)

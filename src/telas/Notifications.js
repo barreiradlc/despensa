@@ -1,15 +1,11 @@
-import React, { useState } from 'react'
-import { UserLabel, CardInner, FormInputTextArea, FormInputReadOnly, Facebook, FormButtonLabel, FormButtonGroup, FormAsset, FormButton, FormContainerScroll, FormIconContainer, FormInput, FormLabel, FormTouchableItem, FormTouchableIcon, Google } from '../components/styled/Form'
-import { UserItem, HeaderTouchable, MenuItem, Container, Float, FloatTitle, FloatTouchable, Plus } from '../components/styled/Geral';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import moment from 'moment'
-import * as LocalStorage from '../services/LocalStorage'
-import * as Utils from '../components/utils/Utils'
-import { Alert } from 'react-native'
-import gql from 'graphql-tag';
-import { LoadingOverlay } from '../components/utils/Components'
-import { useMutation, useQuery, useApolloClient } from '@apollo/react-hooks';
+import { useApolloClient, useMutation } from '@apollo/react-hooks';
 import AsyncStorage from '@react-native-community/async-storage';
+import gql from 'graphql-tag';
+import React, { useEffect, useState } from 'react';
+import { CardInner, FormButton, FormButtonGroup, FormButtonLabel, FormContainerScroll, RowInner, UserLabel, Wrap, InnerText } from '../components/styled/Form';
+import { LoadingOverlay } from '../components/utils/Components';
+import * as Utils from '../components/utils/Utils';
+import * as LocalStorage from '../services/LocalStorage';
 
 const HANDLE_CONVITE = gql`
     mutation handleConvite($id: Int, $aceita: Boolean!){
@@ -32,18 +28,68 @@ const HANDLE_CONVITE = gql`
     }
 `;
 
-
-
 function Notifications({ route, navigation, handleNotifications }) {
 
-    const { despensa, notifications } = route.params
+    const { despensa, notifications, itensVencimento } = route.params
 
     const client = useApolloClient()
     const [notificationList, setNotificationList] = useState(notifications)
+    const [despensasVencimento, setDespensasVencimento] = useState(notifications)
     const [user, setUser] = useState('')
     const [aguarde, setAguarde] = useState(false)
 
     const [sendResposta, { data, loading }] = useMutation(HANDLE_CONVITE, { variables: { id: focus } });
+
+    function getDespensa(uuid) {
+        return LocalStorage.getDespensaByUuid(uuid)            
+    }
+
+    function handleNavigateDespensa(despensa){
+        navigation.navigate('Estoque', {
+            despensa,
+            uuid: despensa.uuid
+        })
+    }
+
+    useEffect(() => {
+        let list = []
+
+        itensVencimento.map((i) => {
+            let add = list.filter((l) => l.uuid === i.despensaUuid)[0]
+            let despensaLocal = getDespensa(i.despensaUuid)
+
+            if (!add) {
+                list.push({
+                    uuid: i.despensaUuid,
+                    despensaLocal,
+                    items: [
+                        i
+                    ]
+                })
+            } else {                
+                console.log('LIST2')
+                console.log(list)
+                list.map((l) => {
+                    console.log(l.uuid, i.despensaUuid)
+                    if (l.uuid === i.despensaUuid) {
+                        l.items.push(i)
+                    }
+                })
+            }
+        })
+
+        setDespensasVencimento(list)
+        // getItemsVencimento()
+    }, [])
+
+    // function getItemsVencimento(){
+    //     LocalStorage.getItemsVencimento()        
+    //         .then(( res ) => {
+    //             console.debug('items vencimento')
+    //             console.debug(res)
+    //             console.debug('items')
+    //         })
+    // }
 
     navigation.setOptions({
         title: `Notificações`
@@ -73,10 +119,10 @@ function Notifications({ route, navigation, handleNotifications }) {
                 aceita: value
             }
         })
-        .then((response) => {
+            .then((response) => {
                 setAguarde(false)
                 console.debug(response)
-                let newList = notificationList.filter(( n ) => n.id !== focus)
+                let newList = notificationList.filter((n) => n.id !== focus)
                 setNotificationList(newList)
                 route.params.handleNotifications(newList)
                 LocalStorage.storeDespensas([response.data.responseConviteMutation.response])
@@ -100,41 +146,70 @@ function Notifications({ route, navigation, handleNotifications }) {
 
     getUser()
 
+
     return (
-            <FormContainerScroll>
+        <FormContainerScroll>
 
-                {aguarde &&
-                    <LoadingOverlay />
-                }
+            {aguarde &&
+                <LoadingOverlay />
+            }
 
-                {notificationList.map((u) =>
+            {notificationList.map((u) =>
 
-                    <FormButton key={u.id} flat onPress={() => handleSelect(u)} >
-                        <CardInner flat active={focus === u.id} >
-                            <UserLabel active={focus === u.id} >{u.mensagem}</UserLabel>
-                            <UserLabel active={focus === u.id} >{u.email}</UserLabel>
+                <FormButton key={u.id} flat onPress={() => handleSelect(u)} >
+                    <CardInner flat active={focus === u.id} >
+                        <UserLabel active={focus === u.id} >{u.mensagem}</UserLabel>
+                        <UserLabel active={focus === u.id} >{u.email}</UserLabel>
 
-                            {focus === u.id &&
-                                <FormButtonGroup>
-                                    <FormButton onPress={() => handleSubmit(true)}>
-                                        <FormButtonLabel>
-                                            Aceitar
+                        {focus === u.id &&
+                            <FormButtonGroup>
+                                <FormButton onPress={() => handleSubmit(true)}>
+                                    <FormButtonLabel>
+                                        Aceitar
                                         </FormButtonLabel>
-                                    </FormButton>
-                                    <FormButton active onPress={() => handleSubmit(false)}>
-                                        <FormButtonLabel active>
-                                            Recusar
+                                </FormButton>
+                                <FormButton active onPress={() => handleSubmit(false)}>
+                                    <FormButtonLabel active>
+                                        Recusar
+                                        </FormButtonLabel>
+                                </FormButton>
+                            </FormButtonGroup>
+                        }
+
+
+                    </CardInner>
+
+                </FormButton>
+            )}
+
+            {despensasVencimento.map((d) =>
+                <FormButton style={{ paddingVertical: 20 }}>
+
+                    <UserLabel style={{ fontSize: 18 }}> Se atente à suas despensas,{'\n'} {d.despensaLocal.nome} possui o{d.items.length > 1 && 's'} seguinte{d.items.length > 1 && 's'} ite{d.items.length > 1 ? 'ns' : 'm'}:</UserLabel>
+
+                    <Wrap>
+                        {d.items.map((i) =>
+                            <RowInner active>
+                                <InnerText>
+                                    {i.provimento.nome}
+                                </InnerText>
+                            </RowInner>
+                        )}
+                    </Wrap>
+                    <UserLabel style={{ fontSize: 18 }}> próximo{d.items.length > 1 && 's'} a seu vencimento</UserLabel>
+                                <FormButtonGroup>
+                                    <FormButton onPress={() => handleNavigateDespensa(d.despensaLocal)} >
+                                        <FormButtonLabel>
+                                            Ver despensa
                                         </FormButtonLabel>
                                     </FormButton>
                                 </FormButtonGroup>
-                            }
 
-                        </CardInner>
+                </FormButton>
+            )}
 
-                    </FormButton>
-                )}
 
-            </FormContainerScroll>
+        </FormContainerScroll>
     )
 }
 

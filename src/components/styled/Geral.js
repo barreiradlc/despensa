@@ -166,7 +166,8 @@ export const FloatHome = styled.View`
     textAlign: center
     `
     export const CardBody = styled.Text`
-    
+        color: ${props => props.vencimento ? cor1 : cor5 };
+        fontWeight: bold
     `
     export const CardRow = styled.View`
     flexDirection: row

@@ -9,8 +9,8 @@ import CardErros from "../components/CardErros";
 
 import { FormContainerScroll, Facebook, FormButtonLabel, FormButtonGroup, FormAsset, FormButton, FormContainer, FormIconContainer, FormInput, FormLabel, FormTouchable, FormTouchableIcon, Google } from '../components/styled/Form'
 import { LoadingOverlay } from '../components/utils/Components'
-import * as Utils from '../components/utils/Utils'
 import { uri } from '../components/apollo'
+import * as Utils from '../components/utils/Utils'
 import * as LocalStorage from '../services/LocalStorage'
 import realm from '../config/realm'
 

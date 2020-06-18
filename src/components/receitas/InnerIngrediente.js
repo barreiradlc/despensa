@@ -18,10 +18,10 @@ function InnerIngrediente({ toggle, item, remove, show, storage }) {
 
     function getStorageIngrediente(i){
         LocalStorage.getProvimento(i)
-            .then(( res ) => {
-                if(res){
-                    if(res.id){
-                        console.log(res.id)
+        .then(( res ) => {
+            
+            if(res){
+                if(res.id || res.nome){
                         setActive(true)
                     }
                     console.log('a')
@@ -40,10 +40,9 @@ function InnerIngrediente({ toggle, item, remove, show, storage }) {
 
     return (
         <RowInner active={active}>
-            <FormTouchableItem onPress={edit}>
-                <InnerText>{qtd > 1 && `${qtd}x `}{nome}</InnerText>
-            </FormTouchableItem>
-
+            
+            <InnerText>{qtd > 1 && `${qtd}x `}{nome}</InnerText>
+            
             {!show && 
                 <FormTouchableItem onPress={() => remove(item) }  hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
                     <RemoveReceita />

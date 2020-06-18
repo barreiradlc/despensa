@@ -294,7 +294,7 @@ function ShowReceita({ route, navigation }) {
                     <Wrap>
 
                         {values.ingredientes && values.ingredientes.map((i) =>
-                            <InnerIngrediente  update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show />
+                            <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show />
                         )}
                     </Wrap>
                 </CardInner>

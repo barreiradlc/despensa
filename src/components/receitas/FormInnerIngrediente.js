@@ -41,7 +41,7 @@ function FormInnerIngrediente({ active, toggle, add }) {
 
     if (!active) {
         return (
-            <RowInner>
+            <RowInner active>
                 <MoreIngredient onPress={toggle} >
                     <AddReceita />
                 </MoreIngredient>

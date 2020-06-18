@@ -25,7 +25,7 @@ function ShowPasso({ active, toggle, add, index, item }) {
 
     return (
         <>
-            <InnerHeader >Passo {item.posicao + 1}:  {`\n${nome} \n\n`}</InnerHeader>
+            <InnerHeader >Passo {item.posicao}:  {`\n${nome} \n\n`}</InnerHeader>
         </>
     )
 }

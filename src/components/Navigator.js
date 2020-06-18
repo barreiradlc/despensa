@@ -29,6 +29,8 @@ const logo = '../assets/despensa.png'
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+import * as LocalStorage from '../services/LocalStorage'
+
 function Sair({navigation}){
 
   function handleSair(){
@@ -65,17 +67,28 @@ function Sair({navigation}){
 function HomeScreen({ navigation }) {
 
   const [ conviteList, setConviteList ] = React.useState([])
+  const [ itensVencimento, setItensVencimento ] = React.useState([])
   const [ mount, setMount ] = React.useState(true)
+
+  React.useEffect(() => {
+    LocalStorage.getItemsVencimento()        
+    .then(( res ) => {
+      console.log("LIST VENCIMENTO")
+      setItensVencimento(res)
+    })
+  },[])
 
   function handleNotifications(convites){
     console.log('Olar')
     console.debug(convites)
+    
     setConviteList(convites)
   }
 
   function handleNavigateNotifications(){
     navigation.navigate('Notifications', {
       notifications: conviteList,
+      itensVencimento,
       handleNotifications
     })
   }
@@ -93,7 +106,7 @@ function HomeScreen({ navigation }) {
     headerRight: () => ( 
         <HeaderTouchable onPress={handleNavigateNotifications}>
             <HeaderContainer>
-                {conviteList && conviteList.length > 0 && 
+                {(itensVencimento.length > 0 || conviteList.length > 0) && 
                   <HeaderBadge/>
                 }
                 <HomeNotifications /> 
