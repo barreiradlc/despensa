@@ -3,7 +3,7 @@ import { FormTouchableItem, InnerText, RowInner } from '../styled/Form'
 import { RemoveReceita } from '../styled/Geral'
 import * as LocalStorage  from '../../services/LocalStorage'
 
-function InnerIngrediente({ toggle, item, remove, show, storage }) {
+function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage }) {
 
     const [active, setActive] = useState(false)
     const [input, setInput] = useState()
@@ -36,10 +36,8 @@ function InnerIngrediente({ toggle, item, remove, show, storage }) {
         console.log('edit')
     }
 
-    console.log({storage})
-
     return (
-        <RowInner active={active}>
+        <RowInner active={active} onPress={() => snackCompras(item)} onLongPress={() => console.log('LoongPress') }>
             
             <InnerText>{qtd > 1 && `${qtd}x `}{nome}</InnerText>
             

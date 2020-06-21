@@ -3,7 +3,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { Alert } from 'react-native';
+import { Snackbar } from 'react-native-paper'
 
+
+import SnackBar from '../../components/utils/SnackBar'
+import AlertConfig from '../../components/utils/AlertConfig'
 import DeleteReceitaMutation from '../../components/mutations/DeleteReceitaMutation';
 import InnerIngrediente from '../../components/receitas/InnerIngrediente';
 import ShowPasso from '../../components/receitas/ShowPasso';
@@ -103,8 +107,13 @@ function ShowReceita({ route, navigation }) {
     }
 
     const [provimentos, setProvimentos] = useState([]);
+    const [despensas, setDespensas] = useState([]);
+    const [despensaAtiva, setDespensaAtiva] = useState();
     const [user, setUser] = useState(true);
     const [load, setLoad] = useState(true);
+    const [configVisible, setConfigVisible] = useState(false);
+    const [snackVisible, setSnackVisible] = useState(false);
+    const [snackVisibleSelect, setSnackVisibleSelect] = useState('');
     const [addIgrediente, setAddIngrediente] = useState(false);
     const [values, setValues] = useState(INITIAL_VALUES)
 
@@ -116,9 +125,10 @@ function ShowReceita({ route, navigation }) {
         }
     }, [data])
 
-    // useEffect(() => {
-    //     getProvimentos()
-    // }, [])
+    useEffect(() => {
+        // getProvimentos()
+        getUltimaDespensa()
+    }, [])
 
     // function getProvimentos(){
     //     LocalStorage.getProvimentos()
@@ -131,11 +141,11 @@ function ShowReceita({ route, navigation }) {
     //         })
     // }
 
-    function getStorageIngrediente(i){
+    function getStorageIngrediente(i) {
         LocalStorage.getProvimento(i)
-            .then(( res ) => {
-                if(res){
-                    if(res.id){
+            .then((res) => {
+                if (res) {
+                    if (res.id) {
                         console.log(res.id)
                         return res.id
                     }
@@ -143,7 +153,7 @@ function ShowReceita({ route, navigation }) {
                 }
                 return false
             })
-            .catch(( err ) => {
+            .catch((err) => {
                 return false
                 console.debug(err)
             })
@@ -153,6 +163,25 @@ function ShowReceita({ route, navigation }) {
         const u = await AsyncStorage.getItem('@user');
         console.log({ u })
         setUser(JSON.parse(u))
+    }
+
+    async function getUltimaDespensa() {
+        const despensaAtivaLocal = await AsyncStorage.getItem('@despensaAtiva');
+
+        LocalStorage.getDespensas()
+            .then(( despensas ) => {
+                console.debug(despensas)
+                setDespensas(despensas)
+
+                if(!despensaAtivaLocal){
+                    AsyncStorage.setItem('@despensaAtiva', despensas[0].uuid);
+                    setDespensaAtiva(despensas[0].uuid)
+                } else {
+                    setDespensaAtiva(despensaAtivaLocal)
+                }
+                
+                console.log({ despensaAtivaLocal })
+            })        
     }
 
     function handleInput(event, attr) {
@@ -272,6 +301,42 @@ function ShowReceita({ route, navigation }) {
         Utils.sweetalert('', 'success', `\n\n\nReceita removida com sucesso`)
     }
 
+    function configsLista(){
+        setConfigVisible(true)
+    }
+
+    function clickSnackBar(config) {
+        if(config){
+            configsLista()
+            console.debug('Configurar')
+        }
+        setSnackVisible(false)
+    }
+
+    function snackCompras(item) {
+        setSnackVisibleSelect(item.provimento.nome)
+        setSnackVisible(true)
+
+        if(snackVisible){
+            if(snackVisibleSelect === item.provimento.nome){
+                console.log('ADD: ', snackVisibleSelect)
+            }
+            console.log(snackVisibleSelect, item.provimento.nome)
+        }
+    }
+
+    async function handleConfigDialog(qtd, despensa){
+        console.debug({qtd, despensa, snackVisibleSelect})        
+        setConfigVisible(false)
+        handleListaCompressAdd({qtd, despensa})
+    }
+    
+    async function handleListaCompressAdd({qtd, despensa}){
+        console.debug({qtd, despensa, snackVisibleSelect})
+        await AsyncStorage.setItem('@despensaAtiva', despensa);
+        setDespensaAtiva(despensa)
+    }
+
     if (loading) {
         return <LoadingOverlay />
     }
@@ -282,6 +347,32 @@ function ShowReceita({ route, navigation }) {
             {/* {load &&
                 <LoadingOverlay />
             } */}
+
+            {/* <Snackbar
+                visible={snackVisible}
+                // onDismiss={() => setSnackVisible(false)}
+                onDismiss={() => clickSnackBar()}
+                duration={3000}
+
+                action={{
+                    label: 'Configurar',
+                    onPress: (e) => {
+                        // Do something
+                        console.log("UAI")
+                        clickSnackBar(e)
+                    },
+                }}
+            >
+                Clique novamente para adicionar uma unidade de {snackVisibleSelect} à sua lista de compras vinculado a geladeira, ou configure aqui.
+            </Snackbar> */}
+
+            {despensas.length > 0 && configVisible &&
+                <AlertConfig handleConfigDialog={handleConfigDialog} despensas={despensas} despensaAtiva={despensaAtiva} configVisible={configVisible} />
+            }                            
+
+            {despensas.length > 0 && snackVisible && 
+                <SnackBar clickSnackBar={clickSnackBar} despensaAtiva={despensas.filter(( d ) => d.uuid === despensaAtiva)[0]} />
+            }                                    
 
             <FormContainerScroll >
 
@@ -294,7 +385,7 @@ function ShowReceita({ route, navigation }) {
                     <Wrap>
 
                         {values.ingredientes && values.ingredientes.map((i) =>
-                            <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show />
+                            <InnerIngrediente snackCompras={snackCompras} update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show />
                         )}
                     </Wrap>
                 </CardInner>
@@ -321,7 +412,7 @@ function ShowReceita({ route, navigation }) {
                     </FormButtonGroup>
                     :
                     <CardInnerTitle style={{ lineHeight: 35, fontSize: 15 }}>Receita enviada por: {'\n'}
-                        <CardInnerTitle style={{ lineHeight: 25,fontSize: 20 }} >{values.user.fullName || values.user.email }</CardInnerTitle>
+                        <CardInnerTitle style={{ lineHeight: 25, fontSize: 20 }} >{values.user.fullName || values.user.email}</CardInnerTitle>
                     </CardInnerTitle>
                 }
 

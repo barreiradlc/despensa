@@ -2,6 +2,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 import * as React from 'react';
+import { Provider as PaperProvider } from 'react-native-paper';
 
 import { ApolloProvider } from 'react-apollo';
 import { YellowBox } from 'react-native';
@@ -36,7 +37,9 @@ function App() {
   return (
     <UserProvider>
       <ApolloProvider client={client} >
-        <Navigator token={token} />
+        <PaperProvider>
+          <Navigator token={token} />
+        </PaperProvider>
         {/* <QueueProcess /> */}
       </ApolloProvider>
     </UserProvider>

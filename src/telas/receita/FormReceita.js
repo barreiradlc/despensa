@@ -191,6 +191,13 @@ function FormReceita({ route, navigation }) {
         removeRef.current.mutate(values)
     }
 
+    function snackCompras(item) {
+        console.log('ITEM A CONFIGURAR')
+        console.log(item)
+        console.log('ITEM A CONFIGURAR')
+    }
+
+
     function removeReceita() {
         Alert.alert(
             'Atenção',
@@ -271,7 +278,7 @@ function FormReceita({ route, navigation }) {
                 <CardInner>
                     <CardInnerTitle>Ingredientes</CardInnerTitle>
                     <Wrap>
-                        <FormInnerIngrediente add={handleNewIngrediente} active={addIgrediente} toggle={toggleIngrediente} />
+                        <FormInnerIngrediente snackCompras={snackCompras} add={handleNewIngrediente} active={addIgrediente} toggle={toggleIngrediente} />
 
                         {values.ingredientes && values.ingredientes.map((i) =>
                             <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} />
