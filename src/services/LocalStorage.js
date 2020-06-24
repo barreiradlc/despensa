@@ -2,6 +2,36 @@ import Realm from 'realm'
 import { uuid } from '../components/utils/Utils'
 import realm from '../config/realm'
 
+export async function checkItemListaCompras(item, despensa){
+    
+}
+
+export async function addItemListaCompras(item, despensa){
+    console.debug("ADD", item, " em ", despensa)
+
+    let despensaLocal = await realm.objectForPrimaryKey('Despensa', despensa)
+    let provimentoLocal = await realm.objects('Provimento').filtered('id = $0', Number(item.id))[0]
+
+    if(!provimentoLocal){
+        console.log('ADD')
+        saveProvimento({provimento: item})
+    }
+
+    getProvimentoCompras({provimento:item})
+        .then((update) => {
+            console.debug({update})
+            
+            if(!update){
+                newItemCompras(item.nome, despensa)
+                return "new"
+            } else {
+                addCompras(update, despensaLocal)
+                return "update"
+            }
+        })    
+
+}
+
 export async function getItemsVencimento() {
     let currentTime = new Date();
 
@@ -19,7 +49,12 @@ export async function getProvimentos() {
 }
 
 export async function getProvimento(i) {
-    return await realm.objects('Provimento').filtered('id = $0 or nome = $1', Number(i.provimento.id) ,i.provimento.nome)[0]
+    return await realm.objects('Item').filtered('provimento.id = $0 or provimento.nome = $1', Number(i.provimento.id) ,i.provimento.nome)[0]
+}
+
+export async function getProvimentoCompras(i) {
+    console.log("COMPRAS", i.provimento)
+    return await realm.objects('ItemCompras').filtered('provimento.id = $0 or provimento.nome = $1', Number(i.provimento.id) ,i.provimento.nome)[0]
 }
 
 
@@ -113,6 +148,18 @@ export async function changeQTD(data, action) {
         despensaLocal.fila = true
     })
     return despensaLocal
+}
+
+export async function addCompras(data, despensaLocal) {
+    
+    let itemLocal = realm.objectForPrimaryKey('ItemCompras', data.uuid)
+
+    realm.write(() => {        
+        itemLocal.quantidade++        
+    })
+
+    console.debug(itemLocal)
+    console.debug(itemLocal.quantidade)
 }
 
 async function getItemPerUuid(uuid) {
@@ -239,6 +286,41 @@ export async function editItem(item, despensaUuid) {
         itemLocal
     }
 }
+
+export async function newItemCompras(item, despensaUuid) {
+    // let realm = await getRealm()
+
+    let today = new Date()
+    let despensaLocal = realm.objects('Despensa').filtered('uuid = $0', despensaUuid)[0]
+    let provimentoLocal = realm.objects('Provimento').filtered('nome = $0', item)[0]
+
+    if (!provimentoLocal) {
+        provimentoLocal = {
+            nome: item.trim()
+        }
+    }
+
+    const attrs = {
+        uuid: uuid(),
+        // id: parseInt(item.id),
+        despensaUuid: despensaLocal.uuid,
+        quantidade: 1,
+        provimento: provimentoLocal,
+        dataAlteracao: today,
+        done: false
+    }
+
+    realm.write(async () => {
+        await despensaLocal.compras.push(attrs)
+    })
+
+    return {
+        despensaLocal,
+        attrs
+    }
+
+}
+
 
 export async function newItem(item, despensaUuid) {
     // let realm = await getRealm()

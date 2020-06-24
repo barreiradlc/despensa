@@ -5,7 +5,6 @@ import { useQuery } from '@apollo/react-hooks';
 import { Alert } from 'react-native';
 import { Snackbar } from 'react-native-paper'
 
-
 import SnackBar from '../../components/utils/SnackBar'
 import AlertConfig from '../../components/utils/AlertConfig'
 import DeleteReceitaMutation from '../../components/mutations/DeleteReceitaMutation';
@@ -75,10 +74,12 @@ mutation addReceita($receita: ReceitaInput!) {
 function ShowReceita({ route, navigation }) {
 
     const removeRef = useRef()
+    // const ingredientesRef = useRef()
 
     const { id, nome } = route.params
 
     const { data, error, loading, refetch, subscribeToMore } = useQuery(GET, { variables: { id: id } });
+
 
     const { edit, receita } = route.params;
 
@@ -106,6 +107,7 @@ function ShowReceita({ route, navigation }) {
         }
     }
 
+    const [ingredientesRef, setIngredientesRef] = useState([]);
     const [provimentos, setProvimentos] = useState([]);
     const [despensas, setDespensas] = useState([]);
     const [despensaAtiva, setDespensaAtiva] = useState();
@@ -120,6 +122,7 @@ function ShowReceita({ route, navigation }) {
     useEffect(() => {
         if (data) {
             setValues(data.receita)
+            // handleUpdateRefs()
             setLoad(false)
             getUser()
         }
@@ -130,13 +133,28 @@ function ShowReceita({ route, navigation }) {
         getUltimaDespensa()
     }, [])
 
+    useEffect(() => {
+        // getProvimentos()
+        // handleUpdateRefs()
+
+        // console.log(values)
+        // if(values.ingredientes){
+        //     const ingredientesRefList = values && values.ingredientes.map(( i ) => {
+        //         return useRef()
+        //     }) //useRef()            
+        //     setIngredientesRef(ingredientesRefList)        
+        // }
+    }, [values])
+
+
+
     // function getProvimentos(){
     //     LocalStorage.getProvimentos()
     //         .then(( p ) => {
     //             console.debug(p)
     //             setProvimentos(p)
     //         })
-    //         .catch(( e ) => {
+    //         .catch(( e ) => {    
     //             console.log(e)
     //         })
     // }
@@ -169,19 +187,19 @@ function ShowReceita({ route, navigation }) {
         const despensaAtivaLocal = await AsyncStorage.getItem('@despensaAtiva');
 
         LocalStorage.getDespensas()
-            .then(( despensas ) => {
+            .then((despensas) => {
                 console.debug(despensas)
                 setDespensas(despensas)
 
-                if(!despensaAtivaLocal){
+                if (!despensaAtivaLocal) {
                     AsyncStorage.setItem('@despensaAtiva', despensas[0].uuid);
                     setDespensaAtiva(despensas[0].uuid)
                 } else {
                     setDespensaAtiva(despensaAtivaLocal)
                 }
-                
+
                 console.log({ despensaAtivaLocal })
-            })        
+            })
     }
 
     function handleInput(event, attr) {
@@ -301,38 +319,67 @@ function ShowReceita({ route, navigation }) {
         Utils.sweetalert('', 'success', `\n\n\nReceita removida com sucesso`)
     }
 
-    function configsLista(){
+    function configsLista() {
         setConfigVisible(true)
     }
 
     function clickSnackBar(config) {
-        if(config){
+        if (config) {
             configsLista()
             console.debug('Configurar')
         }
         setSnackVisible(false)
     }
 
-    function snackCompras(item) {
-        setSnackVisibleSelect(item.provimento.nome)
-        setSnackVisible(true)
+    function handleAddItemListaCompras() {
 
-        if(snackVisible){
-            if(snackVisibleSelect === item.provimento.nome){
+        // handleUpdateRefs()
+
+        LocalStorage.addItemListaCompras(snackVisibleSelect, despensaAtiva)
+            .then((res) => {
+                ingredientesRef.map((i, index) => {
+                    i.current.reload()
+                })
+                const labelDespensa = despensas.filter((d) => d.uuid === despensaAtiva)[0]
+
+                console.debug('LABEL', labelDespensa)
+                if (res == 'new') {
+                    Utils.toast(`${snackVisibleSelect.nome} adicionado(a) a lista de compras ${labelDespensa.nome}`, 'bottom')
+                } else {
+                    Utils.toast(`${snackVisibleSelect.nome} abastecido(a) em sua lista de compras ${labelDespensa.nome}`, 'bottom')
+                }
+            })
+    }
+
+    function snackCompras(item) {
+        setSnackVisibleSelect({
+            nome: item.provimento.nome,
+            id: item.provimento.id
+        })
+
+        setSnackVisible(true)
+        
+        if (snackVisible) {
+            if (snackVisibleSelect.nome === item.provimento.nome) {
+                
+                setSnackVisible(false)
+                handleAddItemListaCompras()
                 console.log('ADD: ', snackVisibleSelect)
             }
             console.log(snackVisibleSelect, item.provimento.nome)
         }
     }
 
-    async function handleConfigDialog(qtd, despensa){
-        console.debug({qtd, despensa, snackVisibleSelect})        
+    async function handleConfigDialog(qtd, despensa) {
+        console.debug({ qtd, despensa, snackVisibleSelect })
         setConfigVisible(false)
-        handleListaCompressAdd({qtd, despensa})
+        if (despensa) {
+            handleListaCompressAdd({ qtd, despensa })
+        }
     }
-    
-    async function handleListaCompressAdd({qtd, despensa}){
-        console.debug({qtd, despensa, snackVisibleSelect})
+
+    async function handleListaCompressAdd({ qtd, despensa }) {
+        console.debug({ qtd, despensa, snackVisibleSelect })
         await AsyncStorage.setItem('@despensaAtiva', despensa);
         setDespensaAtiva(despensa)
     }
@@ -340,6 +387,17 @@ function ShowReceita({ route, navigation }) {
     if (loading) {
         return <LoadingOverlay />
     }
+
+    console.log("CRASH")
+
+    function handleUpdateRefs() {
+        const ingredientesRefList = values && values.ingredientes.map((i) => {
+            return useRef()
+        }) //useRef()            
+        setIngredientesRef(ingredientesRefList)
+    }
+
+
 
     return (
         <>
@@ -353,7 +411,7 @@ function ShowReceita({ route, navigation }) {
                 // onDismiss={() => setSnackVisible(false)}
                 onDismiss={() => clickSnackBar()}
                 duration={3000}
-
+                
                 action={{
                     label: 'Configurar',
                     onPress: (e) => {
@@ -368,11 +426,11 @@ function ShowReceita({ route, navigation }) {
 
             {despensas.length > 0 && configVisible &&
                 <AlertConfig handleConfigDialog={handleConfigDialog} despensas={despensas} despensaAtiva={despensaAtiva} configVisible={configVisible} />
-            }                            
+            }
 
-            {despensas.length > 0 && snackVisible && 
-                <SnackBar clickSnackBar={clickSnackBar} despensaAtiva={despensas.filter(( d ) => d.uuid === despensaAtiva)[0]} />
-            }                                    
+            {despensas.length > 0 && snackVisible &&
+                <SnackBar clickSnackBar={clickSnackBar} itemAtivo={snackVisibleSelect.nome} despensaAtiva={despensas.filter((d) => d.uuid === despensaAtiva)[0]} />
+            }
 
             <FormContainerScroll >
 
@@ -383,9 +441,8 @@ function ShowReceita({ route, navigation }) {
                 <CardInner>
                     <CardInnerTitle>Ingredientes</CardInnerTitle>
                     <Wrap>
-
-                        {values.ingredientes && values.ingredientes.map((i) =>
-                            <InnerIngrediente snackCompras={snackCompras} update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show />
+                        {values.ingredientes && values.ingredientes.map((i, index) =>
+                            <InnerIngrediente ref={ingredientesRef[index]} snackCompras={snackCompras} update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show />
                         )}
                     </Wrap>
                 </CardInner>

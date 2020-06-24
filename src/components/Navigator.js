@@ -18,6 +18,7 @@ import FormReceita from '../telas/receita/FormReceita'
 import ListReceitas from '../telas/receita/List'
 import ListReceitasPossiveis from '../telas/receita/ListReceitasPossiveis'
 import ShowReceita from '../telas/receita/Show'
+import ListaCompras from '../telas/compras/Show'
 
 import { IconsImage, TabContainer, TabLabel } from '../components/styled/Geral'
 import { HeaderBadge, HomeNotifications, HeaderTouchable, HeaderContainer, HomeMenuItem } from '../components/styled/Geral'
@@ -284,6 +285,7 @@ function MyDrawer(props) {
 function Navigator(props) {
 
   const home = props.token ? 'Home' : 'Login'
+  // const home = 'Lista de compras'
 
   return (
       <Stack.Navigator initialRouteName={home}>
@@ -299,6 +301,7 @@ function Navigator(props) {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="ShowReceita" component={ShowReceita} />
         <Stack.Screen name="Estoque" component={Estoque} />
+        <Stack.Screen name="Lista de compras" component={ListaCompras} />
         <Stack.Screen name="Details" component={DetailsScreen} />
       </Stack.Navigator>
   );

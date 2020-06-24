@@ -10,8 +10,8 @@ const cor5 = '#555'
 const cor6 = '#999999'
 const cor7 = '#000'
 
-const screenWidth = Math.round(Dimensions.get('window').width);
-const screenHeight = Math.round(Dimensions.get('window').height);
+export const screenWidth = Math.round(Dimensions.get('window').width);
+export const screenHeight = Math.round(Dimensions.get('window').height);
 
 
 export const SafeContainer = styled.SafeAreaView`
@@ -168,9 +168,13 @@ export const FloatHome = styled.View`
     export const CardBody = styled.Text`
         color: ${props => props.vencimento ? cor1 : cor5 };
         fontWeight: bold
-    `
-    export const CardRow = styled.View`
+`
+export const CardRow = styled.View`
     flexDirection: row
+    justifyContent: space-between
+    `
+    export const CardCol = styled.View`
+    flexDirection: column
     justifyContent: space-between
     `
 export const CardRowItem = styled.View`
@@ -222,13 +226,15 @@ export const Google = () => <FontAwesome name="google-plus" size={30} color="#ff
 export const RemoveReceita = () => <FontAwesome name="times" size={20} color="#fff" style={{ borderRadius:15, paddingHorizontal: 5 }} />;
 export const AddReceita = () => <FontAwesome name="plus" size={20} color="#fff" style={{padding:15,borderRadius:15 }} />;
 export const PlusItemReceita = () => <FontAwesome name="plus" size={20} color="#fff" style={{paddinng:25}} />;
-export const PlusItem = () => <FontAwesome name="plus" size={40} color="#fff" style={{paddinng:25}} />;
-export const MinusItem = () => <FontAwesome name="minus" size={40} color="#fff"  />;
+export const PlusItem = ({color, size}) => <FontAwesome name="plus" size={size || 40} color={color || '#fff'} style={{paddinng:25}} />;
+export const MinusItem = ({color, size}) => <FontAwesome name="minus" size={size || 40} color={color || '#fff'}  />;
 export const EditItem = () => <FontAwesome name="pencil" size={40} color="#fff" />;
-export const DeleteItem = () => <FontAwesome name="trash-o" size={40} color="#fff" />;
+export const DeleteItem = ({color}) => <FontAwesome name="trash-o" size={40} color={color || '#fff'} />;
 export const RemoveItem = () => <FontAwesome name="times" size={40} color="#555" />;
 export const MenuItem = () => <FontAwesome name="ellipsis-v" size={20} color="#555" style={{paddingRight:20}} />;
 export const HomeMenuItem = () => <FontAwesome name="navicon" size={20} color="#555" style={{paddingLeft:20}}/>;
 export const HomeNotifications = () => <FontAwesome name="bell-o" size={20} color="#555" style={{paddingRight:20}}/>;
 
 export const UserItem = () => <FontAwesome name="ellipsis-v" size={20} color="#555" style={{paddingRight:20}} />;
+
+export const CheckItem = ({state}) => <FontAwesome name={state} size={30} color="#555" style={{paddingRight:10}} />;

@@ -16,11 +16,19 @@ export function LoadingOverlay(){
       )
 }
 
- export function toast(mensagem){
+ export function toast(mensagem, position){
+    let POS
+    if(position === 'bottom'){
+      POS = ToastAndroid.BOTTOM
+    } else {
+      POS = ToastAndroid.CENTER      
+    }
+
+
     ToastAndroid.showWithGravityAndOffset(
       mensagem || "A wild toast appeared!",
       ToastAndroid.LONG,
-      ToastAndroid.CENTER,
+      POS,
       25,
       50
     );

@@ -14,7 +14,7 @@ export default class SnackBar extends React.Component {
 
   _onDismissSnackBar = (config) => {
     this.setState({ visible: false })
-    this.props.clickSnackBar()
+    this.props.clickSnackBar(config)
     console.log("SUMIU!!!")
   };
 
@@ -24,14 +24,14 @@ export default class SnackBar extends React.Component {
     console.log(this.props.despensaAtiva.nome)
 
     const { visible } = this.state;
-    const { despensaAtiva } = this.props;
+    const { despensaAtiva, itemAtivo } = this.props;
 
     return (
       <View style={styles.container}>
         <Snackbar
           visible={visible}
           onDismiss={this._onDismissSnackBar}
-          DURATION_MEDIUM
+          DURATION_SHORT
           action={{
             label: 'Configurar',
             onPress: () => {
@@ -40,7 +40,7 @@ export default class SnackBar extends React.Component {
             },
           }}
         >
-          Clique novamente para adicionar a sua lista de compras vinculado a {despensaAtiva.nome}, ou configure outra aqui.
+          Clique novamente para adicionar {itemAtivo} a sua lista de compras vinculado a {despensaAtiva.nome}, ou configure outra aqui.
         </Snackbar>
       </View>
     );

@@ -68,8 +68,7 @@ export default class AlertConfig extends React.Component {
         
         this.setState({
             qtd: text
-        })
-        
+        })        
     }
 
     render() {
@@ -82,13 +81,13 @@ export default class AlertConfig extends React.Component {
                     <Dialog.Content>
                         <Dialog.ScrollArea>
                             <ScrollView contentContainerStyle={{ paddingVertical: 14, borderBottomWidth: 0 }}>
-                                <FormInput
+                                {/* <FormInput
                                     onChange={(e) => this.handleSetQTD(e)}
                                     autoFocus
                                     value={this.state.qtd}
                                     placeholder='Quantidade'
                                     keyboardType='number-pad'
-                                />
+                                /> */}
                                 <Picker
                                     style={{ padding: 35, borderRadius: 25, marginBottom: 15, color: "#555" }}
                                     selectedValue={this.state.despensa}

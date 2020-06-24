@@ -211,7 +211,7 @@ export const CardInner = styled.View`
   `
   
   export const RowInner = styled.TouchableOpacity`
-  backgroundColor:${props => props.active ? cor1 : cor3 }
+  backgroundColor:${props => props.active ? cor1 : (props.stock ? cor2 : cor3) }
   flexDirection:row
   alignItems: center
   justify-content: center

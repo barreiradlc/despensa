@@ -28,7 +28,9 @@ mutation handleDepensasMutation($despensas: [DespensaInput!]!){
 ` 
 
 function QueueProcess({ reloadQueue, call, reload }, ref){
-        
+
+    
+
     const [ despensas, setDespensas ] = useState({})
     const [ resetDespensas, setResetDespensas ] = useState(false)
     const [ send, setSend ] = useState(true)

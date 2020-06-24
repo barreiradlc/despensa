@@ -9,6 +9,7 @@ export default class Despensa {
             nome: 'string?',
             descricao: 'string?',
             items: 'Item[]',
+            compras: 'ItemCompras[]',
             deletedAt: 'date?',
             fila: {type: 'bool?', default: true} //{type: 'int', default: 0},
         }

@@ -70,8 +70,13 @@ function ContentDrawer({navigation, route}){
     function handleProfile(){
       navigation.navigate('Perfil')
     }
+
     function handleListReceitasPossiveis(){
       navigation.navigate('ListReceitasPossiveis')
+    }
+    
+    function handleListaCompras(){
+      navigation.navigate('Lista de compras')
     }
 
     function handleSoon(){
@@ -93,8 +98,8 @@ function ContentDrawer({navigation, route}){
         <DrawerItem label='Home' icon='home' handleFunction={handleHome} />
         <DrawerItem label='Editar perfil' icon='user' handleFunction={handleProfile} />
         <DrawerItem label='Receitas possíveis' icon='star-o' handleFunction={handleListReceitasPossiveis} />
-        {/* <DrawerItem label='Favoritos' icon='star-o' handleFunction={handleSoon} />
-        <DrawerItem label='Lista de compras' icon='th-list' handleFunction={handleSoon} /> */}
+        {/* <DrawerItem label='Favoritos' icon='star-o' handleFunction={handleSoon} /> */}
+        <DrawerItem label='Lista de compras' icon='th-list' handleFunction={handleListaCompras} />
         <DrawerItem label='Sair' icon='power-off' handleFunction={handleSair} />
 
       </DrawerScrollContainer>
