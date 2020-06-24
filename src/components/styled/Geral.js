@@ -125,6 +125,15 @@ export const Card = styled.View`
     borderRadius: 10px
     elevation:3
 `
+export const CardCompras = styled.View`
+    background: #fff
+    marginHorizontal: 20px
+    marginVertical: 10px
+    paddingVertical: 5px
+    paddingHorizontal: 25px
+    borderRadius: 10px
+    elevation:3
+`
 export const CardTitle = styled.Text`
     fontSize: 20px
     fontWeight: bold
@@ -175,7 +184,7 @@ export const CardRow = styled.View`
     `
     export const CardCol = styled.View`
     flexDirection: column
-    justifyContent: space-between
+    justifyContent: space-evenly
     `
 export const CardRowItem = styled.View`
     flex:1

@@ -13,16 +13,33 @@ function Show() {
 
     function init(){
         LocalStorage.getDespensas()
-            .then(( res ) => {
-                console.log({res}, despensas)
-                setDespensas(res)
-            })
+        .then(( res ) => {
+            console.log({res}, despensas)
+            setDespensas(res)
+        })
     }
+
+    function reloadLista(item, despensa){
+        const newListDespensas = despensas.map(( d ) => {
+            d.compras.map(( i ) => {
+                if(i.uuid === item.uuid){
+                    i = item
+                }
+                return i
+            })
+            return d
+        })  
+
+        console.debug(item.quantidade)
+        console.debug(newListDespensas)
+        setDespensas(newListDespensas)
+    }
+
 
     return (
         <ScrollView>  
             {despensas.map(( d ) => 
-                <ItemDespensa data={d} />
+                <ItemDespensa reload={reloadLista} data={d} />
             )}
         </ScrollView>
     )

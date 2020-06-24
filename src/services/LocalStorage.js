@@ -2,8 +2,46 @@ import Realm from 'realm'
 import { uuid } from '../components/utils/Utils'
 import realm from '../config/realm'
 
+export async function changeQTDItemListaCompras(item, action){
+    try {
+        realm.write(() => {
+            if(action == 'more'){
+                item.quantidade++
+            }
+            if(action == 'less'){
+                console.log("LESS")
+                item.quantidade--
+            }
+
+            console.log('ITEM')
+            console.log(item.quantidade)
+            console.log('ITEM')
+
+            return item
+        })
+    } catch (error) {
+        console.error('Erro em alterar o estado do item na lista de compras')
+    }
+}
+
+export async function removeItemListaCompras(item, despensa){
+    try {
+        realm.write(() => {
+            return item.deletedAt = new Date()
+        })
+    } catch (error) {
+        console.error('Erro em alterar o estado do item na lista de compras')
+    }
+}
+
 export async function checkItemListaCompras(item, despensa){
-    
+    try {
+        realm.write(() => {
+            return item.done = !item.done
+        })
+    } catch (error) {
+        console.error('Erro em alterar o estado do item na lista de compras')
+    }
 }
 
 export async function addItemListaCompras(item, despensa){

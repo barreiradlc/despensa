@@ -4,6 +4,7 @@ import { List, Checkbox } from 'react-native-paper';
 import PerRowConfig from '../../telas/compras/Item'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 import { screenWidth } from '../styled/Geral'
+import * as LocalStorage from '../../services/LocalStorage'
 
 class Despensa extends React.Component {
     state = {
@@ -14,17 +15,41 @@ class Despensa extends React.Component {
         this.setState({
             expanded: !this.state.expanded
         });
-
         
-    checkItem = (item) => {
-        console.debug({item})
+    checkItem = (item, despensa) => {
+        LocalStorage.checkItemListaCompras(item)
+            .then(( res ) => {
+                console.log(res)
+                this.props.reload(item, this.props.data)
+            })
+        console.debug(item, despensa)
     }
+
+    removeItem = (item, despensa) => {
+        LocalStorage.removeItemListaCompras(item)
+            .then(( res ) => {
+                console.log({res})
+                this.props.reload(item, this.props.data)
+            })
+        console.debug(item, despensa)
+    }
+
+    changeItemQTD = (item, action) => {
+        LocalStorage.changeQTDItemListaCompras(item, action)
+            .then(( res ) => {
+                console.log({'resItem':res})
+                this.props.reload(item, action)
+            })
+        console.log({item: item.quantidade})
+    }
+
+
 
     render() {
 
         const { data } = this.props
 
-        if (data.compras.length === 0) {
+        if (data.compras.length === 0 || data.compras.filter(( c ) => !c.deletedAt).length === 0) {
             return null
         }
 
@@ -40,10 +65,10 @@ class Despensa extends React.Component {
                     onPress={this._handlePress}
                     left={props => <List.Icon {...props} icon="fridge" color='#c93b4a' />}
                 >
-                    
+
                     <List.Item 
                         style={{ position: "relative", left: 0, width:screenWidth }}                       
-                        right={props => <PerRowConfig check={this.checkItem} value={data.compras} /> }
+                        right={props => <PerRowConfig changeItemQTD={this.changeItemQTD} check={this.checkItem} removeItem={this.removeItem} value={data.compras.filter(( c ) => !c.deletedAt)} despensa={data} /> }
                     />
 
                 </List.Accordion>
