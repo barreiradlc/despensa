@@ -11,14 +11,16 @@ const cor7 = '#000'
 
 export const FormContainer = styled.SafeAreaView`
   background-color: #fff
-  flex: 1 
+  flex:1
 `
+export const FormContainerCompras = styled.SafeAreaView`
   
+`
+
 export const FormContainerScroll = styled.ScrollView`
   background-color: #fff
   flex: 1 
   padding:40px
-  
 `
   
 export const FormLabel = styled.Text`
@@ -239,10 +241,9 @@ export const CardInner = styled.View`
     `
 export const InnerHeader = styled.Text`
 fontWeight: bold
-alignSelf:flex-start
-    
-    borderRadius: 15px
-    color: #555
+alignSelf:flex-start    
+borderRadius: 15px
+color: #555
   `
   
   export const ErrorTouchable = styled.TouchableOpacity`
