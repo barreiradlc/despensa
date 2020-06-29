@@ -390,13 +390,12 @@ function ShowReceita({ route, navigation }) {
 
     console.log("CRASH")
 
-    function handleUpdateRefs() {
-        const ingredientesRefList = values && values.ingredientes.map((i) => {
-            return useRef()
-        }) //useRef()            
-        setIngredientesRef(ingredientesRefList)
-    }
-
+    // function handleUpdateRefs() {
+    //     const ingredientesRefList = values && values.ingredientes.map((i) => {
+    //         return useRef()
+    //     }) //useRef()            
+    //     setIngredientesRef(ingredientesRefList)
+    // }
 
 
     return (

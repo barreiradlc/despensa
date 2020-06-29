@@ -163,7 +163,7 @@ export default function PerRowConfig(props) {
                                 </TouchableOpacity>
                             </CardCol>
                             <CardCol style={{alignContent: 'flex-start', width: '80%'}}>
-                                <CardTitle style={{ textAlign: 'left' }}>{data.item.provimento.nome}</CardTitle>
+                                <CardTitle style={{ textAlign: 'left', textDecorationLine: data.item.done ? "line-through" : "none" }}>{data.item.provimento.nome}</CardTitle>
                                 <CardRow>
                                     <CardBody>{data.item.quantidade} unidade{data.item.quantidade > 1 && 's'}</CardBody>
                                     {data.item.validade &&

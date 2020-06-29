@@ -6,10 +6,12 @@ import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 import { FormButton, FormButtonLabel, FormContainerCompras, FormContainer } from '../styled/Form'
 import { screenWidth, Card } from '../styled/Geral'
 import * as LocalStorage from '../../services/LocalStorage'
+import FormItemCompra from '../utils/FormItemCompra'
 
 class Despensa extends React.Component {
     state = {
-        expanded: true
+        expanded: false,
+        renderForm: false
     }
 
     _handlePress = () =>
@@ -18,7 +20,7 @@ class Despensa extends React.Component {
         });
 
     checkItem = (item, despensa) => {
-        LocalStorage.checkItemListaCompras(item)
+        LocalStorage.checkItemListaCompras(item, this.props.data)
             .then((res) => {
                 console.log(res)
                 this.props.reload(item, this.props.data)
@@ -46,13 +48,24 @@ class Despensa extends React.Component {
 
 
     render() {
+
+        const setRenderForm = (val) => {
+            const { data } = this.props
+            // console.debug(val)
+            this.props.handleFormShow(data)
+            // this.setState({
+            //     renderForm: val
+            // })
+            // console.debug('val')
+        }
+
         const RenderItem = () => {
             return (
                 <FormContainerCompras>
 
                     <PerRowConfig changeItemQTD={this.changeItemQTD} check={this.checkItem} removeItem={this.removeItem} value={data.compras.filter((c) => !c.deletedAt)} despensa={data} />
 
-                    <FormButton onPress={() => console.log(true)} style={{ width: screenWidth / 2, alignSelf: "center", padding: 0 }} active>
+                    <FormButton onPress={() => setRenderForm( this.state.renderForm ) } style={{ width: screenWidth / 2, alignSelf: "center", padding: 0, marginBottom: 35 }} active>
                         <FormButtonLabel active style={{ fontWeight: 'regular', fontSize: 15, margin: 0, padding: 0 }}>Adicionar Item</FormButtonLabel>
                     </FormButton>
 
@@ -60,16 +73,17 @@ class Despensa extends React.Component {
             )
         }
 
-        const { data } = this.props
+        const { data, renderForm } = this.props
 
-        if (data.compras.length === 0 || data.compras.filter((c) => !c.deletedAt).length === 0) {
-            return null
-        }
+        // if (data.compras.length === 0 || data.compras.filter((c) => !c.deletedAt).length === 0) {
+        //     return null
+        // }
 
         console.log({ screenWidth })
 
         return (
             <List.Accordion
+                style={{ borderTopColor: '#c93b4a', borderTopWidth: 2 }}
                 description={data.descricao}
                 color='#c93b4a'
                 titleStyle={{ color: '#c93b4a', fontSize: 20, fontWeight: 'bold' }}
@@ -83,6 +97,10 @@ class Despensa extends React.Component {
                     style={{ position: "relative", right: 20, width: screenWidth }}
                     right={props => <RenderItem />}
                 />
+
+                {renderForm &&
+                    <FormItemCompra renderForm={renderForm} despensaAtiva={data.uuid}/>
+                }
 
             </List.Accordion>
 

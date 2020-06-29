@@ -46,14 +46,14 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage },
     
     function getStorageIngredienteCompras(i){
         LocalStorage.getProvimentoCompras(i)
-        .then(( res ) => {
-            
+            .then(( res ) => {
+                console.log('res')
                 if(res){
-                    if(res.provimento.id || res.provimento.nome){
+                    if(!res.deletedAt && res.provimento){
                         setStock(true)
-                        console.log('estoque', res)
+                        console.log('estoque', res.deletedAt, res.provimento.nome)    
                     }
-                    console.log('estoque?')
+                    
                 }
             })
             .catch(( err ) => {
