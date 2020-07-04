@@ -9,7 +9,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import List from '../telas/despensa/List'
 import { LoadingOverlay } from '../components/utils/Components'
 
-
 const ME = gql`
     query me{
         me {
@@ -69,18 +68,13 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
 
     useEffect(() => {
         if (data && refresh) {
-            console.log({refresh})
-            console.log({data})
-            console.log('refresh!')
+
             // console.log(data.me.despensas.length)            
             if (data.me && refresh) {
                 loadData()
                 handleNotifications(data.me.convites)
             }
         } else {
-            console.log({refresh})
-            console.log({data})
-            console.log('!refresh')
             // setLoadingList(false)
             // if(!error && refresh){
             //     refetch()
@@ -99,9 +93,7 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
         loadData()
     }
 
-    async function loadData(){
-        
-        console.log("load DATA")
+    async function loadData(){                
 
         let userData = {
             id: data.me.id,
@@ -119,9 +111,7 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
             // LocalStorage.removeDespensas()
 
             LocalStorage.storeDespensas(data.me.despensas)
-                .then((res) => {
-                    console.log('RESPONSE')
-                    console.log(JSON.stringify(res))
+                .then((res) => {                    
                     setLoadingList(false)
                     setEdit(false)
                     setRefresh(false)
