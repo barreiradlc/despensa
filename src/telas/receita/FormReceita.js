@@ -274,7 +274,6 @@ function FormReceita({ route, navigation }) {
                     multiline
                 />
 
-
                 <CardInner>
                     <CardInnerTitle>Ingredientes</CardInnerTitle>
                     <Wrap>

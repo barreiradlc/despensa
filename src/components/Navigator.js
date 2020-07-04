@@ -1,10 +1,11 @@
+import * as React from 'react';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
-import * as React from 'react';
 import { Alert, Button, TouchableWithoutFeedback, Text, View } from 'react-native';
+
 
 import Login from '../telas/Login';
 import Perfil from '../telas/Perfil';
@@ -132,7 +133,6 @@ function HomeScreen({ navigation }) {
           <CustomComponent props={props} id='Despensa' />
         ),
       }} />
-
       
         <Tab.Screen name="Receitas" component={ListReceitas} options={{
           tabBarLabel: '',
@@ -140,8 +140,7 @@ function HomeScreen({ navigation }) {
             <CustomComponent props={props} id='Receitas' />
           ),
         }}
-        />
-      
+        />      
       
     </Tab.Navigator>
   );
@@ -266,7 +265,6 @@ function MyDrawer(props) {
     drawerContent={props =>  <ContentDrawer context={context} {...props} />}
     gestureHandlerProps={false}
     swipeEnabled={false}
-
     edgeWidth={0}
     drawerStyle={{
       backgroundColor: '#fff',
@@ -274,8 +272,6 @@ function MyDrawer(props) {
     }}
     >
       <Drawer.Screen name="Home" gesturesEnabled={false} component={() => Navigator(props)} />
-      {/* <Drawer.Screen name="Article" component={Article} /> */}
-      {/* <Drawer.Screen name="Sair" component={Sair} /> */}
     </Drawer.Navigator>
   </NavigationContainer>
   );
@@ -285,7 +281,6 @@ function MyDrawer(props) {
 function Navigator(props) {
 
   const home = props.token ? 'Home' : 'Login'
-  // const home = 'Lista de compras'
 
   return (
       <Stack.Navigator initialRouteName={home}>
