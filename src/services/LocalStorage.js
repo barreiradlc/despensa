@@ -2,6 +2,28 @@ import Realm from 'realm'
 import { uuid } from '../components/utils/Utils'
 import realm from '../config/realm'
 
+export async function updateShopList() {
+    let today = new Date()
+    let doneItems = realm.objects('ItemCompras').filtered('done  = $0 AND deletedAt = $1', true, null)
+    
+    doneItems.map(( d ) => {
+        let despensaLocal = getDespensaByUuid(d.despensaUuid)
+        let itemProvimentoLocal = realm.objects('Item').filtered('provimento.nome = $0', d.provimento.nome)[0]
+        
+        console.log(d.provimento.nome)
+
+
+        saveItem(d, d.provimento, today, despensaLocal, itemProvimentoLocal)
+            .then(( res ) => {
+                console.log({res})
+                realm.write(() => {
+                    realm.delete(d)
+                })
+            })
+    })
+
+}
+
 export async function changeQTDItemListaCompras(item, action) {
     try {
         realm.write(() => {
@@ -498,7 +520,7 @@ async function saveItem(item, provimentoLocal, today, despensaLocal, itemLocal) 
         realm.write(async () => {
             itemLocal.id = Number(item.id),
                 itemLocal.validade = item.validade,
-                itemLocal.quantidade = item.quantidade
+                itemLocal.quantidade = item.quantidade + itemLocal.quantidade
         })
     }
 

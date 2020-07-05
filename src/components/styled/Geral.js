@@ -127,7 +127,7 @@ export const Card = styled.View`
 `
 export const CardCompras = styled.View`
     background: #fff
-    marginHorizontal: 20px
+    
     marginVertical: 10px
     paddingVertical: 5px
     paddingHorizontal: 25px
@@ -183,6 +183,7 @@ export const CardRow = styled.View`
     justifyContent: space-between
     `
     export const CardCol = styled.View`
+    
     flexDirection: column
     justifyContent: space-evenly
     `
@@ -246,4 +247,4 @@ export const HomeNotifications = () => <FontAwesome name="bell-o" size={20} colo
 
 export const UserItem = () => <FontAwesome name="ellipsis-v" size={20} color="#555" style={{paddingRight:20}} />;
 
-export const CheckItem = ({state}) => <FontAwesome name={state} size={30} color="#555" style={{paddingRight:10}} />;
+export const CheckItem = ({state}) => <FontAwesome name={state} size={30} color="#555" style={{paddingLeft:10}} />;

@@ -71,7 +71,12 @@ class Despensa extends React.Component {
 
         this.setState({
             data : {
-                ...data,
+                uuid : data.uuid,
+                id : data.id,
+                nome : data.nome,
+                descricao : data.descricao,
+                deletedAt: data.deletedAt,
+                fila: data.fila,
                 compras: newData
                 
             }

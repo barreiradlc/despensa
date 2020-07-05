@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, Alert } from 'react-native';
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 import { CheckItem, CardRow, EditItem, DeleteItem, PlusItem, MinusItem, CardCol, CardCompras, Card, CardBody, CardTitle, screenWidth } from '../../components/styled/Geral';
+import * as Utils from '../../components/utils/Utils'
 import moment from 'moment'
 import 'moment/min/moment-with-locales'
 
@@ -22,83 +23,6 @@ export class IconCheck extends React.Component {
         )
     }
 }
-
-export const renderItem = (data, rowMap) => {
-
-    const closeRow = (rowMap, rowKey) => {
-        console.log({ rowMap })
-        console.log({ rowKey })
-
-        if (rowMap[rowKey]) {
-            rowMap[rowKey].closeRow();
-        }
-    }
-
-
-    const checkItem = (item) => {
-        console.debug({ item })
-    }
-
-    console.log('key')
-    console.log(rowMap)
-
-    return (
-        <SwipeRow
-            disableLeftSwipe={parseInt(data.item.key) % 2 === 0}
-            friction={65}
-            directionalDistanceChangeThreshold={5}
-            leftActionValue={10}
-            rightActionValue={-10}
-            leftOpenValue={70}
-            rightOpenValue={-120}
-            style={styles.front}
-        >
-            <View style={styles.rowBack}>
-
-                <View style={styles.rowBackTouchable}>
-                    <View style={styles.rowBackTouchableLeft}>
-                        <TouchableOpacity style={styles.touchableLeft} onPress={() => props.changeqtd(data, 'add')}>
-                            <DeleteItem color='#c93b4a' />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
-                <TouchableOpacity
-                    style={[styles.backRightBtn, styles.backRightBtnRight]}
-                    onPress={() => { checkItem(data.item), closeRow(rowMap, data.item.key); }}
-
-                >
-                    <CheckItem state={data.item.done ? 'check-square-o' : 'square-o'} />
-                </TouchableOpacity>
-            </View>
-
-            <TouchableWithoutFeedback
-                onPress={() => console.log('You touched me')}
-
-                underlayColor={'#AAA'}
-            >
-                <CardCompras >
-                    <CardRow>
-                        <CardCol>
-                            <PlusItem color='#c93b4a' />
-                            <MinusItem color='#c93b4a' />
-                        </CardCol>
-
-                        <CardCol>
-                            <CardTitle>{data.item.provimento.nome}</CardTitle>
-                            <CardRow>
-                                <CardBody>{data.item.quantidade} unidade{data.item.quantidade > 1 && 's'}</CardBody>
-                                {data.item.validade &&
-                                    <CardBody vencimento={twoWeeks > data.item.validade}> expira em: {moment(data.item.validade).format('L')}</CardBody>}
-                            </CardRow>
-                        </CardCol>
-                    </CardRow>
-                </CardCompras>
-            </TouchableWithoutFeedback>
-
-        </SwipeRow>
-    );
-};
 
 
 export default function PerRowConfig(props) {
@@ -146,6 +70,10 @@ export default function PerRowConfig(props) {
             console.log('MIAU')
 
             props.setShowOptions(item)
+        }
+
+        const toastBlock = () => {
+            Utils.toast('Não é possível ter 0 unidades de um item a comprar ')
         }
 
         return (
@@ -208,14 +136,21 @@ export default function PerRowConfig(props) {
                                 <DeleteItem color='#c93b4a' />
                             </TouchableOpacity>                            
 
-                            <CardCol style={{ flexDirection: 'row', marginHorizontal: 0, alignContent: "flex-end", width: 120, alignSelf: "flex-end" }}>
-                                <TouchableOpacity style={styles.touchableQTD} onPress={() => { props.changeItemQTD(data.item, 'less') }}>
-                                    <MinusItem color='#c93b4a' size={20} />
-                                </TouchableOpacity>
+                            <CardRow>
+                                {data.item.quantidade === 1 ?
+                                    <TouchableOpacity style={[styles.touchableQTD, { opacity: 0.4 }]} onPress={() => toastBlock()} >
+                                        <MinusItem color='#c93b4a' size={20} />
+                                    </TouchableOpacity>
+                                    :
+                                    <TouchableOpacity style={styles.touchableQTD} onPress={() => { props.changeItemQTD(data.item, 'less') }}>
+                                        <MinusItem color='#c93b4a' size={20} />
+                                    </TouchableOpacity>
+                                }
                                 <TouchableOpacity style={styles.touchableQTD} onPress={() => { props.changeItemQTD(data.item, 'more') }}>
                                     <PlusItem color='#c93b4a' size={20} />
                                 </TouchableOpacity>
-                            </CardCol>
+                            </CardRow>
+                        
                         </CardRow>
                         }
                         
@@ -264,19 +199,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         // padding: 20
-
-
+        
+        
     },
     rowBackTouchableLeft: {
-
+        
         // backgroundColor: '#DDD',
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         // padding: 20
         width: 75
-
-
+        
+        
     },
     backRightBtn: {
         alignItems: 'flex-end',
@@ -317,7 +252,7 @@ const styles = StyleSheet.create({
     },
     touchableCheck: {
         position: "absolute",
-
+        
     },
     front: {
         position: 'relative',
@@ -326,9 +261,13 @@ const styles = StyleSheet.create({
     },
     touchableQTD: {
         height: 45,
-        width: 45,
+        alignSelf: 'flex-end',
+        
+        
         borderRadius: 50,
         backgroundColor: '#dedede',
+        marginRight: 0,
+        marginLeft: 25,
         marginVertical: 5,
         padding: 15
     }

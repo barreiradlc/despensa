@@ -109,10 +109,11 @@ export default class FormItemCompra extends React.Component {
                                     keyboardType='number-pad'
                                     onSubmitEditing={() => {this.handleSetConfig(true)}}
                                 />
-                                
-                                <FormButton onPress={this.handleSetConfig} active>
-                                    <FormButtonLabel active>Adicionar</FormButtonLabel>
-                                </FormButton>
+                                <FormButtonGroup>
+                                    <FormButton onPress={this.handleSetConfig} active>
+                                        <FormButtonLabel active>Adicionar</FormButtonLabel>
+                                    </FormButton>                                    
+                                </FormButtonGroup>
 
                             </ScrollView>
                         </Dialog.ScrollArea>
