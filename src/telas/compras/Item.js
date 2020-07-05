@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, Alert } from 'react-native';
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 import { CheckItem, CardRow, EditItem, DeleteItem, PlusItem, MinusItem, CardCol, CardCompras, Card, CardBody, CardTitle, screenWidth } from '../../components/styled/Geral';
 import moment from 'moment'
@@ -11,7 +11,7 @@ require('moment/locale/fr.js');
 require('moment/locale/nl.js');
 require('moment/locale/pt-br');
 
-moment.locale('pt-br');        
+moment.locale('pt-br');
 
 export class IconCheck extends React.Component {
     render() {
@@ -26,8 +26,8 @@ export class IconCheck extends React.Component {
 export const renderItem = (data, rowMap) => {
 
     const closeRow = (rowMap, rowKey) => {
-        console.log({rowMap})
-        console.log({rowKey})
+        console.log({ rowMap })
+        console.log({ rowKey })
 
         if (rowMap[rowKey]) {
             rowMap[rowKey].closeRow();
@@ -36,68 +36,67 @@ export const renderItem = (data, rowMap) => {
 
 
     const checkItem = (item) => {
-        console.debug({item})
+        console.debug({ item })
     }
 
     console.log('key')
     console.log(rowMap)
 
     return (
-            <SwipeRow
-                disableLeftSwipe={parseInt(data.item.key) % 2 === 0}
-                friction={65}
-                directionalDistanceChangeThreshold={5}
-                leftActionValue={10}
-                rightActionValue={-10}
-                leftOpenValue={70}
-                rightOpenValue={-70}
-                
-                style={styles.front}
-            >
-                <View style={styles.rowBack}>
+        <SwipeRow
+            disableLeftSwipe={parseInt(data.item.key) % 2 === 0}
+            friction={65}
+            directionalDistanceChangeThreshold={5}
+            leftActionValue={10}
+            rightActionValue={-10}
+            leftOpenValue={70}
+            rightOpenValue={-120}
+            style={styles.front}
+        >
+            <View style={styles.rowBack}>
 
-                    <View style={styles.rowBackTouchable}>
-                        <View style={styles.rowBackTouchableLeft}>
-                            <TouchableOpacity style={styles.touchableLeft} onPress={() => props.changeqtd(data, 'add')}>
-                                <DeleteItem color='#c93b4a' />
-                            </TouchableOpacity>
-                        </View>
+                <View style={styles.rowBackTouchable}>
+                    <View style={styles.rowBackTouchableLeft}>
+                        <TouchableOpacity style={styles.touchableLeft} onPress={() => props.changeqtd(data, 'add')}>
+                            <DeleteItem color='#c93b4a' />
+                        </TouchableOpacity>
                     </View>
-
-                    <TouchableOpacity
-                        style={[styles.backRightBtn, styles.backRightBtnRight]}
-                        onPress={() => { checkItem(data.item), closeRow(rowMap, data.item.key); } }
-
-                    >
-                        <CheckItem state={data.item.done ? 'check-square-o' : 'square-o'} />
-                    </TouchableOpacity>
                 </View>
 
-                <TouchableWithoutFeedback
-                    onPress={() => console.log('You touched me')}
+                <TouchableOpacity
+                    style={[styles.backRightBtn, styles.backRightBtnRight]}
+                    onPress={() => { checkItem(data.item), closeRow(rowMap, data.item.key); }}
 
-                    underlayColor={'#AAA'}
                 >
-                    <CardCompras >
-                        <CardRow>                            
-                            <CardCol>
-                                <PlusItem color='#c93b4a' />
-                                <MinusItem color='#c93b4a' />
-                            </CardCol>
+                    <CheckItem state={data.item.done ? 'check-square-o' : 'square-o'} />
+                </TouchableOpacity>
+            </View>
 
-                            <CardCol>
-                                <CardTitle>{data.item.provimento.nome}</CardTitle>
-                                <CardRow>
-                                    <CardBody>{data.item.quantidade} unidade{data.item.quantidade > 1 && 's'}</CardBody>
-                                    {data.item.validade &&
-                                        <CardBody vencimento={twoWeeks > data.item.validade}> expira em: {moment(data.item.validade).format('L')}</CardBody>}
-                                </CardRow>
-                            </CardCol>
-                        </CardRow>
-                    </CardCompras>
-                </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback
+                onPress={() => console.log('You touched me')}
 
-            </SwipeRow>
+                underlayColor={'#AAA'}
+            >
+                <CardCompras >
+                    <CardRow>
+                        <CardCol>
+                            <PlusItem color='#c93b4a' />
+                            <MinusItem color='#c93b4a' />
+                        </CardCol>
+
+                        <CardCol>
+                            <CardTitle>{data.item.provimento.nome}</CardTitle>
+                            <CardRow>
+                                <CardBody>{data.item.quantidade} unidade{data.item.quantidade > 1 && 's'}</CardBody>
+                                {data.item.validade &&
+                                    <CardBody vencimento={twoWeeks > data.item.validade}> expira em: {moment(data.item.validade).format('L')}</CardBody>}
+                            </CardRow>
+                        </CardCol>
+                    </CardRow>
+                </CardCompras>
+            </TouchableWithoutFeedback>
+
+        </SwipeRow>
     );
 };
 
@@ -112,23 +111,54 @@ export default function PerRowConfig(props) {
 
     const closeRow = (rowMap, rowKey) => {
         console.log(rowMap.undefined)
-        console.log({rowKey})
+        console.log({ rowKey })
 
-        if (rowMap[rowKey]) {
-            rowMap[rowKey].closeRow();
-        }
+        // if (rowMap[rowKey]) {
+        //     rowMap[rowKey].closeRow();
+        // }
     }
 
 
-    const renderItem = (data, rowMap) => (
-        <SwipeRow
-                disableLeftSwipe={parseInt(data.item.key) % 2 === 0}
-                friction={65}
-                directionalDistanceChangeThreshold={5}
-                leftActionValue={10}
-                rightActionValue={-10}
-                leftOpenValue={70}
-                rightOpenValue={-70}                
+
+    const renderItem = (data, rowMap) => {
+
+        let visible = false
+
+        const deleteAlert = (data) => {
+            
+            Alert.alert(
+                'Atenção',
+                'Deseja mesmo remover?',
+                [
+                  {
+                    text: 'NÂO',
+                    onPress: () => console.log('Nom'),
+                    style: 'cancel',
+                  },
+                  {text: 'SIM', onPress: () => props.removeItem(data.item)
+                },
+              ],
+              {cancelable: false},
+              );
+        }
+
+        const setVisible = (item) => {
+            console.log('MIAU')
+
+            props.setShowOptions(item)
+        }
+
+        return (
+
+            <SwipeRow
+                disableLeftSwipe
+                disableRightSwipe
+                // friction={65}
+                // directionalDistanceChangeThreshold={5}
+                // leftActionValue={10}
+                // rightActionValue={-10}
+                // leftOpenValue={70}
+                // rightOpenValue={-120}
                 style={styles.front}
             >
                 <View style={styles.rowBack}>
@@ -140,45 +170,65 @@ export default function PerRowConfig(props) {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <TouchableOpacity
-                        style={[styles.backRightBtn, styles.backRightBtnRight]}
-                        onPress={() => { props.check(data.item, props.data) } }
-                    >
-                        <CheckItem state={data.item.done ? 'check-square-o' : 'square-o'} />
-                    </TouchableOpacity>
+
+
+                    {/* <TouchableOpacity
+                            style={[styles.backRightBtn, styles.backRightBtnRight]}
+                            onPress={() => { props.check(data.item, props.data) } }
+                        >
+                            <CheckItem state={data.item.done ? 'check-square-o' : 'square-o'} />
+                        </TouchableOpacity> */}
                 </View>
 
                 <TouchableWithoutFeedback
-                    onPress={() => console.log('You touched me')}
+                    onPress={() => setVisible(data.item)}
                     underlayColor={'#AAA'}
                 >
                     <CardCompras >
-                        <CardRow>
-                            <CardCol style={{ alignContent: "space-between" }}>
-                                <TouchableOpacity style={styles.touchableQTD} onPress={() => { props.changeItemQTD(data.item, 'more' ) }}>
-                                    <PlusItem color='#c93b4a'size={20} />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.touchableQTD} onPress={() => { props.changeItemQTD(data.item, 'less' ) }}>
-                                    <MinusItem color='#c93b4a' size={20} />
-                                </TouchableOpacity>
-                            </CardCol>
-                            <CardCol style={{alignContent: 'flex-start', width: '80%'}}>
-                                <CardTitle style={{ textAlign: 'left', textDecorationLine: data.item.done ? "line-through" : "none" }}>{data.item.provimento.nome}</CardTitle>
-                                <CardRow>
+                        <CardRow style={{ alignContent: "space-between" }}>
+                            <CardCol style={{ alignContent: 'flex-start', width: '80%' }}>
+                                <CardRow style={{ alignContent: 'space-between', alignItems: 'center' }}>
+                                    <CardTitle style={{ textAlign: 'left', textDecorationLine: data.item.done ? "line-through" : "none", marginTop: 15 }}>{data.item.provimento.nome}</CardTitle>
                                     <CardBody>{data.item.quantidade} unidade{data.item.quantidade > 1 && 's'}</CardBody>
-                                    {data.item.validade &&
-                                        <CardBody vencimento={twoWeeks > data.item.validade}> expira em: {moment(data.item.validade).format('L')}</CardBody>}
                                 </CardRow>
                             </CardCol>
+                            <CardCol style={{ alignContent: "flex-end" }}>
+                                <TouchableOpacity
+                                    style={[styles.backRightBtn, styles.backRightBtnRight]}
+                                    onPress={() => { props.check(data.item, props.data) }}
+                                >
+                                    <CheckItem state={data.item.done ? 'check-square-o' : 'square-o'} />
+                                </TouchableOpacity>
+                            </CardCol>
                         </CardRow>
+                        
+                        {data.item.visible &&                            
+                        <CardRow>
+                            <TouchableOpacity onPress={() => deleteAlert(data)}>
+                                <DeleteItem color='#c93b4a' />
+                            </TouchableOpacity>                            
+
+                            <CardCol style={{ flexDirection: 'row', marginHorizontal: 0, alignContent: "flex-end", width: 120, alignSelf: "flex-end" }}>
+                                <TouchableOpacity style={styles.touchableQTD} onPress={() => { props.changeItemQTD(data.item, 'less') }}>
+                                    <MinusItem color='#c93b4a' size={20} />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.touchableQTD} onPress={() => { props.changeItemQTD(data.item, 'more') }}>
+                                    <PlusItem color='#c93b4a' size={20} />
+                                </TouchableOpacity>
+                            </CardCol>
+                        </CardRow>
+                        }
+                        
                     </CardCompras>
                 </TouchableWithoutFeedback>
 
             </SwipeRow>
-    );
+        );
 
-    return (        
-        <SwipeListView data={props.value} renderItem={renderItem} style={{position: "relative" ,width:screenWidth}} />        
+    }
+
+    return (
+        <SwipeListView data={props.value} renderItem={renderItem} style={{ position: "relative", width: screenWidth }} />
     );
 }
 
@@ -229,7 +279,7 @@ const styles = StyleSheet.create({
 
     },
     backRightBtn: {
-        alignItems: 'center',
+        alignItems: 'flex-end',
         bottom: 0,
         justifyContent: 'center',
         position: 'absolute',
@@ -274,9 +324,9 @@ const styles = StyleSheet.create({
         right: 0,
         width: '100%'
     },
-    touchableQTD:{
-        height:45,
-        width:45,
+    touchableQTD: {
+        height: 45,
+        width: 45,
         borderRadius: 50,
         backgroundColor: '#dedede',
         marginVertical: 5,

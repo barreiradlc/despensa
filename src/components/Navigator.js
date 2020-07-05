@@ -281,6 +281,8 @@ function MyDrawer(props) {
 function Navigator(props) {
 
   const home = props.token ? 'Home' : 'Login'
+  // const home = 'Lista de compras'
+
 
   return (
       <Stack.Navigator initialRouteName={home}>

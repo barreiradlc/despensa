@@ -16,12 +16,13 @@ import * as Utils from '../utils/Utils'
 import * as LocalStorage from '../../services/LocalStorage'
 
 export default class FormItemCompra extends React.Component {
-    
+
     state = {
         despensa: this.props.despensa,
         visible: this.props.renderForm,
         nome: '',
-        quantidade: 1
+        quantidade: 1,
+        focus: true
     };
     
     _hideDialog = () => {
@@ -30,7 +31,7 @@ export default class FormItemCompra extends React.Component {
         this.setState({ visible: false })
     };
     
-    handleSetConfig = () => {
+    handleSetConfig = (noDismiss) => {
         const { despensa, nome, quantidade } = this.state
 
         console.debug(despensa.uuid)
@@ -40,8 +41,16 @@ export default class FormItemCompra extends React.Component {
                 Utils.toast(`${nome} adicionado`)
 
                 console.debug({responseCompra:res})
-
-                this._hideDialog()
+                if(!noDismiss){
+                    this._hideDialog()
+                } else {
+                    this.setState({
+                        focus: true,
+                        nome: '',
+                        quantidade: 1
+                    })
+                    this.textInput.focus()
+                }
                 this.props.refresh()
             })
             .catch((e) => {
@@ -74,7 +83,7 @@ export default class FormItemCompra extends React.Component {
             })
         }
         
-        const { quantidade, nome } = this.state
+        const { quantidade, nome, focus } = this.state
         
         return (
             <Portal>
@@ -83,21 +92,26 @@ export default class FormItemCompra extends React.Component {
                         <Dialog.ScrollArea>
                             <ScrollView contentContainerStyle={{ paddingVertical: 14, borderBottomWidth: 0 }}>
                                 <FormInput
+                                    ref={(input) => { this.textInput = input; }}
                                     onChange={(e) => handleChangeInput(e, 'nome')}
-                                    autoFocus
+                                    autoFocus={focus}
                                     value={nome}
-                                    placeholder='Nome'
+                                    placeholder='Nome'                                    
+                                    onSubmitEditing={() => this.secondTextInput.focus() }
+                                    blurOnSubmit={false}
                                 />
 
                                 <FormInput
+                                    ref={(input) => { this.secondTextInput = input; }}
                                     onChange={(e) => handleChangeInput(e, 'quantidade')}
                                     value={quantidade || 1}
                                     placeholder='Quantidade'
                                     keyboardType='number-pad'
+                                    onSubmitEditing={() => {this.handleSetConfig(true)}}
                                 />
                                 
                                 <FormButton onPress={this.handleSetConfig} active>
-                                    <FormButtonLabel active>Atualizar</FormButtonLabel>
+                                    <FormButtonLabel active>Adicionar</FormButtonLabel>
                                 </FormButton>
 
                             </ScrollView>

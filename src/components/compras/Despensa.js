@@ -7,11 +7,13 @@ import { FormButton, FormButtonLabel, FormContainerCompras, FormContainer } from
 import { screenWidth, Card } from '../styled/Geral'
 import * as LocalStorage from '../../services/LocalStorage'
 import FormItemCompra from '../utils/FormItemCompra'
+import realm from '../../config/realm'
 
 class Despensa extends React.Component {
     state = {
         expanded: false,
-        renderForm: false
+        renderForm: false,
+        data: this.props.data
     }
 
     _handlePress = () =>
@@ -37,20 +39,96 @@ class Despensa extends React.Component {
         console.debug(item, despensa)
     }
 
+    setShowOptions = (item) => {
+        const { data } = this.state
+
+        console.debug(item.visible)
+        console.debug(data.compras)
+        const newData = data.compras.map(( c ) => {
+            if(item.provimento.nome === c.provimento.nome){
+                
+                c = { 
+                    visible: !item.visible,
+                    id: item.id,
+                    uuid: item.uuid,
+                    quantidade: item.quantidade,
+                    deletedAt: item.deletedAt,
+                    dataAlteracao: item.dataAlteracao,
+                    done: item.done,
+                    provimento: {
+                        id: item.provimento.id,
+                        nome: item.provimento.nome,
+                    }
+                }
+                console.log(c)
+            }
+
+            return c
+        })
+
+        console.log({newData})
+
+
+        this.setState({
+            data : {
+                ...data,
+                compras: newData
+                
+            }
+        })
+    }
+
     changeItemQTD = (item, action) => {
-        LocalStorage.changeQTDItemListaCompras(item, action)
-            .then((res) => {
-                console.log({ 'resItem': res })
-                this.props.reload(item, action)
-            })
+        // LocalStorage.changeQTDItemListaCompras(item, action)
+        //     .then((res) => {
+        //         console.log( 'item' )
+        //         console.log({ res })
+                
+        //         console.log( item.provimento.nome )
+        //         console.log( this.state.data.compras )
+
+                let newQTD = action == 'more' ? item.quantidade + 1 : item.quantidade - 1
+
+                const newList = this.state.data.compras.map(( c ) => {
+                    if(item.provimento.nome == c.provimento.nome){
+                        realm.write(() => {
+                            c.quantidade = newQTD
+                        })
+                    }
+
+                    return item
+                })
+
+                this.setState({
+                    ...this.state.data,
+                    compras: {
+                        newList
+                    }
+                })
+
+                console.log({newList})
+
+
+                // this.setState({
+                //     data: {
+                //         ...this.state.data,
+                //         item : {
+                //             quantidade: newQTD
+                //         }
+                //     }
+                // })
+                // this.props.reload(item, action)
+            // })
         console.log({ item: item.quantidade })
     }
 
 
     render() {
 
+
+
         const setRenderForm = (val) => {
-            const { data } = this.props
+            const { data } = this.state
             // console.debug(val)
             this.props.handleFormShow(data)
             // this.setState({
@@ -63,17 +141,18 @@ class Despensa extends React.Component {
             return (
                 <FormContainerCompras>
 
-                    <PerRowConfig changeItemQTD={this.changeItemQTD} check={this.checkItem} removeItem={this.removeItem} value={data.compras.filter((c) => !c.deletedAt)} despensa={data} />
-
-                    <FormButton onPress={() => setRenderForm( this.state.renderForm ) } style={{ width: screenWidth / 2, alignSelf: "center", padding: 0, marginBottom: 35 }} active>
+                    <FormButton onPress={() => setRenderForm( this.state.renderForm ) } style={{ width: screenWidth / 2, alignSelf: "center", padding: 0, marginBottom: 25 }} active>
                         <FormButtonLabel active style={{ fontWeight: 'regular', fontSize: 15, margin: 0, padding: 0 }}>Adicionar Item</FormButtonLabel>
                     </FormButton>
+
+                    <PerRowConfig changeItemQTD={this.changeItemQTD} check={this.checkItem} removeItem={this.removeItem} value={data.compras.filter((c) => !c.deletedAt)} despensa={data} setShowOptions={this.setShowOptions} />
 
                 </FormContainerCompras>
             )
         }
 
-        const { data, renderForm } = this.props
+        const { renderForm } = this.props
+        const { data } = this.state
 
         // if (data.compras.length === 0 || data.compras.filter((c) => !c.deletedAt).length === 0) {
         //     return null
@@ -93,14 +172,15 @@ class Despensa extends React.Component {
                 left={props => <List.Icon {...props} icon="fridge" color='#c93b4a' />}
             >
 
+                {renderForm &&
+                    <FormItemCompra renderForm={renderForm} despensaAtiva={data.uuid}/>
+                }
+
                 <List.Item
                     style={{ position: "relative", right: 20, width: screenWidth }}
                     right={props => <RenderItem />}
                 />
 
-                {renderForm &&
-                    <FormItemCompra renderForm={renderForm} despensaAtiva={data.uuid}/>
-                }
 
             </List.Accordion>
 
