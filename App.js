@@ -17,6 +17,7 @@ import * as LocalStorage from "./src/services/LocalStorage";
 console.disableYellowBox = true;
 
 function App() {  
+  const [ reload, setReload ] = React.useState(true)
   const [ token, setToken ] = React.useState()
   const [loading, setLoading] = React.useState(true)
 
@@ -25,20 +26,26 @@ function App() {
   }, [])
   
   function updateShopList(){
-    LocalStorage.updateShopList()
-    console.debug("updateShopList")
+    if(reload){
+      console.debug("updateShopList")
+      LocalStorage.updateShopList()
+    }
   }
-
+  
   async function getToken(){
+    LocalStorage.updateShopList()
     const value = await AsyncStorage.getItem('@token');
     setToken(value)
     setLoading(false)
     AppState.addEventListener('change', _handleAppStateChange);
   }
-
+  
   function _handleAppStateChange (nextAppState){  
     if(nextAppState === 'inactive' || nextAppState === 'background'){
       updateShopList()
+      setReload(false)
+    } else if(nextAppState === 'active'){
+      setReload(true)
     }
   }
 

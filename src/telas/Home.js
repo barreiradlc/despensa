@@ -108,6 +108,7 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
         // setdespensasList(data.me.despensas)
 
         try {
+            
             // LocalStorage.removeDespensas()
 
             LocalStorage.storeDespensas(data.me.despensas)

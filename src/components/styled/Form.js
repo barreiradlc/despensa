@@ -22,6 +22,12 @@ export const FormContainerScroll = styled.ScrollView`
   flex: 1 
   padding:40px
 `
+
+export const ContainerScrollCard = styled.ScrollView`
+  background-color: #fff
+  flex: 1 
+  padding:20px
+`
   
 export const FormLabel = styled.Text`
   marginHorizontal: 5px
@@ -196,7 +202,7 @@ export const CardInner = styled.View`
   borderLeftWidth: 5px
   background: ${props => props.active ? cor1 : cor4 }
   marginVertical: 10px
-  padding: 25px
+  padding: 20px
   borderRadius: 10px
   elevation: ${props => props.flat ? 0 : 3 }
   `

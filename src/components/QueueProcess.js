@@ -112,6 +112,7 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
                     uuid: i.uuid,
                     quantidade: i.quantidade,
                     validade: i.validade,
+                    deletedAt: i.deletedAt,    
                     provimento: {
                         id :i.provimento.id,
                         nome:i.provimento.nome

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView } from 'react-native'
+import { ScrollView, AppState } from 'react-native'
 import ItemDespensa from '../../components/compras/Despensa'
 import * as LocalStorage from '../../services/LocalStorage'
 import FormItemCompra from '../../components/utils/FormItemCompra'
@@ -14,7 +14,15 @@ function Show() {
         init()
     }, [])
 
+
+    function _handleAppStateChange (nextAppState){  
+        if(nextAppState === 'inactive' || nextAppState === 'background'){
+          init()
+        }
+      }
+
     function init() {
+        AppState.addEventListener('change', _handleAppStateChange);
         LocalStorage.getDespensas()
             .then((res) => {
                 console.log({ res }, despensas)

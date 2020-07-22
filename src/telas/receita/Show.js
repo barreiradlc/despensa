@@ -2,15 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import { Alert } from 'react-native';
-import { Snackbar } from 'react-native-paper'
+import { Alert, StyleSheet } from 'react-native';
+import { Snackbar, DataTable } from 'react-native-paper'
 
 import SnackBar from '../../components/utils/SnackBar'
 import AlertConfig from '../../components/utils/AlertConfig'
 import DeleteReceitaMutation from '../../components/mutations/DeleteReceitaMutation';
 import InnerIngrediente from '../../components/receitas/InnerIngrediente';
 import ShowPasso from '../../components/receitas/ShowPasso';
-import { CardInner, CardInnerTitle, FormButton, FormButtonGroup, FormButtonLabel, FormContainerScroll, Wrap } from '../../components/styled/Form';
+import { CardInner, CardInnerTitle, FormButton, FormButtonGroup, FormButtonLabel, ContainerScrollCard, Wrap } from '../../components/styled/Form';
 import { LoadingOverlay } from '../../components/utils/Components';
 import * as Utils from '../../components/utils/Utils';
 import * as LocalStorage from '../../services/LocalStorage';
@@ -23,6 +23,8 @@ query getReceita($id: ID!) {
       descricao
       ingredientes {
         id
+        quantidade
+        medida
         provimento {
           id
           nome
@@ -51,8 +53,8 @@ mutation addReceita($receita: ReceitaInput!) {
         descricao
         nome
         updatedAt
-        ingredientes {
-          id
+        ingredientes {            
+          id        
           provimento {
             nome
           }
@@ -358,10 +360,10 @@ function ShowReceita({ route, navigation }) {
         })
 
         setSnackVisible(true)
-        
+
         if (snackVisible) {
             if (snackVisibleSelect.nome === item.provimento.nome) {
-                
+
                 setSnackVisible(false)
                 handleAddItemListaCompras()
                 console.log('ADD: ', snackVisibleSelect)
@@ -431,7 +433,7 @@ function ShowReceita({ route, navigation }) {
                 <SnackBar clickSnackBar={clickSnackBar} itemAtivo={snackVisibleSelect.nome} despensaAtiva={despensas.filter((d) => d.uuid === despensaAtiva)[0]} />
             }
 
-            <FormContainerScroll >
+            <ContainerScrollCard>
 
                 <DeleteReceitaMutation ref={removeRef} success={handleSucess} />
 
@@ -439,11 +441,21 @@ function ShowReceita({ route, navigation }) {
 
                 <CardInner>
                     <CardInnerTitle>Ingredientes</CardInnerTitle>
-                    <Wrap>
+                    {/* <Wrap> */}
+                    <DataTable>
+
+
+                        <DataTable.Header>
+                            <DataTable.Title style={styles.left} >Nome</DataTable.Title>
+                            <DataTable.Title numeric style={styles.left} >Medida</DataTable.Title>
+                            <DataTable.Title numeric style={styles.left} >   Qtd.</DataTable.Title>
+                            <DataTable.Title numeric style={styles.left} >Status</DataTable.Title>
+                        </DataTable.Header>
                         {values.ingredientes && values.ingredientes.map((i, index) =>
-                            <InnerIngrediente ref={ingredientesRef[index]} snackCompras={snackCompras} update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show />
+                            <InnerIngrediente ref={ingredientesRef[index]} snackCompras={snackCompras} update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show index={index} />
                         )}
-                    </Wrap>
+                    </DataTable>
+                    {/* </Wrap> */}
                 </CardInner>
 
                 <CardInner>
@@ -476,9 +488,18 @@ function ShowReceita({ route, navigation }) {
 
                 </FormButtonGroup>
 
-            </FormContainerScroll>
+            </ContainerScrollCard>
         </>
     )
 }
+
+
+
+const styles = StyleSheet.create({
+    left: {              
+    //   justifyContent: 'center',
+    //   width: '100%'
+    },
+  });
 
 export default ShowReceita

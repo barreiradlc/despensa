@@ -20,10 +20,14 @@ function Estoque({ route, navigation }) {
     
     useEffect(() => {
         init()
+        if(!edit){
+            LocalStorage.updateShopList()
+        }
         // setLoading(false)
     }, [edit])
     
     async function init(){
+        
         navigation.setOptions({ 
             title: despensa.nome,
             headerRight: () => (

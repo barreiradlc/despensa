@@ -40,6 +40,7 @@ export default class FormItemCompra extends React.Component {
             .then(( res ) => {
                 Utils.toast(`${nome} adicionado`)
 
+                console.debug({noDismiss})
                 console.debug({responseCompra:res})
                 if(!noDismiss){
                     this._hideDialog()
@@ -110,7 +111,7 @@ export default class FormItemCompra extends React.Component {
                                     onSubmitEditing={() => {this.handleSetConfig(true)}}
                                 />
                                 <FormButtonGroup>
-                                    <FormButton onPress={this.handleSetConfig} active>
+                                    <FormButton onPress={() => this.handleSetConfig(false)} active>
                                         <FormButtonLabel active>Adicionar</FormButtonLabel>
                                     </FormButton>                                    
                                 </FormButtonGroup>

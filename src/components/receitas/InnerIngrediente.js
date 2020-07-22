@@ -1,21 +1,29 @@
 import React, { forwardRef, useState, useEffect, useImperativeHandle } from 'react'
+import  { StyleSheet } from 'react-native'
 import { FormTouchableItem, InnerText, RowInner } from '../styled/Form'
 import { RemoveReceita } from '../styled/Geral'
-import * as LocalStorage  from '../../services/LocalStorage'
+import * as LocalStorage from '../../services/LocalStorage'
+import { DataTable } from 'react-native-paper';
 
-function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage }, ref) {
+const MEDIDAS_ENUM = [
+    {value:"UNIDADE",label: "unidade"},
+    {value:"COLHER", label: "colher de sopa"}
+]
+
+function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, index }, ref) {
 
     const [active, setActive] = useState(false)
+    const [activeEstoque, setActiveEstoque] = useState(false)
     const [stock, setStock] = useState(false)
     const [input, setInput] = useState()
     const [nome, setNome] = useState(item.provimento.nome)
     const qtd = item.quantidade
-    
+
     useEffect(() => {
         init()
     }, [item])
-    
-    function init(){
+
+    function init() {
         setNome(item.provimento.nome)
         getStorageIngrediente(item)
         getStorageIngredienteCompras(item)
@@ -28,55 +36,84 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage },
         }
     }))
 
-    function getStorageIngrediente(i){
+    function getStorageIngrediente(i) {
         LocalStorage.getProvimento(i)
-        .then(( res ) => {
-            
-            if(res){
-                if(res.id || res.nome){
+            .then((res) => {
+
+                if (res) {
+                    if (res.id || res.nome) {
                         setActive(true)
                     }
                     console.log('a')
                 }
             })
-            .catch(( err ) => {
-                console.debug(err)
-            })
-    }
-    
-    function getStorageIngredienteCompras(i){
-        LocalStorage.getProvimentoCompras(i)
-            .then(( res ) => {
-                console.log('res')
-                if(res){
-                    if(!res.deletedAt && res.provimento){
-                        setStock(true)
-                        console.log('estoque', res.deletedAt, res.provimento.nome)    
-                    }
-                    
-                }
-            })
-            .catch(( err ) => {
+            .catch((err) => {
                 console.debug(err)
             })
     }
 
-    function edit(){
+    function getStorageIngredienteCompras(i) {
+        LocalStorage.getProvimentoCompras(i)
+            .then((res) => {
+                console.log('res')
+                if (res) {
+                    if (!res.deletedAt && res.provimento) {
+                        setStock(true)
+                        console.log('estoque', res.deletedAt, res.provimento.nome)
+                    }
+
+                }
+            })
+            .catch((err) => {
+                console.debug(err)
+            })
+    }
+
+    function edit() {
         console.log('edit')
     }
 
+    let left = {
+        textAlign: 'start' ,
+        
+    }
+
     return (
-        <RowInner stock={stock} active={active} onPress={() => snackCompras(item)} onLongPress={() => console.log('LoongPress') }>
+        <>
+            {/* <RowInner stock={stock} active={active} onPress={() => snackCompras(item)} onLongPress={() => console.log('LoongPress')}> */}
+
+            {/* <InnerText>{qtd > 1 && `${qtd}x `}{nome}</InnerText> */}
+
+            {console.log(item)}
+
             
-            <InnerText>{qtd > 1 && `${qtd}x `}{nome}</InnerText>
-            
-            {!show && 
-                <FormTouchableItem onPress={() => remove(item) }  hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
+             
+
+            <DataTable.Row>
+                <DataTable.Cell style={styles.left}>{nome} mais mais</DataTable.Cell>
+                <DataTable.Cell style={styles.left} numeric>{MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label}</DataTable.Cell>
+                <DataTable.Cell style={styles.left} numeric>   {item.quantidade}</DataTable.Cell>
+                <DataTable.Cell style={styles.left} numeric> + </DataTable.Cell>
+            </DataTable.Row>
+        
+
+
+
+            {!show &&
+                <FormTouchableItem onPress={() => remove(item)} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
                     <RemoveReceita />
                 </FormTouchableItem>
             }
-        </RowInner>
+        </>
     )
 }
+
+
+const styles = StyleSheet.create({
+    left: {              
+    //   justifyContent: 'center',
+    //   width: '100%'
+    },
+  });
 
 export default forwardRef(InnerIngrediente)
