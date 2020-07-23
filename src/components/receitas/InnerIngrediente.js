@@ -1,7 +1,7 @@
 import React, { forwardRef, useState, useEffect, useImperativeHandle } from 'react'
 import  { StyleSheet } from 'react-native'
 import { FormTouchableItem, InnerText, RowInner } from '../styled/Form'
-import { RemoveReceita } from '../styled/Geral'
+import { RemoveReceita, TableBody ,TableCell } from '../styled/Geral'
 import * as LocalStorage from '../../services/LocalStorage'
 import { DataTable } from 'react-native-paper';
 
@@ -89,12 +89,12 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, i
             
              
 
-            <DataTable.Row>
-                <DataTable.Cell style={styles.left}>{nome} mais mais</DataTable.Cell>
-                <DataTable.Cell style={styles.left} numeric>{MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label}</DataTable.Cell>
-                <DataTable.Cell style={styles.left} numeric>   {item.quantidade}</DataTable.Cell>
-                <DataTable.Cell style={styles.left} numeric> + </DataTable.Cell>
-            </DataTable.Row>
+            <TableBody>
+                <TableCell >{nome}</TableCell>
+                <TableCell  >{MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label}</TableCell>
+                <TableCell  numeric>   {item.quantidade}</TableCell>
+                <TableCell  numeric> + </TableCell>
+            </TableBody>
         
 
 

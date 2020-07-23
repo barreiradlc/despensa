@@ -1,5 +1,6 @@
 import styled from 'styled-components/native'
 import React from 'react'
+import { Dimensions } from 'react-native'
 
 const cor1 = '#c93b4a'
 const cor2 = '#4e1017'
@@ -8,6 +9,10 @@ const cor4 = '#fff'
 const cor5 = '#555'
 const cor6 = '#999999'
 const cor7 = '#000'
+
+export const screenWidth = Math.round(Dimensions.get('window').width);
+export const screenHeight = Math.round(Dimensions.get('window').height);
+
 
 export const FormContainer = styled.SafeAreaView`
   background-color: #fff
@@ -28,25 +33,25 @@ export const ContainerScrollCard = styled.ScrollView`
   flex: 1 
   padding:20px
 `
-  
+
 export const FormLabel = styled.Text`
   marginHorizontal: 5px
   textAlign: left
   padding: 0px
 `
-  
+
 export const FormButton = styled.TouchableOpacity`
   textAlign: left
-  background: ${props => props.active ? cor1 : cor4 }
+  background: ${props => props.active ? cor1 : cor4}
   flex: 1
-  elevation: ${props => props.flat ? 0 : 5 }
+  elevation: ${props => props.flat ? 0 : 5}
   borderRadius: 10px
 `
-    
+
 export const FormButtonLabel = styled.Text`
   fontSize: 20px
-  fontWeight: ${props => props.active ? 'bold' : 'normal' }
-  color: ${props => props.active ? cor4 : cor5 }
+  fontWeight: ${props => props.active ? 'bold' : 'normal'}
+  color: ${props => props.active ? cor4 : cor5}
   textAlign: center
   marginVertical: 10px
   width: 100%
@@ -59,7 +64,7 @@ export const FormButtonGroup = styled.View`
   justifyContent: space-between
   marginVertical: 20px
 `
-  
+
 export const FormTouchable = styled.TouchableOpacity`
   flexDirection: row
   justifyContent: center
@@ -102,13 +107,13 @@ export const FormTouchableIcon = styled.TouchableOpacity`
   alignItems: center
   justify-content: center
 `
-  
+
 export const FormTouchableInner = styled.Text`
   textAlign: center
   margin: 0px
   padding: 0px
 `
-  
+
 export const FormAssetContainer = styled.View`
   margin:10px
   padding:10px
@@ -119,14 +124,14 @@ export const FormAssetContainer = styled.View`
 `
 
 export const FormAsset = styled.Image`
-  borderRadius: ${ props => props.round ? '50px' : '0px'  }
-  padding: ${ props => props.round ? '80px' : '0px'  }
+  borderRadius: ${ props => props.round ? '50px' : '0px'}
+  padding: ${ props => props.round ? '80px' : '0px'}
   width: 100%
   height: 200px
   resizeMode: contain
   marginVertical: 40px
 `
-  
+
 export const FormInput = styled.TextInput`
   background: ${cor3}
   paddingVertical: 15px
@@ -153,8 +158,8 @@ export const FormInputReadOnly = styled.Text`
   width: 100%
   color: ${props => props.placeholder ? cor6 : cor7}
 `
-  
-  
+
+
 export const ErrorLabel = styled.Text`
   color: #fff
   padding: 10px
@@ -163,7 +168,7 @@ export const ErrorLabel = styled.Text`
 
 export const ErrorInnerCard = styled.View`
 `
-  
+
 export const ErrorCard = styled.View`
   borderRadius: 15px
   marginVertical: 25px
@@ -172,7 +177,7 @@ export const ErrorCard = styled.View`
   elevation:3
   flexDirection: row
 `
-  
+
 export const Card = styled.View`
   background: #fff
   marginVertical: 10px
@@ -180,7 +185,7 @@ export const Card = styled.View`
   borderRadius: 10px
   elevation:3
 `
-  
+
 export const CardTitle = styled.Text`
   fontSize: 20px
   fontWeight: bold
@@ -188,8 +193,8 @@ export const CardTitle = styled.Text`
 `
 export const UserLabel = styled.Text`
   fontSize: 15px
-  fontWeight: ${props => props.active ? 'bold' : 'normal' }
-  color: ${props => props.active ? cor4 : cor5 }
+  fontWeight: ${props => props.active ? 'bold' : 'normal'}
+  color: ${props => props.active ? cor4 : cor5}
   width: 100%
   flex: 1
   elevation: 0
@@ -200,26 +205,26 @@ export const UserLabel = styled.Text`
 export const CardInner = styled.View`
   borderLeftColor: ${cor1}
   borderLeftWidth: 5px
-  background: ${props => props.active ? cor1 : cor4 }
+  background: ${props => props.active ? cor1 : cor4}
   marginVertical: 10px
   padding: 20px
   borderRadius: 10px
-  elevation: ${props => props.flat ? 0 : 3 }
+  elevation: ${props => props.flat ? 0 : 3}
   `
-  
-  export const CardInnerTitle = styled.Text`
+
+export const CardInnerTitle = styled.Text`
   fontSize: 20px
   fontWeight: bold
   marginBottom: 15px
   `
-  
-  export const Wrap = styled.View`
+
+export const Wrap = styled.View`
   flexWrap: wrap
   flexDirection:row
   `
-  
-  export const RowInner = styled.TouchableOpacity`
-  backgroundColor:${props => props.active ? cor1 : (props.stock ? cor2 : cor3) }
+
+export const RowInner = styled.TouchableOpacity`
+  backgroundColor:${props => props.active ? cor1 : (props.stock ? cor2 : cor3)}
   flexDirection:row
   alignItems: center
   justify-content: center
@@ -228,7 +233,7 @@ export const CardInner = styled.View`
   height:50px
   borderRadius:5px
   `
-  export const RowInnerAdd = styled.TouchableOpacity`
+export const RowInnerAdd = styled.TouchableOpacity`
   backgroundColor:${cor1}
   flexDirection:row
   alignItems: flex-end
@@ -237,8 +242,8 @@ export const CardInner = styled.View`
   margin:  5px
   borderRadius:5px
   `
-  
-  export const InnerText = styled.Text`
+
+export const InnerText = styled.Text`
   fontWeight: bold
     alignSelf:center
     paddingHorizontal: 20px
@@ -251,14 +256,36 @@ alignSelf:flex-start
 borderRadius: 15px
 color: #555
   `
-  
-  export const ErrorTouchable = styled.TouchableOpacity`
+
+
+export const Table = styled.View`    
+  marginBottom: 20px    
+  flexDirection: column
+  `
+export const TableHeader = styled.View`    
+  flexDirection: row
+  marginBottom: 10px    
+`
+
+export const TableBody = styled.View`    
+  flexDirection: row
+  marginBottom: 5px        
+`
+export const TableTitle = styled.Text`        
+  width: ${props => props.numeric ? '50px' : `${screenWidth / 2 - 60}`}
+  `
+export const TableCell = styled.View`    
+  width: ${props => props.numeric ? '50px' : `${screenWidth / 2 - 60}`}    
+`
+
+
+export const ErrorTouchable = styled.TouchableOpacity`
   alignItems: flex-end
   elevation:5
   `
-  // ícones
-  import FontAwesome from 'react-native-vector-icons/FontAwesome';
-  
-  export const Facebook = () => <FontAwesome name="facebook-square" size={30} color="#fff" />;
-  export const Google = () => <FontAwesome name="google-plus" size={30} color="#fff" />;
+// ícones
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+export const Facebook = () => <FontAwesome name="facebook-square" size={30} color="#fff" />;
+export const Google = () => <FontAwesome name="google-plus" size={30} color="#fff" />;
 export const Close = () => <FontAwesome name="close" size={30} color="#555" />;

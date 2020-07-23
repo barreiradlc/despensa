@@ -3,7 +3,13 @@ import { Alert } from 'react-native'
 import FormInnerIngrediente from '../../components/receitas/FormInnerIngrediente';
 import FormPasso from '../../components/receitas/FormPasso';
 import InnerIngrediente from '../../components/receitas/InnerIngrediente';
-import { CardInner, CardInnerTitle, FormButton, FormButtonGroup, FormButtonLabel, FormContainerScroll, FormInput, FormInputTextArea, FormTouchableAdd, InnerText, RowInnerAdd, Wrap } from '../../components/styled/Form';
+import {
+    CardInner, CardInnerTitle, FormButton, FormButtonGroup, FormButtonLabel, FormContainerScroll, FormInput, FormInputTextArea, FormTouchableAdd, InnerText, RowInnerAdd, Wrap, Table,
+    TableHeader,
+    TableTitle,
+    TableBody,
+    TableCell
+} from '../../components/styled/Form';
 import { AddReceita } from '../../components/styled/Geral';
 import { LoadingOverlay } from '../../components/utils/Components';
 import * as Utils from '../../components/utils/Utils';
@@ -276,12 +282,22 @@ function FormReceita({ route, navigation }) {
 
                 <CardInner>
                     <CardInnerTitle>Ingredientes</CardInnerTitle>
+                    
+                        <Table>
+                            <TableHeader>
+                            <TableTitle  >Nome</TableTitle>
+                                <TableTitle numeric  >Qtd.</TableTitle>
+                                <TableTitle >Medida</TableTitle>
+                                <TableTitle numeric  ></TableTitle>
+                            </TableHeader>
+                        </Table>
+                    
+                    {values.ingredientes && values.ingredientes.map((i) =>
+                        <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} />
+                    )}
+
                     <Wrap>
                         <FormInnerIngrediente snackCompras={snackCompras} add={handleNewIngrediente} active={addIgrediente} toggle={toggleIngrediente} />
-
-                        {values.ingredientes && values.ingredientes.map((i) =>
-                            <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} />
-                        )}
                     </Wrap>
                 </CardInner>
 

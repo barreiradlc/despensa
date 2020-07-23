@@ -60,14 +60,14 @@ export const TabContainer = styled.View`
     justifyContent: center
     width: 100%
     paddingVertical: 20px
-    background: ${props => props.active ? props.bg : cor4 };
+    background: ${props => props.active ? props.bg : cor4};
     borderRadius: 10px
 `
 
 export const TabLabel = styled.Text`
     paddingHorizontal: 20px
     color: ${props => props.active ? '#fff' : '#555'}
-    fontWeight: ${ props => props.active ? 'bold' : 'normal' }
+    fontWeight: ${ props => props.active ? 'bold' : 'normal'}
 `
 
 export const Header = styled.Text`
@@ -87,6 +87,27 @@ export const ContainerView = styled.View`
     marginBottom: 20px
     backgroundColor: ${cor3}
 `
+
+export const Table = styled.View`    
+    marginBottom: 20px    
+    flexDirection: column
+    `
+export const TableHeader = styled.View`    
+    flexDirection: row
+    marginBottom: 10px    
+`
+
+export const TableBody = styled.View`    
+    flexDirection: row
+    marginBottom: 5px        
+`
+export const TableTitle = styled.Text`        
+    width: ${props => props.numeric ? '50px' : `${screenWidth / 3 - 10}` }
+    `
+    export const TableCell = styled.Text`    
+    width: ${props => props.numeric ? '50px' : `${screenWidth / 3 - 10}` }    
+`
+
 export const ContainerDespensa = styled.ScrollView`
     marginBottom: 20px
 `
@@ -95,7 +116,7 @@ export const CardTouchable = styled.TouchableOpacity`
 `
 
 export const FloatTouchable = styled.TouchableWithoutFeedback`
-    background: ${props => props.active ? cor1 : cor4 }
+    background: ${props => props.active ? cor1 : cor4}
 `
 
 export const HeaderTouchable = styled.TouchableWithoutFeedback`
@@ -167,22 +188,22 @@ export const FloatHome = styled.View`
     marginHorizontal: 25px
     marginBottom: 45px
     `
-    export const FloatTitle = styled.Text`
+export const FloatTitle = styled.Text`
     fontSize: 15px
     color: #fff
     fontWeight: bold
     paddingHorizontal:15px
     textAlign: center
     `
-    export const CardBody = styled.Text`
-        color: ${props => props.vencimento ? cor1 : cor5 };
+export const CardBody = styled.Text`
+        color: ${props => props.vencimento ? cor1 : cor5};
         fontWeight: bold
 `
 export const CardRow = styled.View`
     flexDirection: row
     justifyContent: space-between
     `
-    export const CardCol = styled.View`
+export const CardCol = styled.View`
     
     flexDirection: column
     justifyContent: space-evenly
@@ -233,18 +254,18 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 export const Plus = () => <FontAwesome name="plus" size={30} color="#fff" />;
 export const Google = () => <FontAwesome name="google-plus" size={30} color="#fff" />;
 
-export const RemoveReceita = () => <FontAwesome name="times" size={20} color="#fff" style={{ borderRadius:15, paddingHorizontal: 5 }} />;
-export const AddReceita = () => <FontAwesome name="plus" size={20} color="#fff" style={{padding:15,borderRadius:15 }} />;
-export const PlusItemReceita = () => <FontAwesome name="plus" size={20} color="#fff" style={{paddinng:25}} />;
-export const PlusItem = ({color, size}) => <FontAwesome name="plus" size={size || 40} color={color || '#fff'} style={{paddinng:25}} />;
-export const MinusItem = ({color, size}) => <FontAwesome name="minus" size={size || 40} color={color || '#fff'}  />;
+export const RemoveReceita = () => <FontAwesome name="times" size={20} color="#fff" style={{ borderRadius: 15, paddingHorizontal: 5 }} />;
+export const AddReceita = () => <FontAwesome name="plus" size={20} color="#fff" style={{ padding: 15, borderRadius: 15 }} />;
+export const PlusItemReceita = () => <FontAwesome name="plus" size={20} color="#fff" style={{ paddinng: 25 }} />;
+export const PlusItem = ({ color, size }) => <FontAwesome name="plus" size={size || 40} color={color || '#fff'} style={{ paddinng: 25 }} />;
+export const MinusItem = ({ color, size }) => <FontAwesome name="minus" size={size || 40} color={color || '#fff'} />;
 export const EditItem = () => <FontAwesome name="pencil" size={40} color="#fff" />;
-export const DeleteItem = ({color}) => <FontAwesome name="trash-o" size={40} color={color || '#fff'} />;
+export const DeleteItem = ({ color }) => <FontAwesome name="trash-o" size={40} color={color || '#fff'} />;
 export const RemoveItem = () => <FontAwesome name="times" size={40} color="#555" />;
-export const MenuItem = () => <FontAwesome name="ellipsis-v" size={20} color="#555" style={{paddingRight:20}} />;
-export const HomeMenuItem = () => <FontAwesome name="navicon" size={20} color="#555" style={{paddingLeft:20}}/>;
-export const HomeNotifications = () => <FontAwesome name="bell-o" size={20} color="#555" style={{paddingRight:20}}/>;
+export const MenuItem = () => <FontAwesome name="ellipsis-v" size={20} color="#555" style={{ paddingRight: 20 }} />;
+export const HomeMenuItem = () => <FontAwesome name="navicon" size={20} color="#555" style={{ paddingLeft: 20 }} />;
+export const HomeNotifications = () => <FontAwesome name="bell-o" size={20} color="#555" style={{ paddingRight: 20 }} />;
 
-export const UserItem = () => <FontAwesome name="ellipsis-v" size={20} color="#555" style={{paddingRight:20}} />;
+export const UserItem = () => <FontAwesome name="ellipsis-v" size={20} color="#555" style={{ paddingRight: 20 }} />;
 
-export const CheckItem = ({state}) => <FontAwesome name={state} size={30} color="#555" style={{paddingLeft:10}} />;
+export const CheckItem = ({ state }) => <FontAwesome name={state} size={30} color="#555" style={{ paddingLeft: 10 }} />;
