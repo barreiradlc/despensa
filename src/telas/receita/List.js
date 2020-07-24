@@ -9,7 +9,7 @@ import { LoadingOverlay } from '../../components/utils/Components'
 const actions = [
     {
         text: "Nova Receita",
-        color:'#c93b4a',
+        color: '#c93b4a',
         icon: <PlusItemReceita />,
         name: "newReceita",
         position: 1
@@ -24,26 +24,39 @@ const actions = [
 ];
 
 const GET = gql`
-    query getreceitas($q: String){
-        receitas(query:$q){
-            id
-            nome
-            descricao
+    query getreceitas($q: String, $after: String){
+        receitas(query:$q, after: $after){
+            nodes{
+                id
+                nome
+                descricao
+            }
+            pageInfo {
+                hasNextPage
+                endCursor
+            }
         }
     }
 `;
 
 
-function List({navigation, route}) {
-    const { data, error, loading, refetch, subscribeToMore } = useQuery(GET);
+function List({ navigation, route }) {
+    const { data, error, loading, refetch, subscribeToMore, fetchMore, cursor } = useQuery(GET, {
+        variables: {
+            offset: 0,
+            limit: 10
+        },
+        fetchPolicy: "cache-and-network"
+    });
 
     useEffect(() => {
         console.debug(JSON.stringify(data))
+        console.debug(JSON.stringify(cursor))
     }, [data])
 
     useEffect(() => {
-        if(route.params){
-            if(route.params.refetch){
+        if (route.params) {
+            if (route.params.refetch) {
                 refetch(data)
             }
         }
@@ -56,7 +69,7 @@ function List({navigation, route}) {
         })
     }
 
-    function handleAction(action){
+    function handleAction(action) {
         switch (action) {
             case 'newReceita':
                 handleFormNew()
@@ -64,14 +77,12 @@ function List({navigation, route}) {
             case 'addLista':
                 alert('A implementar...')
                 break;
-        
             default:
                 break;
         }
-
     }
 
-    function handleFormNew(){
+    function handleFormNew() {
         navigation.navigate('FormReceita', {
             edit: false,
             receita: null,
@@ -79,34 +90,99 @@ function List({navigation, route}) {
         })
     }
 
+    function handleInfiniteScrool() {
+        const { pageInfo } = data.receitas
+
+        console.log(pageInfo)
+        console.log(pageInfo.endCursor)
+        if (pageInfo.hasNextPage) {
+            fetchMore({
+                variables: {
+                    after: pageInfo.endCursor
+                },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) return prev;
+
+                    console.log("DATA")
+                    console.log(prev.receitas)
+                    console.log(fetchMoreResult.receitas)
+                    console.log("DATA")
+
+                    return Object.assign({}, prev, {
+                        receitas: {
+                            __typename: "ReceitaConnection",
+                            nodes: [
+                                ...prev.receitas.nodes,
+                                ...fetchMoreResult.receitas.nodes
+                            ],
+                            pageInfo: fetchMoreResult.receitas.pageInfo
+                        }
+                    });
+                }
+            })
+
+
+            // fetchMore({
+            //     variables: {
+            //       offset: data.feed.length
+            //     },
+            //     updateQuery: (prev, { fetchMoreResult }) => {
+            //       if (!fetchMoreResult) return prev;
+            //       return Object.assign({}, prev, {
+            //         feed: [...prev.feed, ...fetchMoreResult.feed]
+            //       });
+            //     }
+            //   })
+        }
+        // pageInfo {
+        //     hasNextPage
+        //     hasPreviousPage
+        //     endCursor
+        //     startCursor
+        // }
+    }
+
     function Item({ receita }) {
         console.debug({ receita })
 
         return (
-                <Card>
-                    <CardTouchable onPress={() => {navigateShow(receita)}}>
+            <Card>
+                <CardTouchable onPress={() => { navigateShow(receita) }}>
                     <CardTitle>{receita.nome}</CardTitle>
                     <CardRow>
                         <CardBody>{receita.descricao}</CardBody>
                     </CardRow>
-                    </CardTouchable>
-                </Card>
+                </CardTouchable>
+            </Card>
         )
     }
 
-    if(loading){
+    if (loading && !data) {
         return <LoadingOverlay />
     }
 
+    console.log("ERRO")
+    console.log(error)
+    console.log("ERRO")
+
     return (
         <>
-            <Container>
-                {data && data.receitas.map((receita) =>
+            <Container
+                // refreshControl={refetch}
+                onScroll={(e) => {
+                    let paddingToBottom = 10;
+                    paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+                    if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
+                        handleInfiniteScrool()
+                    }
+                }}
+            >
+                {data && data.receitas.nodes.map((receita) =>
                     <Item receita={receita} />
                 )}
             </Container>
             <FloatingAction
-            
+
                 color='#c93b4a'
                 actions={actions}
                 onPressItem={name => {
