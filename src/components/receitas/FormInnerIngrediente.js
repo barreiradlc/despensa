@@ -11,29 +11,41 @@ const MEDIDAS_ENUM = [
     {value:"COLHER", label: "colher de sopa"}
 ]
 
-function FormInnerIngrediente({ active, toggle, add }) {
+function FormInnerIngrediente({ active, toggle, add, item }) {
 
     const ref_input = useRef();
     const ref_input2 = useRef();
     const ref_input3 = useRef();
 
-    const [submit, setSubmit] = useState()
-    const [nome, setNome] = useState()
-    const [medida, setMedida] = useState()
-    const [quantidade, setquantidade] = useState(1)
+    const [submit, setSubmit] = useState()    
+    const [values, setValues] = useState({
+        nome: item ? item.provimento.nome : '',
+        quantidade: item ? item.quantidade : '1',
+        medida: item ? item.medida : 'UNIDADE'
+    })
 
-    function handleInput(e) {
-        setNome(e.nativeEvent.text)
+
+    function handleInput(value, attr) {
+        setValues({ ...values, [attr]: value })
+    }
+    // function handleInput(e) {
+    //         setNome(e.nativeEvent.text)
+    // }
+
+    function handleAdd() {
+        add(values)        
+        setTimeout(() => {
+            ref_input.current.focus()
+            resetValues()
+        }, 50)
     }
 
-    function handleAdd(e) {
-        console.log('ref_input2')
-        console.log(ref_input2)
-        console.log(ref_input2.current)
-        // console.log(ref_input2.current.toggle())
-        console.log('ref_input2')
-        // ref_input2.current.toggle()
-        // setSubmit(true)
+    function resetValues(){
+        setValues({
+            nome: '',
+            quantidade: '1',
+            medida: 'UNIDADE'
+        })
     }
     function handleAddMedida(e) {
         // ref_input3.current.focus()
@@ -68,7 +80,7 @@ function FormInnerIngrediente({ active, toggle, add }) {
 
     if (!active) {
         return (
-            <RowInner active>
+            <RowInner active >
                 <MoreIngredient onPress={toggle} >
                     <AddReceita />
                 </MoreIngredient>
@@ -77,13 +89,43 @@ function FormInnerIngrediente({ active, toggle, add }) {
     }
 
     return (
+        <>
+        <TableBody style={{paddingTop: 40}}>            
+            <TableCell>
+                <Picker
+                    prompt="Unidade de medida"
+                    selectedValue={values.medida}
+                    style={{ height: 50, width: '100%' }}
+                    ref={ref_input2}
+                    onValueChange={(itemValue) =>
+                        handleInput(itemValue, 'medida') 
+                    }>                    
+                    {MEDIDAS_ENUM.map(( m ) => 
+                        <Picker.Item label={m.label} value={m.value} />
+                    )}
+                </Picker>
+            </TableCell>
+            <TableCell numeric>
+                <FormInput
+                    // onBlur={handleHide}.
+                    onChange={(event) => { handleInput(event.nativeEvent.text, 'quantidade') }}
+                    autoFocus
+                    value={values.quantidade}
+                    // placeholder='Novo ingrediente'
+                    returnKeyType="next"
+                    onSubmitEditing={handleAdd}
+                    ref={ref_input3}
+                    />
+            </TableCell>
+            
+        </TableBody>
         <TableBody>
             <TableCell>
                 <FormInput
                     // onBlur={handleHide}
-                    onChange={(event) => { handleInput(event, 'nome') }}
+                    onChange={(event) => { handleInput(event.nativeEvent.text, 'nome') }}
                     autoFocus
-                    value={nome}
+                    value={values.nome}
                     placeholder='Nome'
                     returnKeyType="next"
                     onSubmitEditing={handleAdd}
@@ -91,38 +133,14 @@ function FormInnerIngrediente({ active, toggle, add }) {
                     />
             </TableCell>
             <TableCell numeric>
-                <FormInput
-                    // onBlur={handleHide}
-                    onChange={(event) => { handleInput(event, 'nome') }}
-                    autoFocus
-                    value={quantidade}
-                    // placeholder='Novo ingrediente'
-                    returnKeyType="next"
-                    onSubmitEditing={handleAdd}
-                    ref={ref_input3}
-                />
+                <RowInner active>
+                    <MoreIngredient onPress={() => add(values)} >
+                        <AddReceita />
+                    </MoreIngredient>
+                </RowInner>
             </TableCell>
-            <TableCell>
-                <Picker
-                    prompt="Unidade de medida"
-                    selectedValue={medida}
-                    // style={{ height: 50, width: 100 }}
-                    ref={ref_input2}
-                    onValueChange={(itemValue) =>
-                        setMedida(itemValue)                        
-                    }>                    
-                    {MEDIDAS_ENUM.map(( m ) => 
-                        <Picker.Item label={m.label} value={m.value} />
-                    )}
-                </Picker>
-            </TableCell>
-            
-            <RowInner active>
-                <MoreIngredient onPress={toggle} >
-                    <AddReceita />
-                </MoreIngredient>
-            </RowInner>
         </TableBody>
+        </>
 
     )
 }

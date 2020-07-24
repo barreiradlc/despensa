@@ -86,12 +86,9 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, i
 
             {console.log(item)}
 
-            
-             
-
             <TableBody>
-                <TableCell >{nome}</TableCell>
-                <TableCell  >{MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label}</TableCell>
+                <TableCell >{nome}</TableCell>                
+                <TableCell >{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
                 <TableCell  numeric>   {item.quantidade}</TableCell>
                 <TableCell  numeric> + </TableCell>
             </TableBody>

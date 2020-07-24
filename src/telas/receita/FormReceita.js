@@ -24,6 +24,9 @@ function FormReceita({ route, navigation }) {
     const addRef = useRef()
     const removeRef = useRef()
 
+    const descRef = useRef()
+    const ingredientesRef = useRef()
+
     const { edit, receita, id } = route.params;
 
     navigation.setOptions({ title: `${edit ? 'Editar' : 'Nova'} receita` })
@@ -38,6 +41,9 @@ function FormReceita({ route, navigation }) {
         nome: receita && receita.nome,
         descricao: receita && receita.descricao,
         ingredientes: receita && receita.ingredientes,
+        // ingredientes: [
+        //     {"medida": "UNIDADE", "provimento": { nome: "Ovo" }, "quantidade": "1"}
+        // ],
         passos: receita ? receita.passos : [passo]
     }
 
@@ -76,11 +82,17 @@ function FormReceita({ route, navigation }) {
     }
 
     function handleNewIngrediente(value) {
+
+        console.log("==== VALUE ====")
+        console.log(value)
+        console.log("==== VALUE ====")
+
+
         let newItem = true
         let newList = values.ingredientes || []
 
         newList = newList.map((item) => {
-            if (item.provimento.nome === value) {
+            if (item.provimento.nome === value.nome) {
                 item.quantidade++
                 newItem = false
             }
@@ -89,16 +101,20 @@ function FormReceita({ route, navigation }) {
 
         if (newItem) {
             newList.push({
-                quantidade: 1,
+                quantidade: value.quantidade || 1,
+                medida: value.medida || "UNIDADE",
                 provimento: {
-                    nome: value
+                    nome: value.nome
                 }
             })
         }
 
+        console.debug('newList')
+        console.debug(newList)
+        console.debug('newList')
+
         setValues({ ...values, ingredientes: newList })
 
-        console.debug(value)
     }
 
     function handleNewPasso(value, i) {
@@ -138,8 +154,11 @@ function FormReceita({ route, navigation }) {
         result.ingredientes = result.ingredientes.map((i) => {
             delete i.__typename
             delete i.provimento.__typename
-
-            return i
+            
+            return {
+                ...i,
+                quantidade : Number(i.quantidade)
+            }
         })
         result.passos = result.passos.map((p) => {
             delete p.__typename
@@ -189,7 +208,16 @@ function FormReceita({ route, navigation }) {
             })
         }
         setLoad(true)
-        addRef.current.mutate(values)
+        // addRef.current.mutate(values)
+
+        const result = convertValues(values)
+
+        // let variables = {
+        //     id: Number(id),
+        //     receita: result
+        // }
+
+        addRef.current.mutate(result)
     }
 
     function handleRemove() {
@@ -258,7 +286,9 @@ function FormReceita({ route, navigation }) {
                 <LoadingOverlay />
             }
 
-            <FormContainerScroll >
+            <FormContainerScroll 
+                onMomentumScrollBegin={() => setAddIngrediente(false)}
+            >
 
                 <EditReceitaMutation ref={editRef} success={handleSucess} />
                 <AddReceitaMutation ref={addRef} success={handleSucess} />
@@ -270,35 +300,42 @@ function FormReceita({ route, navigation }) {
                     value={values.nome}
                     placeholder='Nome'
                     returnKeyType="next"
-                />
+                    onSubmitEditing={() => descRef.current.focus()}
+                    />
 
                 <FormInputTextArea
                     onChange={(event) => { handleInput(event, 'descricao') }}
                     placeholder='Descricao'
                     value={values.descricao}
-                    returnKeyType='none'
-                    multiline
+                    returnKeyType='next'
+                    // multiline
+                    ref={descRef}
+                    onSubmitEditing={() => setAddIngrediente(true)}
                 />
 
                 <CardInner>
                     <CardInnerTitle>Ingredientes</CardInnerTitle>
-                    
+                    {/* {values.ingredientes.length > 0 || addIgrediente &&
                         <Table>
                             <TableHeader>
-                            <TableTitle  >Nome</TableTitle>
-                                <TableTitle numeric  >Qtd.</TableTitle>
+                                {!addIgrediente &&
+                                    <TableTitle  >Nome</TableTitle>
+                                }
                                 <TableTitle >Medida</TableTitle>
-                                <TableTitle numeric  ></TableTitle>
+                                <TableTitle numeric >Qtd.</TableTitle>
+
                             </TableHeader>
                         </Table>
-                    
+                    } */}
+
                     {values.ingredientes && values.ingredientes.map((i) =>
-                        <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} />
+                        <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} add={handleNewIngrediente} />
                     )}
 
                     <Wrap>
                         <FormInnerIngrediente snackCompras={snackCompras} add={handleNewIngrediente} active={addIgrediente} toggle={toggleIngrediente} />
-                    </Wrap>
+                    </Wrap>                        
+
                 </CardInner>
 
                 <CardInner>

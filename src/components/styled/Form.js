@@ -272,13 +272,11 @@ export const TableBody = styled.View`
   marginBottom: 5px        
 `
 export const TableTitle = styled.Text`        
-  width: ${props => props.numeric ? '50px' : `${screenWidth / 2 - 60}`}
+  width: ${props => props.numeric ? '80px' : `${screenWidth / 2 }`}
   `
 export const TableCell = styled.View`    
-  width: ${props => props.numeric ? '50px' : `${screenWidth / 2 - 60}`}    
+  width: ${props => props.numeric ? '80px' : `${screenWidth / 2 }`}    
 `
-
-
 export const ErrorTouchable = styled.TouchableOpacity`
   alignItems: flex-end
   elevation:5
