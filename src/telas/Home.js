@@ -112,7 +112,7 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
             // LocalStorage.removeDespensas()
 
             LocalStorage.storeDespensas(data.me.despensas)
-                .then((res) => {                    
+                .then((res) => {
                     setLoadingList(false)
                     setEdit(false)
                     setRefresh(false)

@@ -503,7 +503,7 @@ async function saveItem(item, provimentoLocal, today, despensaLocal, itemLocal) 
         console.debug(item, today)
     
         const attrs = await {
-            uuid: itemLocal ? itemLocal.uuid : uuid(),
+            uuid: itemLocal.uuid ? itemLocal.uuid : uuid(),
             id: item.id && parseInt(item.id),
             despensaUuid: despensaLocal.uuid,
             quantidade: item.quantidade || 1,
@@ -515,6 +515,8 @@ async function saveItem(item, provimentoLocal, today, despensaLocal, itemLocal) 
         console.log({ attrs })
     
         if (!itemLocal) {
+            console.log("NOVO ITEM")
+            
             realm.write(async () => {
                 // let saveItem = realm.create('Item', attrs, true)
                 console.debug('List Despensa')
@@ -522,10 +524,13 @@ async function saveItem(item, provimentoLocal, today, despensaLocal, itemLocal) 
                 await despensaLocal.items.push(attrs)
             })
         } else {
+            console.log("EDITAR ITEM")
             realm.write(() => {
-                itemLocal.id = item.id && Number(item.id),
-                itemLocal.validade = item.validade && item.validade,
+                itemLocal.id = item.id && Number(item.id)
+                itemLocal.uuid = item.uuid && item.uuid
+                itemLocal.validade = item.validade && item.validade
                 itemLocal.quantidade = item.quantidade //+ itemLocal.quantidade
+                itemLocal.provimento = provimentoLocal //+ itemLocal.qurantidade
             })
         }
     
@@ -590,7 +595,6 @@ export async function storeDespensas(despensas) {
     let del // = false
     // del = true  
 
-
     // console.debug(del)
 
     try {
@@ -600,8 +604,7 @@ export async function storeDespensas(despensas) {
             })
         } else {
 
-            despensas.map(async (despensa) => {
-
+            despensas.map(async (despensa) => {            
 
                 let despensaLocal = await realm.objects('Despensa').filtered('uuid = $0 or id = $1', despensa.uuid, Number(despensa.id))[0]
 
