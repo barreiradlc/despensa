@@ -17,6 +17,7 @@ mutation handleDepensasMutation($despensas: [DespensaInput!]!){
                 id
                 uuid
                 quantidade
+                validade
                 provimento{
                     id
                     nome

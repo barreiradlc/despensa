@@ -190,20 +190,19 @@ export async function getProvimentoComprasDespensa(i, d) {
 
 
 export async function getQueueDespensa() {
-    let list = await realm.objects('Despensa').filtered('fila = $0', true)
-    // let realm = await getRealm()    
+    let list = await realm.objects('Despensa').filtered('fila = $0 AND deletedAt = $1', true, null)
+    
     realm.write(async () => {
         list = list && list.map((despensa) => {
 
             console.debug({ despensa: despensa.items })
 
             let validItems = []
-
             
             despensa.items && despensa.items.map((i) => {
-                // if (i.dataExclusao !== null) {
+                if (i.dataExclusao && i.id || !i.id) {
                     validItems.push(i)
-                // }
+                }
             })
 
             console.debug({ validItems })
@@ -478,7 +477,7 @@ export async function newItem(item, despensaUuid) {
         uuid: uuid(),
         // id: parseInt(item.id),
         despensaUuid: despensaLocal.uuid,
-        quantidade: parseInt(item.quantidade) || 1,
+        quantidade: Number(item.quantidade) || 1,
         validade: item.validade && item.validade,
         provimento: provimentoLocal,
         dataAlteracao: today

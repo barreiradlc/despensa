@@ -33,9 +33,9 @@ const Tab = createBottomTabNavigator();
 
 import * as LocalStorage from '../services/LocalStorage'
 
-function Sair({navigation}){
+function Sair({ navigation }) {
 
-  function handleSair(){
+  function handleSair() {
     Alert.alert(
       'Atenção',
       'Deseja mesmo sair?',
@@ -45,22 +45,22 @@ function Sair({navigation}){
           onPress: () => navigation.closeDrawer(),
           style: 'cancel',
         },
-        {text: 'SIM', onPress: () => navigation.navigate('Login')},
+        { text: 'SIM', onPress: () => navigation.navigate('Login') },
       ],
-      {cancelable: false},
-  );
+      { cancelable: false },
+    );
   }
 
   return (
     <>
       <TouchableWithoutFeedback onPress={() => navigation.closeDrawer()}>
-        <View style={{  justifyContent: 'flex-start', alignItems: 'flex-start', padding:25, fontWeight: 'bold', fontSize:25 }}>
+        <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', padding: 25, fontWeight: 'bold', fontSize: 25 }}>
           <Text>Home</Text>
-        </View> 
+        </View>
       </TouchableWithoutFeedback><TouchableWithoutFeedback onPress={handleSair}>
-        <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', padding:25, fontWeight: 'bold', fontSize:25 }}>
+        <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', padding: 25, fontWeight: 'bold', fontSize: 25 }}>
           <Text>Sair</Text>
-        </View> 
+        </View>
       </TouchableWithoutFeedback>
     </>
   )
@@ -68,26 +68,26 @@ function Sair({navigation}){
 
 function HomeScreen({ navigation }) {
 
-  const [ conviteList, setConviteList ] = React.useState([])
-  const [ itensVencimento, setItensVencimento ] = React.useState([])
-  const [ mount, setMount ] = React.useState(true)
+  const [conviteList, setConviteList] = React.useState([])
+  const [itensVencimento, setItensVencimento] = React.useState([])
+  const [mount, setMount] = React.useState(true)
 
   React.useEffect(() => {
-    LocalStorage.getItemsVencimento()        
-    .then(( res ) => {
-      console.log("LIST VENCIMENTO")
-      setItensVencimento(res)
-    })
-  },[])
+    LocalStorage.getItemsVencimento()
+      .then((res) => {
+        console.log("LIST VENCIMENTO")
+        setItensVencimento(res)
+      })
+  }, [])
 
-  function handleNotifications(convites){
+  function handleNotifications(convites) {
     console.log('Olar')
     console.debug(convites)
-    
+
     setConviteList(convites)
   }
 
-  function handleNavigateNotifications(){
+  function handleNavigateNotifications() {
     navigation.navigate('Notifications', {
       notifications: conviteList,
       itensVencimento,
@@ -95,29 +95,29 @@ function HomeScreen({ navigation }) {
     })
   }
 
-  navigation.setOptions({ 
+  navigation.setOptions({
     // title: 'Despensa',
-    headerLeft: () => ( 
-        <HeaderTouchable onPress={() => navigation.openDrawer()}>
-            <HeaderContainer>
-                <HomeMenuItem /> 
-            </HeaderContainer>
-        </HeaderTouchable>
+    headerLeft: () => (
+      <HeaderTouchable onPress={() => navigation.openDrawer()}>
+        <HeaderContainer>
+          <HomeMenuItem />
+        </HeaderContainer>
+      </HeaderTouchable>
     ),
 
-    headerRight: () => ( 
-        <HeaderTouchable onPress={handleNavigateNotifications}>
-            <HeaderContainer>
-                {(itensVencimento.length > 0 || conviteList.length > 0) && 
-                  <HeaderBadge/>
-                }
-                <HomeNotifications /> 
-            </HeaderContainer>
-        </HeaderTouchable>
-    )    
+    headerRight: () => (
+      <HeaderTouchable onPress={handleNavigateNotifications}>
+        <HeaderContainer>
+          {(itensVencimento.length > 0 || conviteList.length > 0) &&
+            <HeaderBadge />
+          }
+          <HomeNotifications />
+        </HeaderContainer>
+      </HeaderTouchable>
+    )
   })
 
-  function handleMountFinish(){
+  function handleMountFinish() {
     setMount(false)
   }
 
@@ -127,14 +127,7 @@ function HomeScreen({ navigation }) {
         activeTintColor: 'tomato',
         inactiveTintColor: 'gray',
       }}>
-        <Tab.Screen name="Receitas" component={ListReceitas} options={{
-          tabBarLabel: '',
-          tabBarIcon: (props) => (
-            <CustomComponent props={props} id='Receitas' />
-          ),
-        }}
-        /> 
-             
+
       <Tab.Screen name="Home" component={props => <Home mount={mount} handleMountFinish={handleMountFinish} handleNotifications={handleNotifications}  {...props} />} navigation={navigation} options={{
         tabBarLabel: '',
         tabBarIcon: (props) => (
@@ -142,7 +135,15 @@ function HomeScreen({ navigation }) {
         ),
       }} />
       
-      
+      <Tab.Screen name="Receitas" component={ListReceitas} options={{
+        tabBarLabel: '',
+        tabBarIcon: (props) => (
+          <CustomComponent props={props} id='Receitas' />
+        ),
+      }}
+      />
+
+
     </Tab.Navigator>
   );
 }
@@ -201,7 +202,7 @@ function CustomComponent(props) {
             :
             <IconDespensaInAtivo />
       } */}
-      
+
 
       <TabLabel active={active}>{props.id}</TabLabel>
     </TabContainer>
@@ -259,22 +260,22 @@ function MyDrawer(props) {
   console.debug(context)
 
   return (
-  <NavigationContainer>
-    <Drawer.Navigator
-    context={context}
-    drawerLockMode='locked-open'
-    drawerContent={props =>  <ContentDrawer context={context} {...props} />}
-    gestureHandlerProps={false}
-    swipeEnabled={false}
-    edgeWidth={0}
-    drawerStyle={{
-      backgroundColor: '#fff',
-      width: 240,
-    }}
-    >
-      <Drawer.Screen name="Home" gesturesEnabled={false} component={() => Navigator(props)} />
-    </Drawer.Navigator>
-  </NavigationContainer>
+    <NavigationContainer>
+      <Drawer.Navigator
+        context={context}
+        drawerLockMode='locked-open'
+        drawerContent={props => <ContentDrawer context={context} {...props} />}
+        gestureHandlerProps={false}
+        swipeEnabled={false}
+        edgeWidth={0}
+        drawerStyle={{
+          backgroundColor: '#fff',
+          width: 240,
+        }}
+      >
+        <Drawer.Screen name="Home" gesturesEnabled={false} component={() => Navigator(props)} />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
 
@@ -286,22 +287,22 @@ function Navigator(props) {
 
 
   return (
-      <Stack.Navigator initialRouteName={home}>
-        <Stack.Screen name="Drawer" component={MyDrawer} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Perfil" component={Perfil} />
-        <Stack.Screen name="Notifications" component={Notifications} />
-        <Stack.Screen name="FormItem" component={FormItem} />
-        <Stack.Screen name="FormDespensa" component={FormDespensa} />
-        <Stack.Screen name="SearchUser" component={SearchUser} />
-        <Stack.Screen name="FormReceita" component={FormReceita} />
-        <Stack.Screen name="ListReceitasPossiveis" component={ListReceitasPossiveis} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="ShowReceita" component={ShowReceita} />
-        <Stack.Screen name="Estoque" component={Estoque} />
-        <Stack.Screen name="Lista de compras" component={ListaCompras} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
-      </Stack.Navigator>
+    <Stack.Navigator initialRouteName={home}>
+      <Stack.Screen name="Drawer" component={MyDrawer} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Perfil" component={Perfil} />
+      <Stack.Screen name="Notifications" component={Notifications} />
+      <Stack.Screen name="FormItem" component={FormItem} />
+      <Stack.Screen name="FormDespensa" component={FormDespensa} />
+      <Stack.Screen name="SearchUser" component={SearchUser} />
+      <Stack.Screen name="FormReceita" component={FormReceita} />
+      <Stack.Screen name="ListReceitasPossiveis" component={ListReceitasPossiveis} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="ShowReceita" component={ShowReceita} />
+      <Stack.Screen name="Estoque" component={Estoque} />
+      <Stack.Screen name="Lista de compras" component={ListaCompras} />
+      <Stack.Screen name="Details" component={DetailsScreen} />
+    </Stack.Navigator>
   );
 }
 
