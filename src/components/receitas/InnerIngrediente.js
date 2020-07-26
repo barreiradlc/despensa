@@ -4,11 +4,7 @@ import { FormTouchableItem, InnerText, RowInner } from '../styled/Form'
 import { RemoveReceita, TableBody ,TableCell } from '../styled/Geral'
 import * as LocalStorage from '../../services/LocalStorage'
 import { DataTable } from 'react-native-paper';
-
-const MEDIDAS_ENUM = [
-    {value:"UNIDADE",label: "unidade"},
-    {value:"COLHER", label: "colher de sopa"}
-]
+import { MEDIDAS_ENUM } from './enums/UnidadeDeMedida'
 
 function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, index }, ref) {
 
@@ -87,10 +83,12 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, i
             {console.log(item)}
 
             <TableBody>
-                <TableCell >{nome}</TableCell>                
+                <TableCell style={{ textDecorationLine: active && "line-through" }}>{nome}</TableCell>                
                 <TableCell >{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
                 <TableCell  numeric>   {item.quantidade}</TableCell>
-                <TableCell  numeric> + </TableCell>
+                {__DEV__ && 
+                    <TableCell  numeric> + </TableCell>
+                }
             </TableBody>
         
 

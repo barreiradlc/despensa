@@ -5,20 +5,21 @@ import realm from '../config/realm'
 export async function updateShopList() {
     let today = new Date()
     let doneItems = await realm.objects('ItemCompras').filtered('done = $0', true)
-    
-    console.debug({doneItems})
+
+    console.debug({ doneItems })
     console.debug(doneItems.length)
 
-    doneItems.map(( d ) => {
+    doneItems.map((d) => {
         let despensaLocal = getDespensaByUuid(d.despensaUuid)
         let itemProvimentoLocal = realm.objects('Item').filtered('provimento.nome = $0', d.provimento.nome)[0]
-        
-        console.log(d.provimento.nome)
+
+        console.log("itemProvimentoLocal")
+        console.log(itemProvimentoLocal)
 
 
-        saveItem(d, d.provimento, today, despensaLocal, itemProvimentoLocal)
-            .then(( res ) => {
-                console.log({res})
+        storeItem(d, d.provimento, despensaLocal, true)
+            .then((res) => {
+                console.log({ res })
                 realm.write(() => {
                     despensaLocal.fila = true
                     realm.delete(d)
@@ -32,6 +33,7 @@ export async function changeQTDItemListaCompras(item, action) {
     try {
         realm.write(() => {
             if (action == 'more') {
+                console.log("MORE")
                 item.quantidade++
             }
             if (action == 'less') {
@@ -62,11 +64,11 @@ export async function removeItemListaCompras(item, despensa) {
 
 export async function checkItemListaCompras(item, despensa) {
 
-    console.debug({item}, {despensa})
+    console.debug({ item }, { despensa })
 
     try {
-        if(item.done){
-            
+        if (item.done) {
+
         }
         realm.write(() => {
 
@@ -190,29 +192,57 @@ export async function getProvimentoComprasDespensa(i, d) {
 
 
 export async function getQueueDespensa() {
-    let list = await realm.objects('Despensa').filtered('fila = $0 AND deletedAt = $1', true, null)
-    
-    realm.write(async () => {
-        list = list && list.map((despensa) => {
+    let list = await realm.objects('Despensa').filtered('fila = $0', true)
 
-            console.debug({ despensa: despensa.items })
+    console.debug('list')
+    console.debug(list)
 
-            let validItems = []
-            
-            despensa.items && despensa.items.map((i) => {
-                if (i.dataExclusao && i.id || !i.id) {
-                    validItems.push(i)
-                }
-            })
+    let despensasList = []
 
-            console.debug({ validItems })
+    // await list.map(async(despensa) => {
+    for (let despensa of list) {
 
-            despensa.items = validItems
-            return despensa
+
+        const despensaItems = await getItemsFilaByDespensaUuid(despensa.uuid)
+
+        console.debug("==== despensa ====")
+        console.debug(JSON.stringify(despensaItems))
+
+        let validItems = []
+
+        despensaItems && despensaItems.map((i) => {
+            if (i.fila && (i.dataExclusao && i.id || !i.id && !i.dataExclusao || !i.dataExclusao)) {
+                console.log("VALID")
+                console.log(JSON.stringify(i))
+
+                validItems.push(i)
+            } else {
+                console.log("INVALID")
+                console.log(JSON.stringify(i))
+            }
         })
 
-    })
-    return list
+        console.debug("validItems")
+        console.debug(JSON.stringify(validItems))
+        console.debug(JSON.stringify(despensa))
+
+        // despensa.items = validItems
+        if (validItems.length > 0) {
+            despensasList.push({
+                id: despensa.id,
+                uuid: despensa.uuid,
+                nome: despensa.nome,
+                descricao: despensa.descricao,
+                items: validItems
+            })
+        }
+    }
+
+    console.debug("despensasList")
+    console.debug(despensasList)
+    console.debug("despensasList")
+
+    return await despensasList
 }
 
 export async function getQueue() {
@@ -248,8 +278,27 @@ export function getDespensaByUuid(uuid) {
     return realm.objectForPrimaryKey('Despensa', uuid)
 }
 
+
+export async function getItemsByDespensaUuid(uuid) {
+
+    let list = await realm.objects('Item').filtered('despensaUuid = $0', uuid)
+
+    console.log({ list })
+
+    return await list
+}
+
+export async function getItemsFilaByDespensaUuid(uuid) {
+
+    let list = await realm.objects('Item').filtered('despensaUuid = $0 AND fila = $1', uuid, true)
+
+    console.log({ list })
+
+    return await list
+}
+
+
 export async function getDespensaItems(uuid, local) {
-    // let realm = await getRealm()
 
     let list
     if (local) {
@@ -272,9 +321,11 @@ export async function changeQTD(data, action) {
     realm.write(() => {
         if (action === 'add') {
             itemLocal.quantidade++
+            itemLocal.fila = true
         }
         if (action === 'remove') {
             itemLocal.quantidade--
+            itemLocal.fila = true
         }
         despensaLocal.fila = true
     })
@@ -306,14 +357,18 @@ async function getItemPerUuid(uuid) {
 export async function deleteItem(item) {
 
     let itemLocal = await realm.objectForPrimaryKey('Item', item.uuid)
+    let despensaLocal = await realm.objects('Despensa').filtered('uuid = $0', item.despensaUuid)[0]
+    
 
     console.debug(itemLocal.uuid)
 
     realm.write(() => {
 
         if (itemLocal) {
-            itemLocal.deletedAt = new Date()
+            itemLocal.deletedAt = new Date()            
         }
+
+        despensaLocal.fila = true
 
     })
 
@@ -337,12 +392,12 @@ async function saveProvimento(item) {
 
 
 async function newProvimento(item) {
-    // let realm = await getRealm()
+
 
     const provimentoLocal = {
         // uuid: uuid(),
         // id: parseInt(item.nome),
-        nome: item.provimento.nome.trim(),
+        nome: item.provimento ? item.provimento.nome.trim() : item.nome.trim(),
     }
 
     return await realm.create('Provimento', provimentoLocal, true)
@@ -396,21 +451,32 @@ export async function editItem(item, despensaUuid) {
     console.log(item.nome)
 
     try {
-        realm.write(async () => {
-
+        realm.write(() => {
             itemLocal.quantidade = parseInt(item.quantidade)
             itemLocal.validade = item.validade
-            if (item.nome !== itemLocal.provimento.nome) {
-                // realm.delete(itemLocal.provimento)
-                let provimentoLocal = realm.objects('Provimento').filtered('nome = $0', item.nome)[0]
-                if (!provimentoLocal) {
-                    provimentoLocal = newProvimento(item)
-                }
-                itemLocal.provimento = provimentoLocal
-            }
             despensaLocal.fila = true
+            itemLocal.fila = true
         })
 
+        if (item.nome !== itemLocal.provimento.nome) {
+            // realm.delete(itemLocal.provimento)
+            let provimentoLocal = await realm.objects('Provimento').filtered('nome = $0', item.nome)[0]
+            if (!provimentoLocal) {
+                realm.write(async () => {
+                    provimentoLocal = await newProvimento(item)
+                    itemLocal.provimento = provimentoLocal
+                })
+            } else {
+                console.debug('provimentoLocal')
+                console.debug(provimentoLocal)
+    
+                realm.write(async () => {
+                    itemLocal.provimento = provimentoLocal
+                })
+            }
+
+        }
+        
     } catch (error) {
         console.log('error')
         console.log('error', error)
@@ -480,6 +546,7 @@ export async function newItem(item, despensaUuid) {
         quantidade: Number(item.quantidade) || 1,
         validade: item.validade && item.validade,
         provimento: provimentoLocal,
+        fila: true,
         dataAlteracao: today
     }
 
@@ -496,12 +563,12 @@ export async function newItem(item, despensaUuid) {
 }
 
 async function saveItem(item, provimentoLocal, today, despensaLocal, itemLocal) {
-    
+
     try {
-        
+
         console.log({ itemLocal })
         console.debug(item, today)
-    
+
         const attrs = await {
             uuid: itemLocal.uuid ? itemLocal.uuid : uuid(),
             id: item.id && parseInt(item.id),
@@ -511,12 +578,12 @@ async function saveItem(item, provimentoLocal, today, despensaLocal, itemLocal) 
             provimento: provimentoLocal,
             dataAlteracao: item.dataAlteracao || new Date()
         }
-    
+
         console.log({ attrs })
-    
+
         if (!itemLocal) {
             console.log("NOVO ITEM")
-            
+
             realm.write(async () => {
                 // let saveItem = realm.create('Item', attrs, true)
                 console.debug('List Despensa')
@@ -533,15 +600,15 @@ async function saveItem(item, provimentoLocal, today, despensaLocal, itemLocal) 
                 itemLocal.provimento = provimentoLocal //+ itemLocal.qurantidade
             })
         }
-    
+
         // if (!itemLocal) {
         //     return await attrs
         // }
-    
+
         return await itemLocal
     } catch (error) {
-        console.log({error})   
-        console.error(`Erro em salvar item: ${item.provimento.nome}`)   
+        console.log({ error })
+        console.error(`Erro em salvar item: ${item.provimento.nome}`)
     }
 
 }
@@ -604,68 +671,86 @@ export async function storeDespensas(despensas) {
             })
         } else {
 
-            despensas.map(async (despensa) => {            
+            // console.log('despensas')
+            // console.debug(JSON.stringify(despensas))
+
+            despensas.map(async (despensa) => {
 
                 let despensaLocal = await realm.objects('Despensa').filtered('uuid = $0 or id = $1', despensa.uuid, Number(despensa.id))[0]
 
-                console.log('despensa?')
-                console.log(despensaLocal)
-                // console.log(despensaLocal.nome)
+                despensaLocal = await storeDespensa(despensa, despensaLocal)
 
-                if (!despensaLocal) {
-                    despensaLocal = await saveDespensa(despensa)
-                } else {
-                    realm.write(() => {
-                        if (!despensaLocal.uuid) {
-                            despensaLocal.uuid = despensa.uuid
-                        }
-                        if (!despensaLocal.id) {
-                            despensaLocal.id = Number(despensa.id)
-                        }
-                        despensaLocal.nome = despensa.nome
+                despensa.items.map(async (item) => {
 
-                        despensaLocal.descricao = despensa.descricao
-                        despensaLocal.fila = false
-                    })
-                }
+                    let provimentoLocal = await storeProvimento(item)
 
-                despensa.items.forEach(async (item) => {
-
-                    let provimentoLocal = await realm.objects('Provimento').filtered('id = $0 OR nome = $1', parseInt(item.provimento.id), item.provimento.nome)[0]
-                    let itemLocal = await realm.objects('Item').filtered('id = $0 or uuid = $1', parseInt(item.id), item.uuid)[0]
-
-                    if (!provimentoLocal) {
-                        provimentoLocal = await saveProvimento(item)
-                    }
-
-                    const today = new Date()
-
-                    console.log('itemLocal?', item.uuid)
-                    console.log(itemLocal)
-
-                    itemLocal = await saveItem(item, provimentoLocal, today, despensaLocal, itemLocal)
-
-                    // console.warn({ itemLocal })
-                    // console.debug(itemLocal, newItem)
-
-                    // if (newItem) {
-                    //     realm.write(async () => {
-                    //         console.debug('List Despensa')
-                    //         console.debug(JSON.stringify(despensaLocal))
-                    //             despensaLocal.items.push(itemLocal)
-                    //         console.debug(JSON.stringify(despensaLocal))
-                    //     })
-                    // }
+                    let itemLocal = await storeItem(item, provimentoLocal, despensaLocal)
 
                 })
-                listdespensa.push(despensaLocal)
-                // realm.write(() => {
-                //     despensaLocal.items.push(items)
-                // })
-                // return await despensaLocal
+
             })
-            // return await despensasList
-            return listdespensa
+
+            // despensas.map(async (despensa) => {            
+            //     let despensaLocal = await realm.objects('Despensa').filtered('uuid = $0 or id = $1', despensa.uuid, Number(despensa.id))[0]
+
+            //     console.log('despensa?')
+            //     console.log(despensaLocal)
+            //     // console.log(despensaLocal.nome)
+
+            //     if (!despensaLocal) {
+            //         despensaLocal = await saveDespensa(despensa)
+            //     } else {
+            //         realm.write(() => {
+            //             if (!despensaLocal.uuid) {
+            //                 despensaLocal.uuid = despensa.uuid
+            //             }
+            //             if (!despensaLocal.id) {
+            //                 despensaLocal.id = Number(despensa.id)
+            //             }
+            //             despensaLocal.nome = despensa.nome
+
+            //             despensaLocal.descricao = despensa.descricao
+            //             despensaLocal.fila = false
+            //         })
+            //     }
+
+            //     despensa.items.forEach(async (item) => {
+
+            //         let provimentoLocal = await realm.objects('Provimento').filtered('id = $0 OR nome = $1', parseInt(item.provimento.id), item.provimento.nome)[0]
+            //         let itemLocal = await realm.objects('Item').filtered('id = $0 or uuid = $1', parseInt(item.id), item.uuid)[0]
+
+            //         if (!provimentoLocal) {
+            //             provimentoLocal = await saveProvimento(item)
+            //         }
+
+            //         const today = new Date()
+
+            //         console.log('itemLocal?', item.uuid)
+            //         console.log(itemLocal)
+
+            //         itemLocal = await saveItem(item, provimentoLocal, today, despensaLocal, itemLocal)
+
+            //         // console.warn({ itemLocal })
+            //         // console.debug(itemLocal, newItem)
+
+            //         // if (newItem) {
+            //         //     realm.write(async () => {
+            //         //         console.debug('List Despensa')
+            //         //         console.debug(JSON.stringify(despensaLocal))
+            //         //             despensaLocal.items.push(itemLocal)
+            //         //         console.debug(JSON.stringify(despensaLocal))
+            //         //     })
+            //         // }
+
+            //     })
+            //     listdespensa.push(despensaLocal)
+            //     // realm.write(() => {
+            //     //     despensaLocal.items.push(items)
+            //     // })
+            //     // return await despensaLocal
+            // })
+            // // return await despensasList
+            // return listdespensa
         }
 
     } catch (e) {
@@ -674,5 +759,102 @@ export async function storeDespensas(despensas) {
     }
 }
 
+export async function storeDespensa(despensa, despensaLocal) {
 
+    if (despensaLocal) {
+        realm.write(async () => {
+            despensaLocal.id = Number(despensa.id)
+            despensaLocal.nome = despensa.nome
+            despensaLocal.descricao = despensa.descricao
+        })
+    } else {
+        realm.write(async () => {
+            despensaLocal = realm.create('Despensa', {
+                uuid: despensa.uuid || uuid(),
+                id: despensa.id && parseInt(despensa.id),
+                nome: despensa.nome,
+                descricao: despensa.descricao,
+                // fila: despensaLocal || false
+            }, true)
+        })
+    }
 
+    console.debug("DESPENSA")
+    console.debug(despensaLocal)
+
+    return await despensaLocal
+}
+
+async function storeProvimento(item) {
+
+    let provimentoLocal = await realm.objects('Provimento').filtered('id = $0 OR nome = $1', parseInt(item.provimento.id), item.provimento.nome)[0]
+
+    if (provimentoLocal) {
+        realm.write(() => {
+            provimentoLocal.id = Number(item.provimento.id)
+            provimentoLocal.nome = item.provimento.nome
+        })
+    } else {
+        const attrs = {
+            id: parseInt(item.provimento.id),
+            nome: item.provimento.nome,
+        }
+
+        realm.write(async () => {
+            await realm.create('Provimento', attrs, true)
+        })
+    }
+
+    return provimentoLocal
+}
+
+async function storeItem(item, provimentoLocal, despensaLocal, fila) {
+
+    let itemLocal = await realm.objects('Item').filtered('id = $0 or uuid = $1', parseInt(item.id || 0), item.uuid)[0]
+
+    console.log("itemLocal")
+    console.log({itemLocal})
+    console.log({item})
+
+    try {
+
+        if (!itemLocal) {
+
+            const attrs = await {
+                uuid: uuid(),
+                id: item.id && parseInt(item.id),
+                despensaUuid: despensaLocal.uuid,
+                quantidade: item.quantidade || 1,
+                validade: item.validade && item.validade,
+                provimento: provimentoLocal,
+                fila: fila || false,
+                dataAlteracao: item.dataAlteracao || new Date()
+            }
+
+            realm.write(async () => {
+                // let saveItem = realm.create('Item', attrs, true)
+                console.debug('Despensa')
+                console.debug(JSON.stringify(despensaLocal))
+                await despensaLocal.items.push(attrs)
+                despensaLocal.fila = fila || false
+            })
+
+        } else {
+
+            realm.write(() => {
+                itemLocal.id = item.id && Number(item.id)
+                itemLocal.validade = item.validade && item.validade
+                itemLocal.quantidade = item.quantidade
+                itemLocal.provimento = provimentoLocal
+                itemLocal.fila = fila || false
+            })
+        }
+
+        return await itemLocal
+
+    } catch (error) {
+        console.log({ error })
+        console.error(`Erro em salvar item: ${item.provimento.nome}`)
+    }
+
+}

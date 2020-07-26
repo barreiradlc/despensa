@@ -46,10 +46,10 @@ export default function PerRowConfig(props) {
                 <View style={ styles.rowBackTouchable } >
                     <View style={styles.rowBackTouchableLeft}>
                     <TouchableOpacity style={styles.touchableLeft} onPress={ () => props.changeqtd(data, 'add') }>
-                        <PlusItem />
+                        <PlusItem color="#c93b4a"/>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.touchableLeft}onPress={ () => props.changeqtd(data, 'remove') } >
-                        <MinusItem />
+                    <TouchableOpacity style={styles.touchableLeft} onPress={ () => props.changeqtd(data, 'remove') } >
+                        <MinusItem color="#c93b4a"/>
                     </TouchableOpacity>
                     </View>
                 </View>
@@ -59,14 +59,14 @@ export default function PerRowConfig(props) {
                     onPress={() => {props.edit(data.item, 'edit'), closeRow(rowMap, data.item.key)}}
                     // onPress={() => closeRow(rowMap, data.item.key)}
                 >
-                    <EditItem />
+                    <EditItem color="#c93b4a"/>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.backRightBtn, styles.backRightBtnRight]}
                     onPress={() => {props.delete(data.item, 'edit'), closeRow(rowMap, data.item.key)}}
 
                 >
-                    <DeleteItem />
+                    <DeleteItem color="#c93b4a" />
                 </TouchableOpacity>
             </View>
 
@@ -78,7 +78,7 @@ export default function PerRowConfig(props) {
                 <Card>
                     <CardTitle>{data.item.provimento.nome}</CardTitle>
                     <CardRow>
-                        <CardBody>{data.item.quantidade} unidade{data.item.quantidade > 1 && 's'}</CardBody>
+                        <CardBody>{data.item.quantidade} unidade{data.item.quantidade > 1 && 's'} {__DEV__ && String(data.item.fila)}</CardBody>
                         {data.item.validade && 
                             <CardBody vencimento={twoWeeks > data.item.validade}> expira em: {moment(data.item.validade).format('L')}</CardBody>
                         }

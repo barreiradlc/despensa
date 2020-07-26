@@ -6,31 +6,29 @@ import NetInfo from "@react-native-community/netinfo";
 import  { ConnectionTab, ConnectionLabel } from '../components/styled/Geral'
 
 const SEND = gql`
-mutation handleDepensasMutation($despensas: [DespensaInput!]!){
-    handleDespensaMutation(despensas: $despensas)  {
-        despensas {
-            id
-            uuid
-            nome
-            descricao
-            items{
+    mutation handleDepensasMutation($despensas: [DespensaInput!]!){
+        handleDespensaMutation(despensas: $despensas)  {
+            despensas {
                 id
                 uuid
-                quantidade
-                validade
-                provimento{
+                nome
+                descricao
+                items{
                     id
-                    nome
-                }
-            }        
+                    uuid
+                    quantidade
+                    validade
+                    provimento{
+                        id
+                        nome
+                    }
+                }        
+            }
         }
     }
-}
 ` 
 
 function QueueProcess({ reloadQueue, call, reload }, ref){
-
-    
 
     const [ despensas, setDespensas ] = useState({})
     const [ resetDespensas, setResetDespensas ] = useState(false)
@@ -104,7 +102,14 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
     }
 
     function convertValues(obj){
-        let listDespensas = obj.map(( despensa ) => {
+
+        console.log("OBJ")
+        console.log(obj[0])
+        console.log("OBJ")
+
+        let listDespensas = []
+        
+        obj.map(( despensa ) => {
 
             let listItems = despensa.items.map(( i ) => {
                 
@@ -120,6 +125,7 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
                     }
                 }
 
+                
                 if(!item.provimento.id) delete item.provimento.id
 
                 if(!item.id) delete item.id
@@ -139,15 +145,26 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
                 items: listItems
             }
 
+            console.debug('=== DESPENSA ===')
+            console.debug(despensa.nome)
+            console.debug(newDespensa)
+            console.debug('=== DESPENSA ===')
+
+
             if(!newDespensa.id) delete newDespensa.id
 
-            return newDespensa
+            if(listItems.length > 0){
+                listDespensas.push(newDespensa)
+            }
         })
 
         console.log('LIST')
         console.log(JSON.stringify(listDespensas))
+        
+        if(listDespensas.length > 0){
+            setDespensas(listDespensas)
+        }
 
-        setDespensas(listDespensas)
     }
     
     async function loadData(){
@@ -163,6 +180,11 @@ function QueueProcess({ reloadQueue, call, reload }, ref){
 
         LocalStorage.getQueueDespensa()
             .then( async( response ) => {
+
+                console.log("=== response ===")
+                console.log(JSON.stringify(response))
+                console.log(response)
+
                 if(response.length > 0){
                     convertValues(response)
                 }

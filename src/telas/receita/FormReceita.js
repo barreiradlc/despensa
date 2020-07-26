@@ -52,6 +52,7 @@ function FormReceita({ route, navigation }) {
     const [disable, setDisable] = useState(true);
     const [erros, setErros] = useState([]);
     const [addIgrediente, setAddIngrediente] = useState(false);
+    const [ingrediente, setIngrediente] = useState();
     const [values, setValues] = useState(INITIAL_VALUES)
 
     useEffect(() => {
@@ -76,9 +77,14 @@ function FormReceita({ route, navigation }) {
 
         }
         newList = values.ingredientes.filter(receita => receita.provimento.nome !== value.provimento.nome)
-        console.debug(value)
+        const actualIngrediente = values.ingredientes.filter(receita => receita.provimento.nome === value.provimento.nome)[0]
+        console.debug('value')
         console.debug(JSON.stringify(newList))
+        console.debug(JSON.stringify(actualIngrediente))
+        
         setValues({ ...values, ingredientes: newList })
+        setAddIngrediente(true)
+        setIngrediente(actualIngrediente)
     }
 
     function handleNewIngrediente(value) {
@@ -94,6 +100,7 @@ function FormReceita({ route, navigation }) {
         newList = newList.map((item) => {
             if (item.provimento.nome === value.nome) {
                 item.quantidade++
+                item.medida = value.medida
                 newItem = false
             }
             return item
@@ -104,7 +111,7 @@ function FormReceita({ route, navigation }) {
                 quantidade: value.quantidade || 1,
                 medida: value.medida || "UNIDADE",
                 provimento: {
-                    nome: value.nome
+                    nome: value.nome.trim()
                 }
             })
         }
@@ -333,7 +340,7 @@ function FormReceita({ route, navigation }) {
                     )}
 
                     <Wrap>
-                        <FormInnerIngrediente snackCompras={snackCompras} add={handleNewIngrediente} active={addIgrediente} toggle={toggleIngrediente} />
+                        <FormInnerIngrediente snackCompras={snackCompras} add={handleNewIngrediente} active={addIgrediente} toggle={toggleIngrediente} item={ingrediente}/>
                     </Wrap>                        
 
                 </CardInner>

@@ -1,15 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
     FormInput, RowInner, TableBody,
     TableCell
 } from '../styled/Form';
 import { AddReceita, MoreIngredient } from '../styled/Geral';
 import { Picker } from '@react-native-community/picker';
-
-const MEDIDAS_ENUM = [
-    {value:"UNIDADE",label: "unidade"},
-    {value:"COLHER", label: "colher de sopa"}
-]
+import { MEDIDAS_ENUM } from '../receitas/enums/UnidadeDeMedida'
 
 function FormInnerIngrediente({ active, toggle, add, item }) {
 
@@ -17,13 +13,40 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
     const ref_input2 = useRef();
     const ref_input3 = useRef();
 
+    console.debug("ITEM")
+    console.debug(item)
+    console.debug("ITEM")
+
     const [submit, setSubmit] = useState()    
     const [values, setValues] = useState({
         nome: item ? item.provimento.nome : '',
-        quantidade: item ? item.quantidade : '1',
+        quantidade: item ? String(item.quantidade || 1) : '1',
         medida: item ? item.medida : 'UNIDADE'
     })
 
+    useEffect(()  => {
+        if(active && values.nome){
+            add(values)        
+        }
+        setValues({
+            nome: item ? item.provimento.nome : '',
+            quantidade: item ? String(item.quantidade || 1) : '1',
+            medida: item ? item.medida : 'UNIDADE'
+        })
+        if(active){
+            ref_input.current.focus()
+        }
+    }, [item])
+
+    useEffect(()  => {
+        console.debug("ACTIVE")
+        console.debug(active)
+        console.debug(values)
+
+        if(!active && values.nome){
+            add(values)        
+        }
+    }, [active])
 
     function handleInput(value, attr) {
         setValues({ ...values, [attr]: value })
@@ -99,9 +122,10 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
                     ref={ref_input2}
                     onValueChange={(itemValue) =>
                         handleInput(itemValue, 'medida') 
-                    }>                    
+
+                    }>                  
                     {MEDIDAS_ENUM.map(( m ) => 
-                        <Picker.Item label={m.label} value={m.value} />
+                        <Picker.Item label={m.label} value={m.value} style={{ padding: 5 }}/>
                     )}
                 </Picker>
             </TableCell>
@@ -134,7 +158,7 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
             </TableCell>
             <TableCell numeric>
                 <RowInner active>
-                    <MoreIngredient onPress={() => add(values)} >
+                    <MoreIngredient onPress={handleAdd} >
                         <AddReceita />
                     </MoreIngredient>
                 </RowInner>

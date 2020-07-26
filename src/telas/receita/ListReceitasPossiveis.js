@@ -12,7 +12,7 @@ import * as LocalStorage from '../../services/LocalStorage';
 const actions = [
     {
         text: "Nova Receita",
-        color:'#c93b4a',
+        color: '#c93b4a',
         icon: <PlusItemReceita />,
         name: "newReceita",
         position: 1
@@ -29,51 +29,52 @@ const actions = [
 const GET = gql`
     query receitasPossiveis($provimentos: [Int!]){
         receitasPossiveis(provimentos: $provimentos) {
-            id
-            nome
-            descricao
-            ingredientes {
-                provimento {
-                    id
-                }
+            nodes {
+              id
+              nome
+              descricao              
             }
-        }
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+          }
     }
 `;
 
 
-function ListReceitasPossiveis({navigation, route}) {
+function ListReceitasPossiveis({ navigation, route }) {
 
     navigation.setOptions({ title: `Receitas possíveis` })
 
-    const [provimentos, setProvimentos ] = useState()
+    const [provimentos, setProvimentos] = useState()
 
     useEffect(() => {
         getStorageIngredientes()
     }, [])
 
-    function getStorageIngredientes(){
+    function getStorageIngredientes() {
         LocalStorage.getProvimentos()
-        .then(( res ) => {
-                res.map(( r ) => {
+            .then((res) => {
+                res.map((r) => {
                     console.debug(r.id)
                 })
-                if(res){
+                if (res) {
                     console.debug(JSON.stringify(res))
                     let listIds = []
-                    res.map(( p ) => {
-                        let existente = listIds.filter(( i ) => i === p.id)[0]
+                    res.map((p) => {
+                        let existente = listIds.filter((i) => i === p.id)[0]
 
-                        if(p.id !== null && !existente){
+                        if (p.id !== null && !existente) {
                             listIds.push(p.id)
                         }
                     })
-                    console.debug({listIds})
+                    console.debug({ listIds })
                     setProvimentos(listIds)
                 }
-                
+
             })
-            .catch(( err ) => {
+            .catch((err) => {
                 console.debug(err)
             })
     }
@@ -82,12 +83,18 @@ function ListReceitasPossiveis({navigation, route}) {
     const { data, error, loading, refetch, subscribeToMore } = useQuery(GET, { variables: { provimentos } });
 
     useEffect(() => {
+        console.debug("DATA")
         console.debug(JSON.stringify(data))
     }, [data])
+    
+    useEffect(() => {
+        console.debug("ERROR")
+        console.debug(JSON.stringify(error))
+    }, [error])
 
     useEffect(() => {
-        if(route.params){
-            if(route.params.refetch){
+        if (route.params) {
+            if (route.params.refetch) {
                 refetch(data)
             }
         }
@@ -100,7 +107,7 @@ function ListReceitasPossiveis({navigation, route}) {
         })
     }
 
-    function handleAction(action){
+    function handleAction(action) {
         switch (action) {
             case 'newReceita':
                 handleFormNew()
@@ -108,14 +115,14 @@ function ListReceitasPossiveis({navigation, route}) {
             case 'addLista':
                 alert('A implementar...')
                 break;
-        
+
             default:
                 break;
         }
 
     }
 
-    function handleFormNew(){
+    function handleFormNew() {
         navigation.navigate('FormReceita', {
             edit: false,
             receita: null,
@@ -127,36 +134,44 @@ function ListReceitasPossiveis({navigation, route}) {
         console.debug({ receita })
 
         return (
-                <Card>
-                    <CardTouchable onPress={() => {navigateShow(receita)}}>
+            <Card>
+                <CardTouchable onPress={() => { navigateShow(receita) }}>
                     <CardTitle>{receita.nome}</CardTitle>
                     <CardRow>
                         <CardBody>{receita.descricao}</CardBody>
                     </CardRow>
-                    </CardTouchable>
-                </Card>
+                </CardTouchable>
+            </Card>
         )
     }
-
-    if(loading){
+    
+    if (loading) {
         return <LoadingOverlay />
     }
-
+    
     return (
         <>
-            <Container style={{ marginBottom:0 }}>
-                {data && data.receitasPossiveis.map((receita) =>
+            <Container style={{ marginBottom: 0 }}>
+                {data && data.receitasPossiveis.nodes.map((receita) =>
                     <Item receita={receita} />
                 )}
+
+                {data.receitasPossiveis.nodes.length === 0 &&     
+                    <Card>
+                        <CardTitle style={{ textAlign: "center" }}>Nenhuma receita encontrada</CardTitle>
+                        <CardBody style={{ textAlign: "center" }}>Abasteça suas despensas para que hajam mais possibilidades de busca</CardBody>
+                    </Card>           
+                }
             </Container>
-            <FloatingAction
-            
+
+            {/* <FloatingAction
+
                 color='#c93b4a'
                 actions={actions}
                 onPressItem={name => {
                     handleAction(name)
                 }}
-            />
+            /> */}
         </>
     )
 }

@@ -97,7 +97,8 @@ export default class FormItemCompra extends React.Component {
                                     onChange={(e) => handleChangeInput(e, 'nome')}
                                     autoFocus={focus}
                                     value={nome}
-                                    placeholder='Nome'                                    
+                                    placeholder='Nome'
+                                    returnKeyType="next"
                                     onSubmitEditing={() => this.secondTextInput.focus() }
                                     blurOnSubmit={false}
                                 />

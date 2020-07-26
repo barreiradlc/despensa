@@ -5,7 +5,7 @@ import Item from './schemas/Item'
 import ItemCompras from './schemas/ItemCompras'
 import Provimento from './schemas/Provimento'
 
-const SCHEMA_VERSION = 29
+const SCHEMA_VERSION = 30
 
 export default new Realm({
     schema: [Despensa, Item, Provimento, ItemCompras],

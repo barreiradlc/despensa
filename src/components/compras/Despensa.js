@@ -96,6 +96,11 @@ class Despensa extends React.Component {
 
                 const newList = this.state.data.compras.map(( c ) => {
                     if(item.provimento.nome == c.provimento.nome){
+
+                        console.log("newQTD")
+                        console.log(newQTD)
+                        console.log("newQTD")
+
                         realm.write(() => {
                             c.quantidade = newQTD
                         })

@@ -97,7 +97,7 @@ export const TableHeader = styled.View`
     marginBottom: 10px    
 `
 
-export const TableBody = styled.View`    
+export const TableBody = styled.TouchableOpacity`    
     flexDirection: row
     marginBottom: 5px        
 `
@@ -259,7 +259,7 @@ export const AddReceita = () => <FontAwesome name="plus" size={20} color="#fff" 
 export const PlusItemReceita = () => <FontAwesome name="plus" size={20} color="#fff" style={{ paddinng: 25 }} />;
 export const PlusItem = ({ color, size }) => <FontAwesome name="plus" size={size || 40} color={color || '#fff'} style={{ paddinng: 25 }} />;
 export const MinusItem = ({ color, size }) => <FontAwesome name="minus" size={size || 40} color={color || '#fff'} />;
-export const EditItem = () => <FontAwesome name="pencil" size={40} color="#fff" />;
+export const EditItem = ({color}) => <FontAwesome name="pencil" size={40} color={color || "#fff"} />;
 export const DeleteItem = ({ color }) => <FontAwesome name="trash-o" size={40} color={color || '#fff'} />;
 export const RemoveItem = () => <FontAwesome name="times" size={40} color="#555" />;
 export const MenuItem = () => <FontAwesome name="ellipsis-v" size={20} color="#555" style={{ paddingRight: 20 }} />;

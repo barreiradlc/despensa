@@ -10,6 +10,6 @@ export default Despensa = {
         items: 'Item[]',
         compras: 'ItemCompras[]',
         deletedAt: 'date?',
-        fila: { type: 'bool?', default: true } //{type: 'int', default: 0},
+        fila: { type: 'bool?', default: false } //{type: 'int', default: 0},
     }
 }

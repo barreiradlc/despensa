@@ -18,6 +18,7 @@ import SnackBar from '../../components/utils/SnackBar';
 import * as Utils from '../../components/utils/Utils';
 import * as LocalStorage from '../../services/LocalStorage';
 
+
 const GET = gql`
 query getReceita($id: ID!) {
     receita(id: $id) {

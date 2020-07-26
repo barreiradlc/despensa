@@ -15,19 +15,23 @@ function Estoque({ route, navigation }) {
     
     useEffect(() => {
         init()
+        LocalStorage.updateShopList()        
         // setLoading(false)
     }, [])
     
     useEffect(() => {
-        init()
-        if(!edit){
-            LocalStorage.updateShopList()
-        }
+        init()        
         // setLoading(false)
     }, [edit])
     
     async function init(){
-        
+    
+
+        const itemsLocal =  await LocalStorage.getItemsByDespensaUuid(uuid)
+
+        console.log("ITEMS")        
+        console.log(itemsLocal)
+
         navigation.setOptions({ 
             title: despensa.nome,
             headerRight: () => (
@@ -38,7 +42,10 @@ function Estoque({ route, navigation }) {
                 </HeaderTouchable>
             )    
         })
-        let listValid = validItem(despensa.items)
+
+        // let listValid = validItem(despensa.items)
+        let listValid = validItem(itemsLocal)
+
         setValues({...despensa, items: listValid})
 
         setLoading(false)

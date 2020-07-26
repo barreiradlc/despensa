@@ -10,6 +10,6 @@ export default Item = {
         provimento: 'Provimento',
         dataAlteracao: 'date',
         deletedAt: 'date?',
-        fila: { type: 'bool?', default: true } //{type: 'int', default: 0},
+        fila: { type: 'bool?', default: false } //{type: 'int', default: 0},
     }
 }
