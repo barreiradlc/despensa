@@ -99,7 +99,7 @@ function FormReceita({ route, navigation }) {
 
         newList = newList.map((item) => {
             if (item.provimento.nome === value.nome) {
-                item.quantidade++
+                item.quantidade = Number(item.quantidade) + 1
                 item.medida = value.medida
                 newItem = false
             }
@@ -108,7 +108,7 @@ function FormReceita({ route, navigation }) {
 
         if (newItem) {
             newList.push({
-                quantidade: value.quantidade || 1,
+                quantidade: Number(value.quantidade) || 1,
                 medida: value.medida || "UNIDADE",
                 provimento: {
                     nome: value.nome.trim()
@@ -119,9 +119,8 @@ function FormReceita({ route, navigation }) {
         console.debug('newList')
         console.debug(newList)
         console.debug('newList')
-
         setValues({ ...values, ingredientes: newList })
-
+        setIngrediente()
     }
 
     function handleNewPasso(value, i) {

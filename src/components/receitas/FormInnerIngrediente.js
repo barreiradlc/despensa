@@ -17,7 +17,7 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
     console.debug(item)
     console.debug("ITEM")
 
-    const [submit, setSubmit] = useState()    
+    const [submit, setSubmit] = useState()
     const [values, setValues] = useState({
         nome: item ? item.provimento.nome : '',
         quantidade: item ? String(item.quantidade || 1) : '1',
@@ -28,11 +28,13 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
         if(active && values.nome){
             add(values)        
         }
-        setValues({
-            nome: item ? item.provimento.nome : '',
-            quantidade: item ? String(item.quantidade || 1) : '1',
-            medida: item ? item.medida : 'UNIDADE'
-        })
+        if(item){
+            setValues({
+                nome: item ? item.provimento.nome : '',
+                quantidade: item ? String(item.quantidade || 1) : '1',
+                medida: item ? item.medida : 'UNIDADE'
+            })
+        }
         if(active){
             ref_input.current.focus()
         }
@@ -43,7 +45,7 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
         console.debug(active)
         console.debug(values)
 
-        if(!active && values.nome){
+        if(!active && values && values.nome){
             add(values)        
         }
     }, [active])
@@ -57,6 +59,7 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
 
     function handleAdd() {
         add(values)        
+        resetValues()
         setTimeout(() => {
             ref_input.current.focus()
             resetValues()
