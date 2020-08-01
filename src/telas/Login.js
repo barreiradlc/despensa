@@ -51,14 +51,14 @@ function Login({ navigation }) {
         if(__DEV__){
             setUser({
                 // JOHN
-                // "email": "john.doe@example.com",
-                // "username": "John",
-                // "password": "Doe123123"
+                "email": "john.doe@example.com",
+                "username": "John",
+                "password": "Doe123123"
 
                 // JANE
-                "email": "jane.doe@example.com",
-                "username": "Jane",
-                "password": "Doe123123"
+                // "email": "jane.doe@example.com",
+                // "username": "Jane",
+                // "password": "Doe123123"
             })
         }
 

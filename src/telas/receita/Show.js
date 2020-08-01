@@ -136,21 +136,21 @@ function ShowReceita({ route, navigation }) {
 
     useEffect(() => {
         // getProvimentos()
-        getUltimaDespensa()
+        // getUltimaDespensa()
     }, [])
 
-    useEffect(() => {
-        // getProvimentos()
-        // handleUpdateRefs()
+    // useEffect(() => {
+    //     // getProvimentos()
+    //     // handleUpdateRefs()
 
-        // console.log(values)
-        // if(values.ingredientes){
-        //     const ingredientesRefList = values && values.ingredientes.map(( i ) => {
-        //         return useRef()
-        //     }) //useRef()            
-        //     setIngredientesRef(ingredientesRefList)        
-        // }
-    }, [values])
+    //     // console.log(values)
+    //     // if(values.ingredientes){
+    //     //     const ingredientesRefList = values && values.ingredientes.map(( i ) => {
+    //     //         return useRef()
+    //     //     }) //useRef()            
+    //     //     setIngredientesRef(ingredientesRefList)        
+    //     // }
+    // }, [values])
 
 
 
@@ -449,16 +449,25 @@ function ShowReceita({ route, navigation }) {
 
                     <Table>
 
-                        <TableHeader>
-                            <TableTitle  >Nome</TableTitle>
-                            <TableTitle  >Medida</TableTitle>
-                            <TableTitle numeric  >   Qtd.</TableTitle>
-                            <TableTitle numeric  ></TableTitle>
+                        <TableHeader style={{ justifyContent: 'space-evenly' }}>
+                            <TableTitle style={{fontWeight: 'bold'}}  >Nome</TableTitle>
+                            <TableTitle style={{fontWeight: 'bold', width: 100}} numeric  >Medida</TableTitle>
+                            <TableTitle style={{fontWeight: 'bold'}} numeric  >   Qtd.</TableTitle>
+                            {/* <TableTitle numeric  ></TableTitle> */}
                         </TableHeader>
                         
                         {values.ingredientes && values.ingredientes.map((i, index) =>
-                            <InnerIngrediente ref={ingredientesRef[index]} snackCompras={snackCompras} update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} show index={index} />
+                            <InnerIngrediente 
+                                ref={ingredientesRef[index]} 
+                                snackCompras={snackCompras} 
+                                update={handleUpdateIngrediente} 
+                                remove={handleDeleteIngrediente} 
+                                item={i} 
+                                show 
+                                index={index} 
+                            />
                         )}
+
 
                     </Table>
                     {/* </Wrap> */}

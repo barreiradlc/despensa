@@ -339,7 +339,13 @@ function FormReceita({ route, navigation }) {
                     )}
 
                     <Wrap>
-                        <FormInnerIngrediente snackCompras={snackCompras} add={handleNewIngrediente} active={addIgrediente} toggle={toggleIngrediente} item={ingrediente}/>
+                        <FormInnerIngrediente 
+                            snackCompras={snackCompras} 
+                            add={handleNewIngrediente} 
+                            active={addIgrediente} 
+                            toggle={toggleIngrediente} 
+                            item={ingrediente}
+                        />
                     </Wrap>                        
 
                 </CardInner>

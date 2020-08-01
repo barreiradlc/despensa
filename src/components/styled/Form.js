@@ -203,8 +203,8 @@ export const UserLabel = styled.Text`
 
 
 export const CardInner = styled.View`
-  borderLeftColor: ${cor1}
-  borderLeftWidth: 5px
+  borderBottomColor: ${cor1}
+  borderBottomWidth: 5px  
   background: ${props => props.active ? cor1 : cor4}
   marginVertical: 10px
   padding: 20px
@@ -251,36 +251,43 @@ export const InnerText = styled.Text`
     color: #fff
     `
 export const InnerHeader = styled.Text`
-fontWeight: bold
-alignSelf:flex-start    
-borderRadius: 15px
-color: #555
-  `
+    fontWeight: bold
+    alignSelf:flex-start    
+    borderRadius: 15px
+    color: #555
+    `
 
 
 export const Table = styled.View`    
-  marginBottom: 20px    
-  flexDirection: column
-  `
-export const TableHeader = styled.View`    
-  flexDirection: row
-  marginBottom: 10px    
+    marginBottom: 20px    
+    flexDirection: column
 `
 
-export const TableBody = styled.View`    
-  flexDirection: row
-  marginBottom: 5px        
+export const TableHeader = styled.View`    
+    flexDirection: row
+    marginBottom: 10px    
 `
-export const TableTitle = styled.Text`        
-  width: ${props => props.numeric ? '80px' : `${screenWidth / 2 }`}
-  `
-export const TableCell = styled.View`    
-  width: ${props => props.numeric ? '80px' : `${screenWidth / 2 }`}    
+
+export const TableBody = styled.View`        
+    flexDirection: row
+    alignItems: flex-end
+    marginBottom: 15px            
 `
+
+export const TableTitle = styled.Text`   
+fontWeight: 600
+    width: ${props => props.numeric ? '140px' : `100%`}
+`
+
+export const TableCell = styled.Text`    
+    fontWeight: 200
+    width: ${props => props.numeric ? '140px' : `100%`}    
+`
+
 export const ErrorTouchable = styled.TouchableOpacity`
   alignItems: flex-end
   elevation:5
-  `
+`
 // ícones
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 

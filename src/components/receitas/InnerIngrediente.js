@@ -70,9 +70,24 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, i
     }
 
     let left = {
-        textAlign: 'start' ,
-        
+        textAlign: 'start'        
     }
+
+    console.log('ITEM ---')
+    console.log(item)
+    console.log(nome)
+    console.log(active)
+    console.log('ITEM ---')
+
+
+        return (
+            <TableBody style={{ justifyContent: 'space-evenly', marginBottom: 20 }}>
+                <TableCell style={{ textDecorationLine: active ? "line-through" : "none" }}>{nome}</TableCell>                
+                <TableCell  numeric style={{ width: 100,  }}>{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
+                <TableCell  numeric>   {item.quantidade}</TableCell>
+            </TableBody>
+        )
+    
 
     return (
         <>
@@ -83,18 +98,15 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, i
             {console.log(item)}
 
             <TableBody>
-                <TableCell style={{ textDecorationLine: active && "line-through" }}>{nome}</TableCell>                
-                <TableCell >{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
-                <TableCell  numeric>   {item.quantidade}</TableCell>
-                {__DEV__ && 
-                    <TableCell  numeric> + </TableCell>
-                }
+                <TableCell style={{ textDecorationLine: active ? "line-through" : "none" }}>{nome}</TableCell>                
+                <TableCell numeric style={{ width: 100 }} >{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
+                <TableCell numeric> {item.quantidade}</TableCell>                
             </TableBody>
         
 
 
 
-            {!show &&
+            {__DEV__ && !show &&
                 <FormTouchableItem onPress={() => remove(item)} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
                     <RemoveReceita />
                 </FormTouchableItem>
