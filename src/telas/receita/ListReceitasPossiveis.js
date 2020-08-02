@@ -54,7 +54,7 @@ function ListReceitasPossiveis({ navigation, route }) {
     }, [])
 
     function getStorageIngredientes() {
-        LocalStorage.getProvimentos()
+        LocalStorage.getProvimentosValidos()
             .then((res) => {
                 res.map((r) => {
                     console.debug(r.id)
@@ -78,7 +78,6 @@ function ListReceitasPossiveis({ navigation, route }) {
                 console.debug(err)
             })
     }
-
 
     const { data, error, loading, refetch, subscribeToMore } = useQuery(GET, { variables: { provimentos } });
 

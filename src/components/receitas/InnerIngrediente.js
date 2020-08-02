@@ -79,15 +79,13 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, i
     console.log(active)
     console.log('ITEM ---')
 
-
-        return (
-            <TableBody style={{ justifyContent: 'space-evenly', marginBottom: 20 }}>
-                <TableCell style={{ textDecorationLine: active ? "line-through" : "none" }}>{nome}</TableCell>                
-                <TableCell  numeric style={{ width: 100,  }}>{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
-                <TableCell  numeric>   {item.quantidade}</TableCell>
-            </TableBody>
-        )
-    
+    // return (
+    //     <TableBody style={{ justifyContent: 'space-evenly', marginBottom: 20 }}>
+    //         <TableCell style={{ textDecorationLine: active ? "line-through" : "none" }}>{nome}</TableCell>                
+    //         <TableCell  numeric style={{ width: 100,  }}>{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
+    //         <TableCell  numeric>   {item.quantidade}</TableCell>
+    //     </TableBody>
+    // )    
 
     return (
         <>

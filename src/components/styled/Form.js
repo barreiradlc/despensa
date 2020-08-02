@@ -274,6 +274,11 @@ export const TableBody = styled.View`
     marginBottom: 15px            
 `
 
+export const TableBodyColumn = styled.View`        
+    flexDirection: column    
+    marginBottom: 15px            
+`
+
 export const TableTitle = styled.Text`   
 fontWeight: 600
     width: ${props => props.numeric ? '140px' : `100%`}
@@ -282,6 +287,16 @@ fontWeight: 600
 export const TableCell = styled.Text`    
     fontWeight: 200
     width: ${props => props.numeric ? '140px' : `100%`}    
+`
+
+export const TableTitleForm = styled.View`   
+fontWeight: 600
+    width: ${props => props.numeric ? '50px' : `80%`}
+`
+
+export const TableCellForm = styled.View`    
+    fontWeight: 200
+    width: ${props => props.numeric ? '50px' : `80%`}    
 `
 
 export const ErrorTouchable = styled.TouchableOpacity`

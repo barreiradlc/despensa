@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
     FormInput, RowInner, TableBody,
-    TableCell
+    TableCellForm,TableBodyColumn
 } from '../styled/Form';
 import { AddReceita, MoreIngredient } from '../styled/Geral';
 import { Picker } from '@react-native-community/picker';
@@ -24,29 +24,29 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
         medida: item ? item.medida : 'UNIDADE'
     })
 
-    useEffect(()  => {
-        if(active && values.nome){
-            add(values)        
+    useEffect(() => {
+        if (active && values.nome) {
+            add(values)
         }
-        if(item){
+        if (item) {
             setValues({
                 nome: item ? item.provimento.nome : '',
                 quantidade: item ? String(item.quantidade || 1) : '1',
                 medida: item ? item.medida : 'UNIDADE'
             })
         }
-        if(active){
+        if (active) {
             ref_input.current.focus()
         }
     }, [item])
 
-    useEffect(()  => {
+    useEffect(() => {
         console.debug("ACTIVE")
         console.debug(active)
         console.debug(values)
 
-        if(!active && values && values.nome){
-            add(values)        
+        if (!active && values && values.nome) {
+            add(values)
         }
     }, [active])
 
@@ -58,7 +58,7 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
     // }
 
     function handleAdd() {
-        add(values)        
+        add(values)
         resetValues()
         setTimeout(() => {
             ref_input.current.focus()
@@ -66,7 +66,7 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
         }, 50)
     }
 
-    function resetValues(){
+    function resetValues() {
         setValues({
             nome: '',
             quantidade: '1',
@@ -115,59 +115,59 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
     }
 
     return (
-        <>
-        <TableBody style={{paddingTop: 40}}>            
-            <TableCell>
-                <Picker
-                    prompt="Unidade de medida"
-                    selectedValue={values.medida}
-                    style={{ height: 50, width: '100%' }}
-                    ref={ref_input2}
-                    onValueChange={(itemValue) =>
-                        handleInput(itemValue, 'medida') 
+        <TableBodyColumn>
+            <TableBody style={{ paddingTop: 40 }}>
+                <TableCellForm>
+                    <Picker
+                        prompt="Unidade de medida"
+                        selectedValue={values.medida}
+                        style={{ height: 50, width: '100%' }}
+                        ref={ref_input2}
+                        onValueChange={(itemValue) =>
+                            handleInput(itemValue, 'medida')
 
-                    }>                  
-                    {MEDIDAS_ENUM.map(( m ) => 
-                        <Picker.Item label={m.label} value={m.value} style={{ padding: 5 }}/>
-                    )}
-                </Picker>
-            </TableCell>
-            <TableCell numeric>
-                <FormInput
-                    // onBlur={handleHide}.
-                    onChange={(event) => { handleInput(event.nativeEvent.text, 'quantidade') }}
-                    autoFocus
-                    value={values.quantidade}
-                    // placeholder='Novo ingrediente'
-                    returnKeyType="next"
-                    onSubmitEditing={handleAdd}
-                    ref={ref_input3}
+                        }>
+                        {MEDIDAS_ENUM.map((m) =>
+                            <Picker.Item label={m.label} value={m.value} style={{ padding: 5 }} />
+                        )}
+                    </Picker>
+                </TableCellForm>
+                <TableCellForm numeric>
+                    <FormInput
+                        // onBlur={handleHide}.
+                        onChange={(event) => { handleInput(event.nativeEvent.text, 'quantidade') }}
+                        autoFocus
+                        value={values.quantidade}
+                        placeholder='Qtd.'
+                        returnKeyType="next"
+                        onSubmitEditing={handleAdd}
+                        ref={ref_input3}
                     />
-            </TableCell>
-            
-        </TableBody>
-        <TableBody>
-            <TableCell>
-                <FormInput
-                    // onBlur={handleHide}
-                    onChange={(event) => { handleInput(event.nativeEvent.text, 'nome') }}
-                    autoFocus
-                    value={values.nome}
-                    placeholder='Nome'
-                    returnKeyType="next"
-                    onSubmitEditing={handleAdd}
-                    ref={ref_input}
+                </TableCellForm>
+
+            </TableBody>
+            <TableBody>
+                <TableCellForm>
+                    <FormInput
+                        // onBlur={handleHide}
+                        onChange={(event) => { handleInput(event.nativeEvent.text, 'nome') }}
+                        autoFocus
+                        value={values.nome}
+                        placeholder='Nome'
+                        returnKeyType="next"
+                        onSubmitEditing={handleAdd}
+                        ref={ref_input}
                     />
-            </TableCell>
-            <TableCell numeric>
-                <RowInner active>
-                    <MoreIngredient onPress={handleAdd} >
-                        <AddReceita />
-                    </MoreIngredient>
-                </RowInner>
-            </TableCell>
-        </TableBody>
-        </>
+                </TableCellForm>
+                <TableCellForm numeric>
+                    <RowInner active>
+                        <MoreIngredient onPress={handleAdd} >
+                            <AddReceita />
+                        </MoreIngredient>
+                    </RowInner>
+                </TableCellForm>
+            </TableBody>
+        </TableBodyColumn>
 
     )
 }

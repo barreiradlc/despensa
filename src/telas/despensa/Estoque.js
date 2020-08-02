@@ -33,7 +33,7 @@ function Estoque({ route, navigation }) {
         console.log(itemsLocal)
 
         navigation.setOptions({ 
-            title: despensa.nome,
+            title: `${despensa.nome} ${__DEV__ && despensa.fila}`,
             headerRight: () => (
                 <HeaderTouchable onPress={handleEditDespensa} hitSlop={{ top: 20, bottom: 20, left: 20, right: 100 }}>
                     <HeaderContainer>
@@ -119,18 +119,7 @@ function Estoque({ route, navigation }) {
         })
     }
 
-    function handleDelete(item){
-        LocalStorage.deleteItem(item)
-            .then(( res ) => {
-                console.debug(res)
-                sweetalert(`${res} removido(a)`, 'success', 'Sucesso')
-                setEdit(true)
-            })
-            .catch(( err ) => {
-                console.debug(err)
-                sweetalert(`${err} removido(a)`)
-            })
-    }
+    
 
     function handleDeleteItem(item){
         console.log(item)
@@ -147,6 +136,19 @@ function Estoque({ route, navigation }) {
             ],
             {cancelable: false},
         );
+    }
+
+    function handleDelete(item){
+        LocalStorage.deleteItem(item)
+            .then(( res ) => {
+                console.debug(res)
+                sweetalert(`${res} removido(a)`, 'success', 'Sucesso')
+                setEdit(true)
+            })
+            .catch(( err ) => {
+                console.debug(err)
+                sweetalert(`${err} removido(a)`)
+            })
     }
 
     if (loading) {

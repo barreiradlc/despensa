@@ -170,7 +170,23 @@ export async function getItemsVencimento() {
     return await realm.objects('Item').filtered('validade <= $0', twoWeeks)
 }
 
-export async function getProvimentos() {
+export async function getProvimentosValidos() {
+    let today = new Date()
+    let items = await realm.objects('Item').filtered('(validade > $0 or validade = $1) AND deletedAt = $1',today, null )    
+
+    console.debug(items.length)
+    
+    let listProvimentos = []
+    items.map(( item ) => {
+        console.debug(item.provimento)
+        if(item.provimento.id ){
+            listProvimentos.push(item.provimento)
+        }
+    })
+    console.debug({listProvimentos})
+    return listProvimentos
+}
+export async function getProvimentos() {    
     return await realm.objects('Provimento')
 }
 
@@ -366,6 +382,7 @@ export async function deleteItem(item) {
 
         if (itemLocal) {
             itemLocal.deletedAt = new Date()            
+            itemLocal.fila = true
         }
 
         despensaLocal.fila = true
