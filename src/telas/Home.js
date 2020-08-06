@@ -104,6 +104,10 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
             username: data.me.username,
         }
 
+        console.log('userData')
+        console.log({userData})
+        console.log('userData')
+
         await AsyncStorage.setItem('@user', JSON.stringify(userData))
         // setdespensasList(data.me.despensas)
 

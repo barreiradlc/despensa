@@ -185,7 +185,7 @@ function ShowReceita({ route, navigation }) {
 
     async function getUser() {
         const u = await AsyncStorage.getItem('@user');
-        console.log({ u })
+        console.log({ usuario: u })
         setUser(JSON.parse(u))
     }
 
@@ -478,11 +478,11 @@ function ShowReceita({ route, navigation }) {
 
                     {values.passos.map((passo, i) =>
                         <ShowPasso item={passo} index={i} add={handleNewPasso} />
-                    )}
+                        )}
 
-                </CardInner>
+                </CardInner>                
 
-                {!loading &&
+                {!loading && user &&
                     values.user.id === user.id ?
                     <FormButtonGroup>
                         {/* <FormButton onPress={handleDelete} > */}

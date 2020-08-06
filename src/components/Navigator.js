@@ -128,6 +128,14 @@ function HomeScreen({ navigation }) {
         inactiveTintColor: 'gray',
       }}>
 
+        
+        <Tab.Screen name="Home" component={props => <Home mount={mount} handleMountFinish={handleMountFinish} handleNotifications={handleNotifications}  {...props} />} navigation={navigation} options={{
+          tabBarLabel: '',
+          tabBarIcon: (props) => (
+            <CustomComponent props={props} id='Despensa' />
+          ),
+        }} />
+        
       <Tab.Screen name="Receitas" component={ListReceitas} options={{
         tabBarLabel: '',
         tabBarIcon: (props) => (
@@ -135,13 +143,6 @@ function HomeScreen({ navigation }) {
         ),
       }}
       />
-      
-      <Tab.Screen name="Home" component={props => <Home mount={mount} handleMountFinish={handleMountFinish} handleNotifications={handleNotifications}  {...props} />} navigation={navigation} options={{
-        tabBarLabel: '',
-        tabBarIcon: (props) => (
-          <CustomComponent props={props} id='Despensa' />
-        ),
-      }} />
 
 
 

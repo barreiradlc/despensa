@@ -95,7 +95,7 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, i
 
             {console.log(item)}
 
-            <TableBody>
+            <TableBody style={{ justifyContent: 'space-evenly' }}>
                 <TableCell style={{ textDecorationLine: active ? "line-through" : "none" }}>{nome}</TableCell>                
                 <TableCell numeric style={{ width: 100 }} >{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
                 <TableCell numeric> {item.quantidade}</TableCell>                
@@ -104,11 +104,6 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, i
 
 
 
-            {__DEV__ && !show &&
-                <FormTouchableItem onPress={() => remove(item)} hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}>
-                    <RemoveReceita />
-                </FormTouchableItem>
-            }
         </>
     )
 }

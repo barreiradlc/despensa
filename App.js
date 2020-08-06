@@ -39,7 +39,6 @@ function App() {
     setLoading(false)
     AppState.addEventListener('change', _handleAppStateChange);
   }
-  
   function _handleAppStateChange (nextAppState){  
     if(nextAppState === 'inactive' || nextAppState === 'background'){
       updateShopList()
@@ -57,7 +56,7 @@ function App() {
     <UserProvider>
       <ApolloProvider client={client} >
         <PaperProvider>
-          <Navigator token={token} />
+          <Navigator token={token} />''
         </PaperProvider>        
       </ApolloProvider>
     </UserProvider>
