@@ -100,12 +100,16 @@ export const TableHeader = styled.View`
 export const TableBody = styled.TouchableOpacity`    
     flexDirection: row
     marginBottom: 5px        
+    paddingLeft: 15px
 `
 export const TableTitle = styled.Text`        
-    width: ${props => props.numeric ? '50px' : `${screenWidth / 3 - 10}` }
-    `
-    export const TableCell = styled.Text`    
-    width: ${props => props.numeric ? '50px' : `${screenWidth / 3 - 10}` }    
+    paddingVertical:15px
+    width: ${props => props.numeric ? '50px' : `${screenWidth / 2 - 10}` }
+`
+    
+export const TableCell = styled.Text`    
+    paddingVertical:15px
+    width: ${props => props.numeric ? '50px' : `${screenWidth / 2 - 10}` }    
 `
 
 export const ContainerDespensa = styled.ScrollView`

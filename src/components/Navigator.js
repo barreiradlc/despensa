@@ -135,7 +135,7 @@ function HomeScreen({ navigation }) {
             <CustomComponent props={props} id='Despensa' />
           ),
         }} />
-        
+
       <Tab.Screen name="Receitas" component={ListReceitas} options={{
         tabBarLabel: '',
         tabBarIcon: (props) => (
@@ -259,7 +259,7 @@ const options = {
 function MyDrawer(props) {
   const context = React.useContext(UserContext)
 
-  console.debug(context)
+  console.debug({context})
 
   return (
     <NavigationContainer>

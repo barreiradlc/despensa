@@ -1,6 +1,6 @@
 import React, { forwardRef, useState, useEffect, useImperativeHandle } from 'react'
 import  { StyleSheet } from 'react-native'
-import { FormTouchableItem, InnerText, RowInner } from '../styled/Form'
+import { FormTouchableItem, InnerText, RowInner, Touchable } from '../styled/Form'
 import { RemoveReceita, TableBody ,TableCell } from '../styled/Geral'
 import * as LocalStorage from '../../services/LocalStorage'
 import { DataTable } from 'react-native-paper';
@@ -95,12 +95,15 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, i
 
             {console.log(item)}
 
-            <TableBody style={{ justifyContent: 'space-evenly' }}>
-                <TableCell style={{ textDecorationLine: active ? "line-through" : "none" }}>{nome}</TableCell>                
-                <TableCell numeric style={{ width: 100 }} >{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
-                <TableCell numeric> {item.quantidade}</TableCell>                
-            </TableBody>
+            {/* <Touchable onPress={() => remove(item)} onLongPress={() => console.log('LoongPress')}> */}
+
+                <TableBody style={{ justifyContent: 'space-evenly' }} onPress={() => remove(item)} >
+                    <TableCell style={{ textDecorationLine: active && show ? "line-through" : "none" }}>{nome}</TableCell>                
+                    <TableCell numeric style={{ width: 100 }} >{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
+                    <TableCell numeric> {item.quantidade}</TableCell>                
+                </TableBody>
         
+            {/* </Touchable> */}
 
 
 

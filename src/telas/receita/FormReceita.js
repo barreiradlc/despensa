@@ -68,7 +68,7 @@ function FormReceita({ route, navigation }) {
     }
 
     function handleUpdateIngrediente(value) {
-
+        
     }
 
     function handleDeleteIngrediente(value) {
@@ -157,6 +157,7 @@ function FormReceita({ route, navigation }) {
 
     function convertValues(receita) {
         let result = receita
+
         result.ingredientes = result.ingredientes.map((i) => {
             delete i.__typename
             delete i.provimento.__typename
@@ -202,6 +203,11 @@ function FormReceita({ route, navigation }) {
             receita: result
         }
 
+        console.debug('------ result')
+        console.debug(result)
+        console.debug('------ result')
+
+        // setLoad(false)
         editRef.current.mutate(variables)
     }
 

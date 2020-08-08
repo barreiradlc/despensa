@@ -449,10 +449,10 @@ function ShowReceita({ route, navigation }) {
 
                     <Table>
 
-                        <TableHeader style={{ justifyContent: 'space-evenly' }}>
+                        <TableHeader style={{ justifyContent: 'space-evenly', paddingLeft: 15 }}>
                             <TableTitle style={{fontWeight: 'bold'}}  >Nome</TableTitle>
                             <TableTitle style={{fontWeight: 'bold', width: 100}} numeric  >Medida</TableTitle>
-                            <TableTitle style={{fontWeight: 'bold'}} numeric  >   Qtd.</TableTitle>
+                            <TableTitle style={{fontWeight: 'bold'}} numeric  >Qtd.</TableTitle>
                             {/* <TableTitle numeric  ></TableTitle> */}
                         </TableHeader>
                         

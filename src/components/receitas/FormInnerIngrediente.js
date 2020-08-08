@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
+    RowInnerPlusButton,
     FormInput, RowInner, TableBody,
-    TableCellForm,TableBodyColumn
+    TableCellForm,TableBodyColumnForm,TableBodyForm
 } from '../styled/Form';
 import { AddReceita, MoreIngredient } from '../styled/Geral';
 import { Picker } from '@react-native-community/picker';
@@ -25,7 +26,7 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
     })
 
     useEffect(() => {
-        if (active && values.nome) {
+        if (active && values.nome && item) {
             add(values)
         }
         if (item) {
@@ -106,17 +107,17 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
 
     if (!active) {
         return (
-            <RowInner active >
+            <RowInnerPlusButton active >
                 <MoreIngredient onPress={toggle} >
                     <AddReceita />
                 </MoreIngredient>
-            </RowInner>
+            </RowInnerPlusButton>
         )
     }
 
     return (
-        <TableBodyColumn>
-            <TableBody style={{ paddingTop: 40 }}>
+        <TableBodyColumnForm style={{ marginTop: 40, paddingTop: 20 }}>
+            <TableBodyForm >
                 <TableCellForm>
                     <Picker
                         prompt="Unidade de medida"
@@ -145,8 +146,8 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
                     />
                 </TableCellForm>
 
-            </TableBody>
-            <TableBody>
+            </TableBodyForm>
+            <TableBodyForm>
                 <TableCellForm>
                     <FormInput
                         // onBlur={handleHide}
@@ -159,15 +160,15 @@ function FormInnerIngrediente({ active, toggle, add, item }) {
                         ref={ref_input}
                     />
                 </TableCellForm>
-                <TableCellForm numeric>
-                    <RowInner active>
+                <TableCellForm numeric style={{ paddingBottom: 15 }}>
+                    <RowInner active >
                         <MoreIngredient onPress={handleAdd} >
                             <AddReceita />
                         </MoreIngredient>
                     </RowInner>
                 </TableCellForm>
-            </TableBody>
-        </TableBodyColumn>
+            </TableBodyForm>
+        </TableBodyColumnForm>
 
     )
 }

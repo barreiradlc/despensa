@@ -40,6 +40,10 @@ export const FormLabel = styled.Text`
   padding: 0px
 `
 
+export const Touchable = styled.TouchableOpacity`
+  background: #fff
+`
+
 export const FormButton = styled.TouchableOpacity`
   textAlign: left
   background: ${props => props.active ? cor1 : cor4}
@@ -233,6 +237,18 @@ export const RowInner = styled.TouchableOpacity`
   height:50px
   borderRadius:5px
   `
+
+export const RowInnerPlusButton = styled.TouchableOpacity`
+  backgroundColor:${props => props.active ? cor1 : (props.stock ? cor2 : cor3)}
+  flexDirection:row
+  alignItems: center
+  justify-content: center
+  padding:5px
+  
+  height:50px
+  borderRadius:5px
+  `
+
 export const RowInnerAdd = styled.TouchableOpacity`
   backgroundColor:${cor1}
   flexDirection:row
@@ -270,13 +286,30 @@ export const TableHeader = styled.View`
 
 export const TableBody = styled.View`        
     flexDirection: row
-    alignItems: flex-end
+    alignItems: center
+    marginBottom: 15px            
+`
+export const TableBodyForm = styled.View`        
+    flexDirection: row
+    justifyContent: space-between
+    
     marginBottom: 15px            
 `
 
 export const TableBodyColumn = styled.View`        
     flexDirection: column    
-    marginBottom: 15px            
+    padding: 0
+    margin: 0
+    width: 100%     
+`
+
+export const TableBodyColumnForm = styled.View`        
+    flexDirection: column    
+    padding: 0
+    margin: 0
+    width: 100%         
+    borderTopColor: ${cor1}
+    borderTopWidth: 2px  
 `
 
 export const TableTitle = styled.Text`   
@@ -290,13 +323,14 @@ export const TableCell = styled.Text`
 `
 
 export const TableTitleForm = styled.View`   
-fontWeight: 600
-    width: ${props => props.numeric ? '50px' : `80%`}
-`
-
-export const TableCellForm = styled.View`    
+    
+    fontWeight: 600
+    width: ${props => props.numeric ? '25%' : `70%`}
+    `
+    
+export const TableCellForm = styled.View`            
     fontWeight: 200
-    width: ${props => props.numeric ? '50px' : `80%`}    
+    width: ${props => props.numeric ? '25%' : `70%`}    
 `
 
 export const ErrorTouchable = styled.TouchableOpacity`

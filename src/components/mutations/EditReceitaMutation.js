@@ -14,6 +14,7 @@ const EDIT = gql`
                 updatedAt
                 ingredientes {
                     id
+                    medida
                     provimento {
                         id
                         nome
