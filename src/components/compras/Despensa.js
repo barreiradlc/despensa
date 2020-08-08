@@ -116,6 +116,10 @@ class Despensa extends React.Component {
                     }
                 })
 
+                realm.write( async() => {
+                    this.state.data.compras =  await newList
+                })
+
                 console.log({newList})
 
 

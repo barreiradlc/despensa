@@ -144,10 +144,15 @@ function ListReceitasPossiveis({ navigation, route }) {
         )
     }
     
-    if (loading) {
+    if (loading && !data) {
         return <LoadingOverlay />
     }
     
+    console.log('DATA')
+    console.log(data)
+    console.log(error)
+    console.log('DATA')
+
     return (
         <>
             <Container style={{ marginBottom: 0 }}>

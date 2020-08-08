@@ -191,7 +191,7 @@ export async function getProvimentos() {
 }
 
 export async function getProvimento(i) {
-    return await realm.objects('Item').filtered('provimento.id = $0 or provimento.nome = $1', Number(i.provimento.id), i.provimento.nome)[0]
+    return await realm.objects('Item').filtered('(provimento.id = $0 or provimento.nome = $1) AND deletedAt = $2', Number(i.provimento.id), i.provimento.nome, null)[0]
 }
 
 export async function getProvimentoCompras(i) {

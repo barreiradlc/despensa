@@ -99,8 +99,8 @@ function InnerIngrediente({ snackCompras, toggle, item, remove, show, storage, i
 
                 <TableBody style={{ justifyContent: 'space-evenly' }} onPress={() => remove(item)} >
                     <TableCell style={{ textDecorationLine: active && show ? "line-through" : "none" }}>{nome}</TableCell>                
-                    <TableCell numeric style={{ width: 100 }} >{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
                     <TableCell numeric> {item.quantidade}</TableCell>                
+                    <TableCell numeric style={{ width: 100 }} >{item.medida ? MEDIDAS_ENUM.filter(( m ) => m.value === item.medida)[0].label : "Unidade"}</TableCell>                
                 </TableBody>
         
             {/* </Touchable> */}
