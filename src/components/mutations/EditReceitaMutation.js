@@ -41,7 +41,8 @@ function EditReceitaMutation( props, ref ){
         }
 
         if(error){
-            console.log(`Erro ${error}`)
+            console.log(`Erro ${JSON.stringify(error)}`)
+            props.sendError('editar')
         }
     }, [data, error])
 

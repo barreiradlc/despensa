@@ -4,13 +4,13 @@ import FormInnerIngrediente from '../../components/receitas/FormInnerIngrediente
 import FormPasso from '../../components/receitas/FormPasso';
 import InnerIngrediente from '../../components/receitas/InnerIngrediente';
 import {
-    CardInner, CardInnerTitle, FormButton, FormButtonGroup, FormButtonLabel, FormContainerScroll, FormInput, FormInputTextArea, FormTouchableAdd, InnerText, RowInnerAdd, Wrap, Table,
-    TableHeader,
-    TableTitle,
+    CardInner, CardInnerTitle, FormButton, FormButtonGroup, FormButtonLabel, FormContainerScroll, FormInput, FormInputTextArea, FormTouchableAdd, InnerText, RowInnerAdd, Wrap, 
+    
     TableBody,
     TableCell
 } from '../../components/styled/Form';
-import { AddReceita } from '../../components/styled/Geral';
+import { AddReceita,TableHeader, Table,
+    TableTitle, } from '../../components/styled/Geral';
 import { LoadingOverlay } from '../../components/utils/Components';
 import * as Utils from '../../components/utils/Utils';
 
@@ -185,6 +185,12 @@ function FormReceita({ route, navigation }) {
         }
         Utils.sweetalert('', 'success', `\n\n\nReceita ${edit ? 'editada' : 'cadastrada'} com sucesso`)
     }
+    
+    function sendError(msg) {
+        setLoad(false)
+        // navigation.navigate('Receitas', { refetch: true })        
+        Utils.sweetalert('', 'error', `\n\n\nErro ao ${msg} receita`)
+    }
 
     function editReceita() {
         if (disable) {
@@ -216,7 +222,7 @@ function FormReceita({ route, navigation }) {
             return erros.map((e, i) => {
                 setTimeout(() => {
                     Utils.toast(e.message)
-                }, 500 * i)
+              PASSO  }, 500 * i)
             })
         }
         setLoad(true)
@@ -302,8 +308,8 @@ function FormReceita({ route, navigation }) {
                 onMomentumScrollBegin={() => setAddIngrediente(false)}
             >
 
-                <EditReceitaMutation ref={editRef} success={handleSucess} />
-                <AddReceitaMutation ref={addRef} success={handleSucess} />
+                <EditReceitaMutation ref={editRef} success={handleSucess} sendError={sendError} />
+                <AddReceitaMutation ref={addRef} success={handleSucess} sendError={sendError} />
                 <DeleteReceitaMutation ref={removeRef} success={handleSucess} />
 
                 <FormInput
@@ -327,22 +333,22 @@ function FormReceita({ route, navigation }) {
 
                 <CardInner>
                     <CardInnerTitle>Ingredientes</CardInnerTitle>
-                    {/* {values.ingredientes.length > 0 || addIgrediente &&
-                        <Table>
-                            <TableHeader>
-                                {!addIgrediente &&
-                                    <TableTitle  >Nome</TableTitle>
-                                }
-                                <TableTitle >Medida</TableTitle>
-                                <TableTitle numeric >Qtd.</TableTitle>
 
-                            </TableHeader>
-                        </Table>
-                    } */}
+                    <Table>
+
+                    {values.ingredientes.length > 0 &&                        
+                        <TableHeader style={{ justifyContent: 'space-evenly', paddingLeft: 15 }}>
+                            <TableTitle style={{fontWeight: 'bold'}}  >Nome</TableTitle>
+                            <TableTitle style={{fontWeight: 'bold'}} numeric  >Qtd.</TableTitle>
+                            <TableTitle style={{fontWeight: 'bold', width: 100}} numeric  >Medida</TableTitle>                            
+                        </TableHeader>                        
+                    }
 
                     {values.ingredientes && values.ingredientes.map((i) =>
                         <InnerIngrediente update={handleUpdateIngrediente} remove={handleDeleteIngrediente} item={i} add={handleNewIngrediente} />
                     )}
+
+                    </Table>
 
                     <Wrap>
                         <FormInnerIngrediente 

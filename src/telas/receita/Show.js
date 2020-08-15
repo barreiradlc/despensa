@@ -445,7 +445,6 @@ function ShowReceita({ route, navigation }) {
 
                 <CardInner>
                     <CardInnerTitle>Ingredientes</CardInnerTitle>
-                    {/* <Wrap> */}
 
                     <Table>
 
@@ -453,7 +452,7 @@ function ShowReceita({ route, navigation }) {
                             <TableTitle style={{fontWeight: 'bold'}}  >Nome</TableTitle>
                             <TableTitle style={{fontWeight: 'bold'}} numeric  >Qtd.</TableTitle>
                             <TableTitle style={{fontWeight: 'bold', width: 100}} numeric  >Medida</TableTitle>
-                            {/* <TableTitle numeric  ></TableTitle> */}
+
                         </TableHeader>
                         
                         {values.ingredientes && values.ingredientes.map((i, index) =>
