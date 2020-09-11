@@ -6,6 +6,7 @@ export default Despensa = {
         uuid: 'string',
         id: 'int?',
         nome: 'string?',
+        capa: 'string?',
         descricao: 'string?',
         items: 'Item[]',
         compras: 'ItemCompras[]',

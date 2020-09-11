@@ -7,7 +7,9 @@ import {
     CardInner, CardInnerTitle, FormButton, FormButtonGroup, FormButtonLabel, FormContainerScroll, FormInput, FormInputTextArea, FormTouchableAdd, InnerText, RowInnerAdd, Wrap, 
     
     TableBody,
-    TableCell
+    TableCell,
+    FormButtonCamera,
+    Camera
 } from '../../components/styled/Form';
 import { AddReceita,TableHeader, Table,
     TableTitle, } from '../../components/styled/Geral';
@@ -222,7 +224,7 @@ function FormReceita({ route, navigation }) {
             return erros.map((e, i) => {
                 setTimeout(() => {
                     Utils.toast(e.message)
-              PASSO  }, 500 * i)
+                }, 500 * i)
             })
         }
         setLoad(true)
@@ -249,6 +251,10 @@ function FormReceita({ route, navigation }) {
         console.log('ITEM A CONFIGURAR')
     }
 
+    
+    async function handleGoToCamera() {
+        navigation.navigate('Camera')
+    }
 
     function removeReceita() {
         Alert.alert(
@@ -308,6 +314,13 @@ function FormReceita({ route, navigation }) {
                 onMomentumScrollBegin={() => setAddIngrediente(false)}
             >
 
+                <FormButtonCamera onPress={handleGoToCamera} >
+                    <>
+                        <FormButtonLabel >Editar capa</FormButtonLabel>
+                        <Camera />
+                    </>
+                </FormButtonCamera>
+
                 <EditReceitaMutation ref={editRef} success={handleSucess} sendError={sendError} />
                 <AddReceitaMutation ref={addRef} success={handleSucess} sendError={sendError} />
                 <DeleteReceitaMutation ref={removeRef} success={handleSucess} />
@@ -336,7 +349,7 @@ function FormReceita({ route, navigation }) {
 
                     <Table>
 
-                    {values.ingredientes.length > 0 &&                        
+                    {values.ingredientes && values.ingredientes.length > 0 &&                        
                         <TableHeader style={{ justifyContent: 'space-evenly', paddingLeft: 15 }}>
                             <TableTitle style={{fontWeight: 'bold'}}  >Nome</TableTitle>
                             <TableTitle style={{fontWeight: 'bold'}} numeric  >Qtd.</TableTitle>

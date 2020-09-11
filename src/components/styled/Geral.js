@@ -14,6 +14,13 @@ export const screenWidth = Math.round(Dimensions.get('window').width);
 export const screenHeight = Math.round(Dimensions.get('window').height);
 
 
+export const ImageBg = styled.ImageBackground`
+    width: 100%
+    height: ${screenHeight / 5}    
+    elevation:1
+    padding: 25px    
+`
+
 export const SafeContainer = styled.SafeAreaView`
 `
 
@@ -146,9 +153,11 @@ export const Card = styled.View`
     background: #fff
     marginHorizontal: 20px
     marginVertical: 10px
-    padding: 25px
-    borderRadius: 10px
-    elevation:3
+    padding: ${props => props.noPadding ? '0px' : '25px'}
+    borderRadius: 15px
+    elevation: ${props => props.noPadding ? '0' : '3'}
+    
+    height: ${screenHeight / 5}
 `
 export const CardCompras = styled.View`
     background: #fff

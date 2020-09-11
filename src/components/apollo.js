@@ -30,16 +30,16 @@ const authLink = setContext(async (_, { headers }) => {
 // export const socketUri = `ws://gql-despensa.herokuapp.com`
 
 // CLOUD
-// export const uri = `https://despensa-gql.herokuapp.com`
-// export const socketUri = `ws://despensa-gql.herokuapp.com`
+export const uri = `https://despensa-gql.herokuapp.com`
+export const socketUri = `ws://despensa-gql.herokuapp.com`
 
 // LOCAL
 // export const uri = `http://192.168.0.141:3000`
 // export const socketUri = `ws://192.168.0.141:3000`
 
 // LOCAL
-export const uri = `http://192.168.100.18:3000`
-export const socketUri = `ws://192.168.100.18:3000`
+// export const uri = `http://192.168.100.18:3000`
+// export const socketUri = `ws://192.168.100.18:3000`
 
 // SUBSCRIPTIONS
 // const cable = ActionCable.createConsumer(`${socketUri}/cable`)

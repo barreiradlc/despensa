@@ -9,6 +9,7 @@ import { Alert, Button, TouchableWithoutFeedback, Text, View } from 'react-nativ
 
 import Login from '../telas/Login';
 import Perfil from '../telas/Perfil';
+import Camera from '../components/Camera';
 import Notifications from '../telas/Notifications';
 import Home from '../telas/Home';
 import Estoque from '../telas/despensa/Estoque'
@@ -300,6 +301,7 @@ function Navigator(props) {
       <Stack.Screen name="FormReceita" component={FormReceita} />
       <Stack.Screen name="ListReceitasPossiveis" component={ListReceitasPossiveis} />
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Camera" component={Camera} />
       <Stack.Screen name="ShowReceita" component={ShowReceita} />
       <Stack.Screen name="Estoque" component={Estoque} />
       <Stack.Screen name="Lista de compras" component={ListaCompras} />

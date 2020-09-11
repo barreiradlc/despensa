@@ -180,6 +180,7 @@ function List({ navigation, route }) {
                 {data && data.receitas.nodes.map((receita) =>
                     <Item receita={receita} />
                 )}
+                
             </Container>
             <FloatingAction
 

@@ -1,51 +1,53 @@
 import React, { useRef, useImperativeHandle, forwardRef, useEffect, useState } from 'react'
-import { FloatHome, Plus, FloatTouchable, Float, Header, CardTouchable, ContainerDespensa, Card, CardBody, CardTitle, FloatTitle } from '../../components/styled/Geral'
+import { ImageBackground } from 'react-native'
+import { FloatHome, Plus, FloatTouchable, Float, Header, CardTouchable, ContainerDespensa, Card, CardBody, CardTitle, FloatTitle, ImageBg } from '../../components/styled/Geral'
 import * as LocalStorage from '../../services/LocalStorage'
 import { useNavigation } from '@react-navigation/native';
 
 import { LoadingOverlay } from '../../components/utils/Components'
 import { HeaderTouchable, HeaderContainer, HomeMenuItem } from '../../components/styled/Geral'
 import QueueProcess from '../../components/QueueProcess'
+const logo = '../../assets/logo.png'
 
 function List(props, ref) {
-    
-    const [reload, setReload] = useState(false)    
+
+    const [reload, setReload] = useState(false)
     const queueRef = useRef()
 
     useEffect(() => {
-        if(reload){
+        if (reload) {
             console.debug('IMPERATIVE')
             console.debug(queueRef)
             console.debug('IMPERATIVE')
             queueRef.current.reload('aaaaaa')
         }
         setReload(false)
-    },[reload]);
-    
-    function reloadQueue(){
+    }, [reload]);
+
+    function reloadQueue() {
         console.log('reloadDashBoard')
         setLoading(true)
         init()
     }
 
-    function listenRoute(){
+    function listenRoute() {
         setReload(true)
         console.log('achou')
     }
 
-    useEffect(() => 
+    useEffect(() =>
         navigation.addListener('focus', () => listenRoute())
-    ,[]);
-    
+        , []);
+
     const navigation = useNavigation();
-    const [values, setValues] = useState([])    
+    const [values, setValues] = useState([])
     const [loading, setLoading] = useState(props.edit || true)
 
     useEffect(() => {
         setLoading(true)
         init()
     }, [props])
-    
+
     useEffect(() => {
         setLoading(true)
         init()
@@ -60,7 +62,7 @@ function List(props, ref) {
     }));
 
     function init() {
-        
+
         console.debug('Refresh')
         if (props.items) {
 
@@ -68,22 +70,22 @@ function List(props, ref) {
             console.warn(props.items)
 
             setValues(props.items)
-        } else {            
+        } else {
             loadData()
         }
         setLoading(false)
     }
 
-    function loadData(){
+    function loadData() {
         LocalStorage.getDespensas()
-                .then((response) => {
-                    console.debug({ response })
-                    // props.reload()
-                    setValues(response)
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+            .then((response) => {
+                console.debug({ response })
+                // props.reload()
+                setValues(response)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     if (loading) {
@@ -102,27 +104,32 @@ function List(props, ref) {
 
         const value = props.value
 
-        console.log({v: value.nome})
+        const capa = value.capa ? `data:image/gif;base64,${value.capa}` : logo
+        const capaLogo = value.capa ? false : true
 
         return (
-            <Card>
+
+            <Card noPadding>
+
                 <CardTouchable onPress={() => navigateEstoque(value)}>
-                    <>
+                    <ImageBg source={capaLogo ? require(logo) : { uri: capa } } imageStyle={{ borderRadius: 10, opacity: 0.6, backgroundColor: "#4e1017" }}>
+
                         <CardTitle>{value.nome} {__DEV__ && value.items.length}</CardTitle>
                         <CardBody>{value.descricao}</CardBody>
-                            {__DEV__
+                        {__DEV__
                             &&
-                                <CardBody>
-                                    {value.fila ? 'pendente' : 'nem ta'}
-                                </CardBody>
-                            }
-                    </>
+                            <CardBody>
+                                {value.fila ? 'pendente' : 'nem ta'}
+                            </CardBody>
+                        }
+
+                    </ImageBg>
                 </CardTouchable>
             </Card>
         )
     }
 
-    function handleFormNew(){
+    function handleFormNew() {
         navigation.navigate('FormDespensa', {
             edit: false,
             despensa: null,
@@ -136,10 +143,10 @@ function List(props, ref) {
                 <Header>Minhas Despensas</Header>
 
                 {values.map((value) =>
-                    !value.deletedAt && 
+                    !value.deletedAt &&
                     <Item listenRoute={listenRoute} value={value} />
                 )}
-                
+
             </ContainerDespensa>
 
             <FloatTouchable onPress={handleFormNew}>
@@ -149,7 +156,7 @@ function List(props, ref) {
                 </FloatHome>
             </FloatTouchable>
 
-            <QueueProcess  ref={queueRef} reloadQueue={reloadQueue} />
+            <QueueProcess ref={queueRef} reloadQueue={reloadQueue} />
         </>
     )
 }

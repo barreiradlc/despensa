@@ -25,7 +25,8 @@ export const FormContainerCompras = styled.SafeAreaView`
 export const FormContainerScroll = styled.ScrollView`
   background-color: #fff
   flex: 1 
-  padding:40px
+  paddingVertical:10px
+  paddingHorizontal:40px
 `
 
 export const ContainerScrollCard = styled.ScrollView`
@@ -50,6 +51,20 @@ export const FormButton = styled.TouchableOpacity`
   flex: 1
   elevation: ${props => props.flat ? 0 : 5}
   borderRadius: 10px
+`
+
+export const FormButtonCamera = styled.TouchableOpacity`
+  textAlign: center
+  background: ${props => props.active ? cor1 : cor4}
+  flex: 1
+  elevation: ${props => props.flat ? 0 : 5}
+  borderRadius: 10px
+  marginBottom: 20px
+  marginTop: 10px
+  padding: 5px
+  height: 140px
+  justifyContent: center
+  alignItems: center
 `
 
 export const FormButtonLabel = styled.Text`
@@ -185,7 +200,7 @@ export const ErrorCard = styled.View`
 export const Card = styled.View`
   background: #fff
   marginVertical: 10px
-  padding: 25px
+  padding: ${props => props.noPadding ? '0px' : '25px'}
   borderRadius: 10px
   elevation:3
 `
@@ -340,6 +355,7 @@ export const ErrorTouchable = styled.TouchableOpacity`
 // ícones
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+export const Camera = () => <FontAwesome name="camera" size={30} color="#555" />;
 export const Facebook = () => <FontAwesome name="facebook-square" size={30} color="#fff" />;
 export const Google = () => <FontAwesome name="google-plus" size={30} color="#fff" />;
 export const Close = () => <FontAwesome name="close" size={30} color="#555" />;

@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { FormInputTextArea, FormInputReadOnly,Facebook, FormButtonLabel, FormButtonGroup, FormAsset, FormButton, FormContainerScroll, FormIconContainer, FormInput, FormLabel, FormTouchableItem, FormTouchableIcon, Google } from '../../components/styled/Form'
+import { FormInputTextArea, FormInputReadOnly,Facebook, FormButtonLabel, FormButtonGroup, FormAsset, FormButton, FormContainerScroll, Camera,FormIconContainer, FormInput, FormLabel, FormTouchableItem, FormTouchableIcon, Google,FormButtonCamera } from '../../components/styled/Form'
 import { UserItem, HeaderTouchable, MenuItem, Container, Float, FloatTitle, FloatTouchable, Plus } from '../../components/styled/Geral';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
+
 import * as LocalStorage from '../../services/LocalStorage'
 import * as Utils from '../../components/utils/Utils'
 import { Alert } from 'react-native'
@@ -68,6 +69,12 @@ function FormDespensa({route, navigation}) {
 
 
 
+    async function handleGoToCamera() {
+        navigation.navigate('Camera', {
+            uuid: values.uuid
+        })
+    }
+
     async function handleSubmit() {
         if(edit){
             alter()
@@ -111,6 +118,13 @@ function FormDespensa({route, navigation}) {
 
     return (
         <FormContainerScroll>
+
+            <FormButtonCamera onPress={handleGoToCamera} >
+                <>
+                    <FormButtonLabel >Editar capa</FormButtonLabel>
+                    <Camera />
+                </>
+            </FormButtonCamera>
 
             <FormInput
                 onChange={(event) => { handleInput(event, 'nome') }}

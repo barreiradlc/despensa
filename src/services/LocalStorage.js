@@ -1,6 +1,34 @@
 import Realm from 'realm'
 import { uuid } from '../components/utils/Utils'
 import realm from '../config/realm'
+import ImgToBase64 from 'react-native-image-base64';
+
+export async function updateImageDespensa(despensaUuid, file) {
+
+    const despensaLocal = await realm.objectForPrimaryKey('Despensa', despensaUuid)
+
+
+    // console.log('file')
+    // console.log(file)
+
+    // ImgToBase64.getBase64String(file)
+    //     .then((base64String) => {
+    //         // console.debug(base64String)
+    //         console.debug('base64String')
+    //         despensaLocal.capa = base64String
+    
+    
+    //     })
+    //     .catch((err) => {
+        //         console.error({err})
+        
+        //     });
+        realm.write(() => {
+            despensaLocal.capa = file.base64
+        })
+    return;
+
+}
 
 export async function updateShopList() {
     let today = new Date()
