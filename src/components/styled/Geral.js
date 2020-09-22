@@ -16,8 +16,9 @@ export const screenHeight = Math.round(Dimensions.get('window').height);
 
 export const ImageBg = styled.ImageBackground`
     width: 100%
-    height: ${screenHeight / 5}    
-    elevation:1
+    height: ${screenHeight / 5}   
+    justifyContent: flex-end 
+    elevation: ${ props => props.pop ? '4' : '1'}
     padding: 25px    
 `
 
@@ -157,7 +158,7 @@ export const Card = styled.View`
     borderRadius: 15px
     elevation: ${props => props.noPadding ? '0' : '3'}
     
-    height: ${screenHeight / 5}
+    height: ${props => props.item ? screenHeight / 8 : screenHeight / 5}
 `
 export const CardCompras = styled.View`
     background: #fff
@@ -172,6 +173,7 @@ export const CardTitle = styled.Text`
     fontSize: 20px
     fontWeight: bold
     marginBottom: 15px
+    color: ${props => props.invert ? '#fff' : '#555'}
 `
 export const Float = styled.View`
     alignItems:center
@@ -209,8 +211,13 @@ export const FloatTitle = styled.Text`
     textAlign: center
     `
 export const CardBody = styled.Text`
-        color: ${props => props.vencimento ? cor1 : cor5};
-        fontWeight: bold
+    color: ${props => props.vencimento ? cor1 : cor5};
+    fontWeight: bold
+`
+
+export const CardDesc = styled.Text`
+    color: ${props => props.invert ? '#fff' : '#555'}
+    fontWeight: bold
 `
 export const CardRow = styled.View`
     flexDirection: row

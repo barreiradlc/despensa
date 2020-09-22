@@ -1,13 +1,12 @@
 import React, { useRef, useImperativeHandle, forwardRef, useEffect, useState } from 'react'
 import { ImageBackground } from 'react-native'
-import { FloatHome, Plus, FloatTouchable, Float, Header, CardTouchable, ContainerDespensa, Card, CardBody, CardTitle, FloatTitle, ImageBg } from '../../components/styled/Geral'
+import { CardDesc, FloatHome, Plus, FloatTouchable, Float, Header, CardTouchable, ContainerDespensa, Card, CardBody, CardTitle, FloatTitle, ImageBg } from '../../components/styled/Geral'
 import * as LocalStorage from '../../services/LocalStorage'
 import { useNavigation } from '@react-navigation/native';
 
 import { LoadingOverlay } from '../../components/utils/Components'
-import { HeaderTouchable, HeaderContainer, HomeMenuItem } from '../../components/styled/Geral'
 import QueueProcess from '../../components/QueueProcess'
-const logo = '../../assets/logo.png'
+const logo = '../../assets/563569-PL2J9K-126.png'
 
 function List(props, ref) {
 
@@ -114,14 +113,14 @@ function List(props, ref) {
                 <CardTouchable onPress={() => navigateEstoque(value)}>
                     <ImageBg source={capaLogo ? require(logo) : { uri: capa } } imageStyle={{ borderRadius: 10, opacity: 0.6, backgroundColor: "#4e1017" }}>
 
-                        <CardTitle>{value.nome} {__DEV__ && value.items.length}</CardTitle>
-                        <CardBody>{value.descricao}</CardBody>
-                        {__DEV__
+                        <CardTitle invert>{value.nome} {__DEV__ && value.items.length}</CardTitle>
+                        <CardDesc invert>{value.descricao}</CardDesc>
+                        {/* {__DEV__
                             &&
                             <CardBody>
                                 {value.fila ? 'pendente' : 'nem ta'}
                             </CardBody>
-                        }
+                        } */}
 
                     </ImageBg>
                 </CardTouchable>

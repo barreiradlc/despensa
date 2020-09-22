@@ -2,9 +2,10 @@ import React, { useEffect } from 'react'
 import gql from 'graphql-tag';
 
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { Container, CardRow, EditItem, DeleteItem, PlusItemReceita, MinusItem, Card, CardBody, CardTitle, CardTouchable } from '../../components/styled/Geral';
+import { Container, CardRow, EditItem, DeleteItem, PlusItemReceita, MinusItem, Card, CardBody, CardTitle, CardTouchable, ImageBg, CardDesc } from '../../components/styled/Geral';
 import { FloatingAction } from "react-native-floating-action";
 import { LoadingOverlay } from '../../components/utils/Components'
+const logo = '../../assets/placeholder-receita/563569-PL2J9K-126.png'
 
 const actions = [
     {
@@ -145,13 +146,19 @@ function List({ navigation, route }) {
     function Item({ receita }) {
         console.debug({ receita })
 
+        const capa = logo
+        const capaLogo = true
+
         return (
-            <Card>
+            <Card noPadding>
                 <CardTouchable onPress={() => { navigateShow(receita) }}>
-                    <CardTitle>{receita.nome}</CardTitle>
-                    <CardRow>
-                        <CardBody>{receita.descricao}</CardBody>
-                    </CardRow>
+                    <ImageBg source={capaLogo ? require(logo) : { uri: capa }} imageStyle={{ borderRadius: 10, opacity: 0.6, backgroundColor: "#4e1017" }}>
+
+                        <CardTitle invert>{receita.nome}</CardTitle>
+                        
+                            <CardDesc invert>{receita.descricao}</CardDesc>
+                        
+                    </ImageBg>
                 </CardTouchable>
             </Card>
         )
@@ -180,7 +187,7 @@ function List({ navigation, route }) {
                 {data && data.receitas.nodes.map((receita) =>
                     <Item receita={receita} />
                 )}
-                
+
             </Container>
             <FloatingAction
 

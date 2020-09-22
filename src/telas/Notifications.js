@@ -33,22 +33,25 @@ function Notifications({ route, navigation, handleNotifications }) {
     const { despensa, notifications, itensVencimento } = route.params
 
     const client = useApolloClient()
-    const [notificationList, setNotificationList] = useState(notifications)
-    const [despensasVencimento, setDespensasVencimento] = useState(notifications)
+    const [notificationList, setNotificationList] = useState(notifications || null)
+    const [despensasVencimento, setDespensasVencimento] = useState(notifications || null)
     const [user, setUser] = useState('')
     const [aguarde, setAguarde] = useState(false)
 
     const [sendResposta, { data, loading }] = useMutation(HANDLE_CONVITE, { variables: { id: focus } });
 
     function getDespensa(uuid) {
-        return LocalStorage.getDespensaByUuid(uuid)            
+        return LocalStorage.getDespensaByUuid(uuid)
     }
 
-    function handleNavigateDespensa(despensa){
-        navigation.navigate('Estoque', {
-            despensa,
-            uuid: despensa.uuid
-        })
+    function handleNavigateDespensa(despensa) {
+
+        if (despensa) {
+            navigation.navigate('Estoque', {
+                despensa,
+                uuid: despensa.uuid
+            })
+        } else { console.table(despensa) }
     }
 
     useEffect(() => {
@@ -66,7 +69,7 @@ function Notifications({ route, navigation, handleNotifications }) {
                         i
                     ]
                 })
-            } else {                
+            } else {
                 console.log('LIST2')
                 console.log(list)
                 list.map((l) => {
@@ -182,28 +185,29 @@ function Notifications({ route, navigation, handleNotifications }) {
                 </FormButton>
             )}
 
-            {despensasVencimento.map((d) =>
+            {despensasVencimento.length !== 0 && despensasVencimento.map((d) =>
                 <FormButton style={{ paddingVertical: 20 }}>
 
-                    <UserLabel style={{ fontSize: 18 }}> Se atente à suas despensas,{'\n'} {d.despensaLocal.nome} possui o{d.items.length > 1 && 's'} seguinte{d.items.length > 1 && 's'} ite{d.items.length > 1 ? 'ns' : 'm'}:</UserLabel>
+                    <UserLabel style={{ fontSize: 18 }}> Se atente à suas despensas,{'\n'} {d.despensaLocal && d.despensaLocal.nome} possui {d.items && d.items.length === 1 && 'um'} ite{d.items && d.items.length > 1 ? 'ns' : 'm'}</UserLabel>
+                    {/* <UserLabel style={{ fontSize: 18 }}>{JSON.stringify(d.despensaLocal.nome)}</UserLabel> */}
 
-                    <Wrap>
+                    {/* <Wrap>
                         {d.items.map((i) =>
                             <RowInner active>
-                                <InnerText>
+                                <InnerText>[]
                                     {i.provimento.nome}
                                 </InnerText>
                             </RowInner>
                         )}
-                    </Wrap>
-                    <UserLabel style={{ fontSize: 18 }}> próximo{d.items.length > 1 && 's'} a seu vencimento</UserLabel>
-                                <FormButtonGroup>
-                                    <FormButton onPress={() => handleNavigateDespensa(d.despensaLocal)} >
-                                        <FormButtonLabel>
-                                            Ver despensa
-                                        </FormButtonLabel>
-                                    </FormButton>
-                                </FormButtonGroup>
+                    </Wrap> */}
+                    <UserLabel style={{ fontSize: 18 }}> próximo{d.items && d.items.length > 1 && 's'} a seu vencimento</UserLabel>
+                    <FormButtonGroup>
+                        <FormButton onPress={() => handleNavigateDespensa(d.despensaLocal)} >
+                            <FormButtonLabel>
+                                Ver despensa
+                            </FormButtonLabel>
+                        </FormButton>
+                    </FormButtonGroup>
 
                 </FormButton>
             )}

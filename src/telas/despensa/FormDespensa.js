@@ -1,18 +1,25 @@
 import React, { useState } from 'react'
-import { FormInputTextArea, FormInputReadOnly,Facebook, FormButtonLabel, FormButtonGroup, FormAsset, FormButton, FormContainerScroll, Camera,FormIconContainer, FormInput, FormLabel, FormTouchableItem, FormTouchableIcon, Google,FormButtonCamera } from '../../components/styled/Form'
-import { UserItem, HeaderTouchable, MenuItem, Container, Float, FloatTitle, FloatTouchable, Plus } from '../../components/styled/Geral';
+import { FormInputTextArea, FormInputReadOnly, Facebook, FormButtonLabel, FormButtonGroup, FormAsset, FormButton, FormContainerScroll, Camera, FormIconContainer, FormInput, FormLabel, FormTouchableItem, FormTouchableIcon, Google, FormButtonCamera } from '../../components/styled/Form'
+import { UserItem, HeaderTouchable, MenuItem, Container, Float, FloatTitle, FloatTouchable, Plus, ImageBg } from '../../components/styled/Geral';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 
 import * as LocalStorage from '../../services/LocalStorage'
 import * as Utils from '../../components/utils/Utils'
 import { Alert } from 'react-native'
+const logo = '../../assets/placeholder-receita/563569-PL2J9K-126.png'
 
-function FormDespensa({route, navigation}) {
+function FormDespensa({ route, navigation }) {
 
     const { edit, despensa } = route.params;
-    
-    navigation.setOptions({ 
+    let capa = logo
+    if (despensa){
+        console.log('new')
+        capa = despensa.capa ? `data:image/gif;base64,${despensa.capa}` : logo        
+    }
+    const capaLogo = capa === logo ? false : true
+
+    navigation.setOptions({
         title: `${edit ? 'Editar' : 'Nova'} despensa`
     })
 
@@ -20,6 +27,7 @@ function FormDespensa({route, navigation}) {
         uuid: despensa && despensa.uuid,
         nome: despensa && despensa.nome,
         descricao: despensa && despensa.descricao,
+        capa: despensa && despensa.capa,
     }
 
     const [focus, setFocus] = useState(true);
@@ -31,16 +39,16 @@ function FormDespensa({route, navigation}) {
 
     async function handleDeleteDespensa() {
         LocalStorage.removeDespensa(values)
-        .then(( res ) => {
-            Utils.toast(`${res.nome} removido(a) com sucesso`)
-            route.params.reload()
-            navigation.navigate('Home', {editDespensas: true})
-            
-        })
-        .catch((err) => {
-            Utils.sweetalert('Houve um erro ao editar este item')
-            console.log(err)
-        })
+            .then((res) => {
+                Utils.toast(`${res.nome} removido(a) com sucesso`)
+                route.params.reload()
+                navigation.navigate('Home', { editDespensas: true })
+
+            })
+            .catch((err) => {
+                Utils.sweetalert('Houve um erro ao editar este item')
+                console.log(err)
+            })
     }
 
     async function handleSearch() {
@@ -55,15 +63,15 @@ function FormDespensa({route, navigation}) {
             'Atenção',
             'Deseja mesmo remover esta despensa?',
             [
-            
-              {
-                text: 'NÂO',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel',
-              },
-              {text: 'SIM', onPress: () => handleDeleteDespensa()},
+
+                {
+                    text: 'NÂO',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                { text: 'SIM', onPress: () => handleDeleteDespensa() },
             ],
-            {cancelable: false},
+            { cancelable: false },
         );
     }
 
@@ -76,19 +84,19 @@ function FormDespensa({route, navigation}) {
     }
 
     async function handleSubmit() {
-        if(edit){
+        if (edit) {
             alter()
         } else {
             create()
         }
     }
 
-    function alter(){
+    function alter() {
         LocalStorage.editDespensa(values)
-            .then(( res ) => {
+            .then((res) => {
                 Utils.toast(`${res.nome} editado(a)`)
                 route.params.reload()
-                navigation.navigate('Estoque', {editEstoque: true})
+                navigation.navigate('Estoque', { editEstoque: true })
             })
             .catch((err) => {
                 Utils.sweetalert('Houve um erro ao editar esta despensa')
@@ -96,7 +104,7 @@ function FormDespensa({route, navigation}) {
             })
     }
 
-    function create(more){
+    function create(more) {
         setFocus(false)
         LocalStorage.saveDespensa(values, true)
             .then((res) => {
@@ -110,21 +118,24 @@ function FormDespensa({route, navigation}) {
                 console.log(err)
                 return false
             })
-            console.debug({route})
+        console.debug({ route })
 
-            route.params.reload()
-            navigation.navigate('Home', {editDespensas: true})
+        route.params.reload()
+        navigation.navigate('Home', { editDespensas: true })
     }
 
     return (
         <FormContainerScroll>
+            
+            <ImageBg pop source={capaLogo ? require(logo) : { uri: capa } } imageStyle={{ borderRadius: 10, opacity: 0.6, backgroundColor: "#4e1017", marginBottom: 25 }}>
 
-            <FormButtonCamera onPress={handleGoToCamera} >
-                <>
-                    <FormButtonLabel >Editar capa</FormButtonLabel>
-                    <Camera />
-                </>
-            </FormButtonCamera>
+                <FormButtonCamera onPress={handleGoToCamera} >
+                    <>
+                        <FormButtonLabel active>Editar capa</FormButtonLabel>
+                        <Camera />
+                    </>
+                </FormButtonCamera>
+            </ImageBg>
 
             <FormInput
                 onChange={(event) => { handleInput(event, 'nome') }}
@@ -132,28 +143,28 @@ function FormDespensa({route, navigation}) {
                 value={values.nome}
                 placeholder='Nome'
                 returnKeyType="next"
-                />
+            />
 
             <FormInputTextArea
                 onChange={(event) => { handleInput(event, 'descricao') }}
                 placeholder='Descricao'
                 value={values.descricao}
                 returnKeyType='none'
-                
+
             />
 
             <FormButtonGroup>
                 <FormButton onPress={handleSubmit} active>
                     <FormButtonLabel active>{edit ? 'Editar' : 'Gravar'}</FormButtonLabel>
                 </FormButton>
-                {__DEV__ && edit && 
+                {__DEV__ && edit &&
                     <FormButton onPress={handleSubmit} >
                         <FormButtonLabel >limpar Itens</FormButtonLabel>
                     </FormButton>
-                }                            
+                }
             </FormButtonGroup>
 
-            {edit && despensa.id && 
+            {edit && despensa.id &&
                 <FormButtonGroup>
                     <FormButton onPress={handleSearch} >
                         <FormButtonLabel >Convidar usuário</FormButtonLabel>
@@ -161,12 +172,12 @@ function FormDespensa({route, navigation}) {
                 </FormButtonGroup>
             }
 
-            {edit && 
-            <FormButtonGroup>
-                <FormButton onPress={handleDelete} >
-                    <FormButtonLabel >Excluir despensa</FormButtonLabel>
-                </FormButton>
-            </FormButtonGroup>
+            {edit &&
+                <FormButtonGroup>
+                    <FormButton onPress={handleDelete} >
+                        <FormButtonLabel >Excluir despensa</FormButtonLabel>
+                    </FormButton>
+                </FormButtonGroup>
             }
 
         </FormContainerScroll>

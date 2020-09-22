@@ -68,6 +68,7 @@ function Home({ navigation , route, handleNotifications, mount, handleMountFinis
 
     useEffect(() => {
         if (data && refresh) {
+            // console.log({data})            
 
             // console.log(data.me.despensas.length)            
             if (data.me && refresh) {

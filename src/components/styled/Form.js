@@ -55,9 +55,9 @@ export const FormButton = styled.TouchableOpacity`
 
 export const FormButtonCamera = styled.TouchableOpacity`
   textAlign: center
-  background: ${props => props.active ? cor1 : cor4}
+
   flex: 1
-  elevation: ${props => props.flat ? 0 : 5}
+
   borderRadius: 10px
   marginBottom: 20px
   marginTop: 10px
@@ -209,7 +209,15 @@ export const CardTitle = styled.Text`
   fontSize: 20px
   fontWeight: bold
   marginBottom: 15px
+  color: ${props => props.invert ? '#fff' : '#555'}
+  
 `
+
+export const CardDesc = styled.Text`
+    color: ${props => props.invert ? '#fff' : '#555'}
+    fontWeight: bold
+`
+
 export const UserLabel = styled.Text`
   fontSize: 15px
   fontWeight: ${props => props.active ? 'bold' : 'normal'}
@@ -355,7 +363,7 @@ export const ErrorTouchable = styled.TouchableOpacity`
 // ícones
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export const Camera = () => <FontAwesome name="camera" size={30} color="#555" />;
+export const Camera = () => <FontAwesome name="camera" size={30} color="#fff" />;
 export const Facebook = () => <FontAwesome name="facebook-square" size={30} color="#fff" />;
 export const Google = () => <FontAwesome name="google-plus" size={30} color="#fff" />;
 export const Close = () => <FontAwesome name="close" size={30} color="#555" />;

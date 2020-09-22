@@ -75,7 +75,7 @@ export default function PerRowConfig(props) {
 
                 underlayColor={'#AAA'}
             >
-                <Card>
+                <Card item>
                     <CardTitle>{data.item.provimento.nome}</CardTitle>
                     <CardRow>
                         <CardBody>{data.item.quantidade} unidade{data.item.quantidade > 1 && 's'} {__DEV__ && String(data.item.fila)}</CardBody>
