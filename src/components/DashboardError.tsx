@@ -1,3 +1,4 @@
+import { StackActions, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View } from 'react-native';
 import {
@@ -16,6 +17,14 @@ import {
 const logo = '../assets/logo.png'
 
 const DashboardError: React.FC = ({ refetch }: any) => {
+    const navigation = useNavigation()
+
+    function handleGoOffline() {
+        navigation.dispatch(
+                StackActions.replace('DashBoard',)
+            );     
+    }
+
     return (
         <Container>
 
@@ -26,7 +35,7 @@ const DashboardError: React.FC = ({ refetch }: any) => {
                     <ErrorLabel>Tentar novamente </ErrorLabel>
                 </ErrorTouchable>
 
-                <ErrorTouchable>
+                <ErrorTouchable onPress={handleGoOffline}>
                     <ErrorLabel>Continuar offline</ErrorLabel>
                 </ErrorTouchable>
             </ErrorTouchableContainer>

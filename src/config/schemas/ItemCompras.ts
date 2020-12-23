@@ -1,4 +1,4 @@
-export default ItemCompras = {
+export default {
     name: 'ItemCompras',
     primaryKey: 'uuid',
     properties: {
@@ -7,7 +7,7 @@ export default ItemCompras = {
         despensaUuid: 'string',
         done: 'bool',
         quantidade: 'int',
-        provimento: 'Provimento',
+        provimento: 'Provision',
         dataAlteracao: 'date',
         deletedAt: 'date?'
     }

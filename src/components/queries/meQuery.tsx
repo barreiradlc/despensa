@@ -14,6 +14,7 @@ export const ME = gql`
             description
                 items {
                     id
+                    quantity
                     provision {
                         id
                         name

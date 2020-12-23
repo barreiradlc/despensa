@@ -30,6 +30,10 @@ const SignUp: React.FC = () => {
         setSignUpData({ ...signUpData, [attr]: event.nativeEvent.text.trim().toLowerCase() })
     }
 
+    function handleGoLogin() {
+        navigation.navigate('Login')
+    }
+
     function handleSignUp() {
         const { name, email, username, password } = signUpData
         
@@ -119,6 +123,9 @@ const SignUp: React.FC = () => {
                 />
                 <Button onPress={handleSignUp}>
                     <ButtonLabel>Cadastrar</ButtonLabel>
+                </Button>                
+                <Button onPress={handleGoLogin}>
+                    <ButtonLabel>Já é cadastrado? Login</ButtonLabel>
                 </Button>                
             </Form>
         </Container>

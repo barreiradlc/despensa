@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 import DashboardError from "../components/DashboardError";
 import LoadingComponent from "../components/LoadingComponent";
 import { ME } from "../components/queries/meQuery";
+import { storePantries } from "../services/local/PantryLocalService";
 import getInitialLabel from "../utils/initialLabel";
+
 
 function HomeScreen() {
     const { loading, error, data, refetch } = useQuery(ME);
@@ -17,11 +19,10 @@ function HomeScreen() {
 
     useEffect(() => {
         if(data && readtimer){
-            // navigation.navigate('DashBoard')
-
-            navigation.dispatch(
-                StackActions.replace('DashBoard',)
-            );        
+            storePantries(data.me.pantries)
+            // navigation.dispatch(
+            //     StackActions.replace('DashBoard',)
+            // );        
         }
     }, [data, readtimer])
     

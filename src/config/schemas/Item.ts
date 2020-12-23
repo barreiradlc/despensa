@@ -1,14 +1,13 @@
-export default Item = {
+export default {
     name: 'Item',
     primaryKey: 'uuid',
     properties: {
-        id: 'int?',
+        id: 'string?',
         uuid: 'string',
-        despensaUuid: 'string',
-        quantidade: 'int',
-        validade: 'date?',
-        provimento: 'Provimento',
-        dataAlteracao: 'date',
+        quantity: 'int',
+        expiresAt: 'date?',
+        provision: 'Provision',
+        updatedAt: 'date?',
         deletedAt: 'date?',
         fila: { type: 'bool?', default: false } //{type: 'int', default: 0},
     }
