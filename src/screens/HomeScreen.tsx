@@ -27,7 +27,7 @@ function HomeScreen() {
     }, [data, readtimer])
     
     useEffect(() => {
-        
+        console.log({error})
     }, [error])
 
     

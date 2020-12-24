@@ -31,7 +31,7 @@ const DashboardError: React.FC = ({ refetch }: any) => {
             <ErrorTitle>Ocorreu um erro ao buscar seus dados</ErrorTitle>
 
             <ErrorTouchableContainer>
-                <ErrorTouchable onPress={refetch}>
+                <ErrorTouchable onPress={() => refetch()}>
                     <ErrorLabel>Tentar novamente </ErrorLabel>
                 </ErrorTouchable>
 

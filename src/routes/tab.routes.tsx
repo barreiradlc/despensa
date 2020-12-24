@@ -21,11 +21,11 @@ const MockPage: React.FC = ({ navigation }) => {
     }
 
     
-    useEffect(() => {
-        navigationRN.setOptions({
-            title: "ALOU"            
-        })
-    }, [])
+    // useEffect(() => {
+    //     navigationRN.setOptions({
+    //         title: "ALOU"            
+    //     })
+    // }, [])
 
     return (
         <View style={{ flex:1 }}>

@@ -29,6 +29,8 @@ interface PantryInterface {
 export async function getProvision(provision: ProvisionInterface) {
     const { id, name } = provision
 
+
+
     const savedProvision = realm.objectForPrimaryKey('Provision', id)
 
     if (!savedProvision) {
@@ -46,69 +48,65 @@ export async function storePantries(pantries: PantryInterface[]) {
     // return console.log(JSON.stringify(pantries))
 
     try {
-        realm.write(() => {
-            pantries.map((pantry: PantryInterface) => {
-                console.log("pantry")
-                const pantryData = {
-                    uuid: uuidv4(),
-                    name: pantry.name,
-                    description: pantry.description
-                }
-
-                const itemsData = pantry.items?.map(async (item: ItemInterface) => {
-                    // console.log('item')
-                    // console.log({ item })
-
-                    const provision = getProvision(item.provision)
-
-                    const itemData = {
-                        id: item.id,
-                        uuid: uuidv4(),
-                        quantity: item.quanntity || 1,
-                        provision
-                    }
-
-                    const savedItem = realm.objectForPrimaryKey('Item', item.id)
-
-                    console.log("provision")
-                    console.log({ itemData })
-
-
-                    if (savedItem) {
-                        savedItem.id = item.id
-                        savedItem.uuid = uuidv4()
-                        savedItem.quantity = item.quanntity || 1
-                        savedItem.provision = provision
-                        savedItem.updatedAt = item.updatedAt
-
-                        return savedItem
-                    }
-
-                    return realm.create('Item', itemData)
-
-                })
-
-                const savedPantry = realm.objectForPrimaryKey('Pantry', String(pantry.id))
-
-
+        realm.write(async() => {
+            await pantries.map(async (pantry: PantryInterface) => {                
+                let savedPantry = realm.objects('Pantry').filtered('id = $0', String(pantry.id))[0]
+                
                 if (savedPantry) {
-                    savedPantry.id = pantry.id
+                    // savedPantry.id = pantry.id
                     savedPantry.name = pantry.name
                     savedPantry.description = pantry.description
                     savedPantry.items = itemsData
 
                     return savedPantry
+                } else {
+                    savedPantry = await realm.create('Pantry', {
+                        id: pantry.id,
+                        uuid: uuidv4(),
+                        name: pantry.name,
+                        description: pantry.description,
+                        items: itemsData
+                    })
                 }
 
-                return realm.create('Pantry', {
-                    ...pantryData,
-                    items: itemsData
+
+
+                const itemsData = await pantry.items?.map(async (item: ItemInterface) => {
+
+                    const provision = await getProvision(item.provision)
+                    
+                    const itemData = {
+                        id: item.id,
+                        uuid: uuidv4(),
+                        quantity: item.quanntity || 1,
+                        provision: provision
+                    }                
+
+                    const savedItem = await realm.objects('Item').filtered('id = $0',item.id)[0]
+
+                    if (savedItem) {
+                        // savedItem.id = item.id
+                        // savedItem.uuid = !savedItem.uuid ? savedItem.uuid : uuidv4()
+                        savedItem.quantity = item.quanntity || 1
+                        savedItem.provision = provision
+                        savedItem.updatedAt = item.updatedAt
+                        
+                        return savedItem
+                    }                
+
+                    const newItem = await realm.create('Item', Promise.resolve(itemData))
+
+                    return newItem
                 })
 
+                // Promise.all(itemsData)
+
+                console.log("pantry")
+                console.log(itemsData)
+
+                
             })
         })
-        // TODO -save pantries
-        // TODO -save items
     } catch (error) {
         console.log({ error })
         throw new Error("Error saving patries");
