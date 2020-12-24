@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
 import realm from '../../config/realm';
+import { CreateConfigItemOptions } from '@babel/core';
 
 export default interface ProvisionInterface {
     id: string;
@@ -26,86 +27,120 @@ interface PantryInterface {
     items?: ItemInterface[];
 }
 
-export async function getProvision(provision: ProvisionInterface) {
-    const { id, name } = provision
+export async function getProvision(provision: ProvisionInterface): Promise<ProvisionInterface> {
+    realm.write(() => {
+        try {
+            const { id, name } = provision
 
+            const savedProvision = realm.objectForPrimaryKey('Provision', id)
 
+            if (!savedProvision) {
+                return realm.create('Provision', {
+                    id,
+                    name
+                })
+            }
 
-    const savedProvision = realm.objectForPrimaryKey('Provision', id)
+            return savedProvision
+        } catch (error) {
 
-    if (!savedProvision) {
-        return realm.create('Provision', {
-            id,
-            name
-        })
-    }
+        }
+    })
+}
+export async function getItem(item: ItemInterface, provision: ProvisionInterface) {
+    realm.write(async() => {
+        try {
+            const savedItem = await realm.objects('Item').filtered('id = $0', item.id)[0]
 
-    return savedProvision
+            if (savedItem) {
+                // savedItem.id = item.id
+                // savedItem.uuid = !savedItem.uuid ? savedItem.uuid : uuidv4()
+                savedItem.quantity = item.quanntity || 1
+                savedItem.provision = provision
+                savedItem.updatedAt = item.updatedAt
+
+                return savedItem
+            }
+
+            const newItem = await realm.create('Item', {
+                id: item.id,
+                uuid: uuidv4(),
+                quantity: item.quanntity || 1,
+                provision: provision
+            })
+
+            return newItem
+        } catch (error) {
+
+        }
+    })
+}
+
+export async function getPantry(pantry: PantryInterface, itemsData: ItemInterface[]) {
+    realm.write(async() => {
+
+        try {
+            let savedPantry = realm.objects('Pantry').filtered('id = $0', String(pantry.id))[0]
+
+            if (savedPantry) {
+                // savedPantry.id = pantry.id
+                savedPantry.name = pantry.name
+                savedPantry.description = pantry.description
+
+            } else {
+                savedPantry = realm.create('Pantry', {
+                    id: pantry.id,
+                    uuid: uuidv4(),
+                    name: pantry.name,
+                    description: pantry.description,
+                })
+            }
+
+            if (itemsData) {
+                itemsData.map(( savedItem  => {
+                    savedPantry.items.push(savedItem)
+                }))
+            }
+
+            return savedPantry
+        } catch (error) {
+
+        }
+
+    })
 }
 
 export async function storePantries(pantries: PantryInterface[]) {
 
     // return console.log(JSON.stringify(pantries))
-
     try {
-        realm.write(async() => {
-            await pantries.map(async (pantry: PantryInterface) => {                
-                let savedPantry = realm.objects('Pantry').filtered('id = $0', String(pantry.id))[0]
-                
-                if (savedPantry) {
-                    // savedPantry.id = pantry.id
-                    savedPantry.name = pantry.name
-                    savedPantry.description = pantry.description
-                    savedPantry.items = itemsData
+        pantries.map(async (pantry: PantryInterface) => {
 
-                    return savedPantry
-                } else {
-                    savedPantry = await realm.create('Pantry', {
-                        id: pantry.id,
-                        uuid: uuidv4(),
-                        name: pantry.name,
-                        description: pantry.description,
-                        items: itemsData
-                    })
-                }
+            const itemsData = await pantry.items?.map(async (item: ItemInterface) => {
 
+                const provision = await getProvision(item.provision)
 
+                let savedItem = await getItem(item, provision)
+                // console.log("item")                    
+                // console.log(provision)                    
+                // console.log(savedItem)                    
 
-                const itemsData = await pantry.items?.map(async (item: ItemInterface) => {
-
-                    const provision = await getProvision(item.provision)
-                    
-                    const itemData = {
-                        id: item.id,
-                        uuid: uuidv4(),
-                        quantity: item.quanntity || 1,
-                        provision: provision
-                    }                
-
-                    const savedItem = await realm.objects('Item').filtered('id = $0',item.id)[0]
-
-                    if (savedItem) {
-                        // savedItem.id = item.id
-                        // savedItem.uuid = !savedItem.uuid ? savedItem.uuid : uuidv4()
-                        savedItem.quantity = item.quanntity || 1
-                        savedItem.provision = provision
-                        savedItem.updatedAt = item.updatedAt
-                        
-                        return savedItem
-                    }                
-
-                    const newItem = await realm.create('Item', Promise.resolve(itemData))
-
-                    return newItem
-                })
-
-                // Promise.all(itemsData)
-
-                console.log("pantry")
-                console.log(itemsData)
-
-                
+                return savedItem
             })
+
+            let savedPantry = await getPantry(pantry, itemsData)
+
+            return savedPantry
+            console.log("pantry")
+            
+            // itemsData?.map(( itemData ) => {
+            //     savedPantry.items.push(itemData)
+            // })
+            console.log(savedPantry)
+
+            // if (itemsData) {
+            //     savedPantry.items = itemsData
+            // }
         })
     } catch (error) {
         console.log({ error })
