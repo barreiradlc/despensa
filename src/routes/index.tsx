@@ -18,6 +18,7 @@ import TabRoutes from './tab.routes';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import DrawerNavigation from './drawer.routes';
 import SignUpScreen from '../screens/SignUp';
+import ShowDespensa from '../screens/despensa/Show';
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,7 @@ function App() {
                 <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="DashBoard" component={DrawerNavigation} options={{ headerShown: false }} />
+                <Stack.Screen name="ShowDespensa" component={ShowDespensa} options={{ title: '' }} />
             </Stack.Navigator>
             {loading && <LoadingOverlayComponent label='Aguarde' />}
         </>

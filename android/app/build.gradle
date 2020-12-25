@@ -4,6 +4,9 @@ import com.android.build.OutputFile
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
+
+apply plugin: 'kotlin-android' 
+
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -183,6 +186,8 @@ android {
 }
 
 dependencies {
+    implementation project(':watermelondb')  // ⬅️ This!
+
     implementation project(':realm')
 
     implementation project(':react-native-vector-icons')

@@ -4,7 +4,8 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Icon from 'react-native-vector-icons/Feather';
-import { useNavigation, use } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import Estoque from '../screens/despensa/List';
 
 // import Dashboard from '../pages/Dashboard';
 // import Favorites from '../pages/Favorites';
@@ -51,15 +52,6 @@ const TabRoutes: React.FC = () => (
         }}
     >
         <Tab.Screen
-            options={{
-                tabBarIcon: ({ color }) => <Icon size={25} name="list" color={color} />,
-                title: 'Listagem',
-            }}
-            name="ShoppingList"
-            component={MockPage}
-            // component={Dashboard}
-        />
-        <Tab.Screen
             name="Stock"
             options={{
                 tabBarIcon: ({ color }) => (
@@ -67,8 +59,17 @@ const TabRoutes: React.FC = () => (
                 ),
                 title: 'Estoque',
             }}
-            component={MockPage}
+            component={Estoque}
             // component={Orders}
+        />
+        <Tab.Screen
+            options={{
+                tabBarIcon: ({ color }) => <Icon size={25} name="list" color={color} />,
+                title: 'Listagem',
+            }}
+            name="ShoppingList"
+            component={MockPage}
+            // component={Dashboard}
         />
         <Tab.Screen
             name="Recipes"
