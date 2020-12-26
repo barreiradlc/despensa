@@ -21,8 +21,8 @@ const DashboardError: React.FC = ({ refetch }: any) => {
 
     function handleGoOffline() {
         navigation.dispatch(
-                StackActions.replace('DashBoard',)
-            );     
+            StackActions.replace('DashBoard',)
+        );     
     }
 
     return (
@@ -31,7 +31,7 @@ const DashboardError: React.FC = ({ refetch }: any) => {
             <ErrorTitle>Ocorreu um erro ao buscar seus dados</ErrorTitle>
 
             <ErrorTouchableContainer>
-                <ErrorTouchable onPress={() => refetch()}>
+                <ErrorTouchable onPress={refetch}>
                     <ErrorLabel>Tentar novamente </ErrorLabel>
                 </ErrorTouchable>
 

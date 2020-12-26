@@ -51,6 +51,16 @@ const TabRoutes: React.FC = () => (
             }}
         >
             <Tab.Screen
+                name="Recipes"
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon size={25} name="book-open" color={color} />
+                    ),
+                    title: 'Receitas',
+                }}
+                component={ListRecipe}
+            />
+            <Tab.Screen
                 name="Stock"
                 options={{
                     tabBarIcon: ({ color }) => (
@@ -67,16 +77,6 @@ const TabRoutes: React.FC = () => (
                 }}
                 name="ShoppingList"
                 component={MockPage}
-            />
-            <Tab.Screen
-                name="Recipes"
-                options={{
-                    tabBarIcon: ({ color }) => (
-                        <Icon size={25} name="book-open" color={color} />
-                    ),
-                    title: 'Receitas',
-                }}
-                component={ListRecipe}
             />
         </Tab.Navigator>
     </RecipeProvider>

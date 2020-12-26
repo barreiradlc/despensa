@@ -2,6 +2,8 @@ import { useQuery } from '@apollo/client';
 import React, { useCallback, useMemo, useState } from 'react';
 import { createContext } from "react";
 import { QUERY_RECIPES } from '../components/queries/recipeQuery';
+
+
 import realm from '../config/realmConfig/realm';
 import { getPantry, getPantryByUuid, ItemInterface, minusQuantity, moreQuantity } from '../services/local/PantryLocalService';
 
@@ -26,44 +28,14 @@ export const RecipeProvider: React.FC = ({ children }) => {
     const [ pageInfo, setPageInfo ] = useState(INITIAL_PAGE_INFO as PageInfoInteface)
     const { loading, error, data, refetch, fetchMore } = useQuery(QUERY_RECIPES, {
         variables: {
-            queryList: {
-                take: 10
+            queryList: {        
+                take: 10,
+                skip: 0,
             }
-        }
+        },
+        fetchPolicy: 'cache-first'
+        // fetchPolicy: "cache-and-network"
     });
-
-    const handleInfiniteScrollRecipe = useCallback(() => {
-        const { page, haveMore } = pageInfo
-
-        if(haveMore){
-            fetchMore({
-                variables: {
-                    skip: 10 * page
-                },
-                updateQuery: (prev, { fetchMoreResult }) => {
-                    if (!fetchMoreResult) return prev;
-
-                    console.log("DATA")
-                    console.log(prev)
-                    console.log(fetchMoreResult)
-                    console.log("DATA")
-
-                    // return Object.assign({}, prev, {
-                    //     recipes: [
-                    //         ...prev.recipes,
-                    //         ...fetchMoreResult.recipes
-                    //     ]                        
-                    // });
-
-                    // return [
-                    //     ...prev.recipes,
-                    //     ...fetchMoreResult.recipes
-                    // ];                        
-
-                }
-            })
-        }
-    }, [pageInfo])
 
     const recipes = useMemo(() => {
         if(data){
@@ -71,9 +43,61 @@ export const RecipeProvider: React.FC = ({ children }) => {
         }
         return []
     }, [data]);
+    
+    const handleInfiniteScrollRecipe = useCallback(() => {        
+        if((!recipes && !loading) || recipes.length % 10 !== 0) return;
+
+        const { page, haveMore } = pageInfo        
+        
+
+        if(haveMore){
+            console.log({pageInfo})
+
+            fetchMore({
+                variables: {
+                    queryList: {
+                        skip: page * 10,
+                        take: 10
+                    }
+                }                
+            })
+
+            setPageInfo({
+                ...pageInfo,
+                // haveMore,
+                page: page + 1,                        
+            })
+            // console.log(pageInfo.page)
+
+            // fetchMore({
+            //     variables: {
+            //         skip: pageInfo.page * 10,
+            //         take: 10
+            //     },
+            // })
+            // .then(({data}) => {
+            //     console.log({data})
+
+            //     let haveMore = true
+
+            //     if(!data.recipes.length){
+            //         haveMore = false
+            //     }
+    
+            //     setPageInfo({
+            //         haveMore,
+            //         page: page + 1,                        
+            //     })
+    
+            // })
+
+
+
+        }
+    }, [pageInfo])
 
     return (
-        <RecipeContext.Provider value={{ recipes, handleInfiniteScrollRecipe }}>
+        <RecipeContext.Provider value={{ recipes, handleInfiniteScrollRecipe, loading }}>
             {children}
         </RecipeContext.Provider>
     );

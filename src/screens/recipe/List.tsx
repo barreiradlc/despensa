@@ -1,18 +1,26 @@
-import React, { useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useContext, useEffect } from 'react';
 import { View } from 'react-native';
 import CardRecipe from '../../components/CardRecipe';
 import { RecipeContext } from '../../context/RecipeContext';
 import { ContainerScroll } from '../../styles/components';
 import { ButtonLabel } from '../../styles/form';
 
-interface RecipeInterface{
+interface RecipeInterface {
     id: string;
     name: string;
     description: string;
 }
 
 const List: React.FC = () => {
-    const { recipes, handleInfiniteScrollRecipe } = useContext(RecipeContext)
+    const { recipes, handleInfiniteScrollRecipe, loading } = useContext(RecipeContext)
+
+    // const navigation = useNavigation()
+    // useEffect(() => {
+    //     navigation.setOptions({
+    //         title: `${recipes.length}`
+    //     })
+    // }, [recipes])
 
     return (
         <ContainerScroll
@@ -30,9 +38,9 @@ const List: React.FC = () => {
                 <CardRecipe recipe={recipe} key={recipe.id} />
             )}
 
+        
         </ContainerScroll>
     );
 }
 
 export default List;
-

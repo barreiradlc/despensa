@@ -21,8 +21,9 @@ function LoadingSyncComponent(_, ref){
     const [call, { data, error, loading }] = useMutation(MANAGE_PANTRIES);
 
     useImperativeHandle(ref, () => ({
-        reload: () => {            
-            reloadData()
+        reload: () => {    
+            console.log("REALOAD")        
+            // reloadData()
         }
     }))
 

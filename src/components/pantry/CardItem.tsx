@@ -45,7 +45,6 @@ const CardItem: React.FC = ({ pantry }) => {
     }
 
     
-
     return (
         <>
             {items?.map((item: ItemInterface, index: number) =>

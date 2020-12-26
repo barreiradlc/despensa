@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { StackActions, useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import DashboardError from "../components/DashboardError";
 import LoadingComponent from "../components/LoadingComponent";
 import { ME } from "../components/queries/meQuery";
@@ -30,8 +30,11 @@ function HomeScreen() {
         console.log({error})
     }, [error])
 
+    const reload = useCallback(() => {
+        refetch()
+    }, [data])
     
-    if (error) return <DashboardError refetch={refetch} />;
+    if (error) return <DashboardError refetch={reload} />;
 
     return <LoadingComponent />;
 }
