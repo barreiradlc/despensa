@@ -233,10 +233,10 @@ export async function pushPantry(uuid: string, item: ItemInterface) {
         item.queue = true
         pantry.queue = true
     })
-
+    
     console.log(uuid)
     console.log(JSON.stringify(pantry))
-
+    
 }
 
 export async function handlePantryQueue(uuid: string, itemUuid: string) {
@@ -245,6 +245,9 @@ export async function handlePantryQueue(uuid: string, itemUuid: string) {
         try {
             const item = realm.objects('Item').filtered('uuid = $0', uuid)[0]
             const pantry = realm.objects('Pantry').filtered('uuid = $0', itemUuid)[0]
+            
+            item.queue = true
+            pantry.queue = true
             
         } catch (error) {
             throw new Error("Error saving queue edits");         

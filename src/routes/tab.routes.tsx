@@ -6,10 +6,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import Estoque from '../screens/despensa/List';
-
-// import Dashboard from '../pages/Dashboard';
-// import Favorites from '../pages/Favorites';
-// import Orders from '../pages/Orders';
+import { RecipeProvider } from '../context/RecipeContext';
+import ListRecipe from '../screens/recipe/List';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,7 +19,7 @@ const MockPage: React.FC = ({ navigation }) => {
         navigation.openDrawer();
     }
 
-    
+
     // useEffect(() => {
     //     navigationRN.setOptions({
     //         title: "ALOU"            
@@ -29,7 +27,7 @@ const MockPage: React.FC = ({ navigation }) => {
     // }, [])
 
     return (
-        <View style={{ flex:1 }}>
+        <View style={{ flex: 1 }}>
             <TouchableOpacity onPress={handleToggleDrawer} style={{ padding: 40 }}>
                 <Text>ALOU</Text>
             </TouchableOpacity>
@@ -39,50 +37,49 @@ const MockPage: React.FC = ({ navigation }) => {
 
 
 const TabRoutes: React.FC = () => (
-    <Tab.Navigator
-        tabBarOptions={{
-            labelPosition: 'beside-icon',
-            activeTintColor: '#C72828',
-            labelStyle: {
-                // fontFamily: 'Poppins-Regular',
-                fontSize: 12,
-                fontWeight: '600',
-            },
-            inactiveTintColor: '#B7B7CC',
-        }}
-    >
-        <Tab.Screen
-            name="Stock"
-            options={{
-                tabBarIcon: ({ color }) => (
-                    <Icon size={25} name="shopping-bag" color={color} />
-                ),
-                title: 'Estoque',
+    <RecipeProvider>
+        <Tab.Navigator
+            tabBarOptions={{
+                labelPosition: 'beside-icon',
+                activeTintColor: '#C72828',
+                labelStyle: {
+                    // fontFamily: 'Poppins-Regular',
+                    fontSize: 12,
+                    fontWeight: '600',
+                },
+                inactiveTintColor: '#B7B7CC',
             }}
-            component={Estoque}
-            // component={Orders}
-        />
-        <Tab.Screen
-            options={{
-                tabBarIcon: ({ color }) => <Icon size={25} name="list" color={color} />,
-                title: 'Listagem',
-            }}
-            name="ShoppingList"
-            component={MockPage}
-            // component={Dashboard}
-        />
-        <Tab.Screen
-            name="Recipes"
-            options={{
-                tabBarIcon: ({ color }) => (
-                    <Icon size={25} name="book-open" color={color} />
-                ),
-                title: 'Receitas',
-            }}            
-            component={MockPage}
-            // component={Favorites}
-        />
-    </Tab.Navigator>
+        >
+            <Tab.Screen
+                name="Stock"
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon size={25} name="shopping-bag" color={color} />
+                    ),
+                    title: 'Estoque',
+                }}
+                component={Estoque}
+            />
+            <Tab.Screen
+                options={{
+                    tabBarIcon: ({ color }) => <Icon size={25} name="list" color={color} />,
+                    title: 'Listagem',
+                }}
+                name="ShoppingList"
+                component={MockPage}
+            />
+            <Tab.Screen
+                name="Recipes"
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon size={25} name="book-open" color={color} />
+                    ),
+                    title: 'Receitas',
+                }}
+                component={ListRecipe}
+            />
+        </Tab.Navigator>
+    </RecipeProvider>
 );
 
 export default TabRoutes;

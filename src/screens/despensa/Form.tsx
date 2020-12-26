@@ -15,6 +15,9 @@ const Form: React.FC = () => {
     const provisionOfflineRef = useRef()
     const provisionRef = useRef()
     const quantidadeRef = useRef()
+    const nameRef = useRef()
+    const descriptionRef = useRef()
+
     const [edit, setEdit] = useState(false)
     const [pantryData, setPantryData] = useState<PantryInterface>({} as PantryInterface)
     const navigation = useNavigation()
@@ -32,12 +35,19 @@ const Form: React.FC = () => {
                 title: "Editar Despensa"
             })
 
+            setPantryData({
+                name: pantry.name,
+                description: pantry.description,
+            })
+
             setEdit(true)
         } else {
             navigation.setOptions({
                 title: "Nova Despensa"
             })
         }
+
+        nameRef.current.focus()
     }, [pantry])
 
     async function handleSavePantry() {
@@ -63,20 +73,20 @@ const Form: React.FC = () => {
             <FormItemContainer>
 
                 <Input
-                    ref={quantidadeRef}
+                    ref={nameRef}
                     placeholder='Nome'
-                    value={pantryData.quantity}
+                    value={pantryData.name}
                     onChange={(e: any) => handleChange(e, 'name')}
                     autoCapitalize='none'
                 />
                 <Input
                     ref={quantidadeRef}
                     placeholder='Descrição'
-                    value={pantryData.quantity}
+                    value={pantryData.description}
                     onChange={(e: any) => handleChange(e, 'description')}
                     autoCapitalize='none'
                 />
-                <Button onPress={handleSavePantry}>
+                <Button  onPress={handleSavePantry}>
                     <ButtonLabel>Salvar</ButtonLabel>
                 </Button>
 

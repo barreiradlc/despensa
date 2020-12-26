@@ -5,7 +5,7 @@ import { getPantry, getPantryByUuid, ItemInterface, minusQuantity, moreQuantity 
 
 interface ItemListContextData {
     items: ItemInterface[];
-    setItemsList(uuid: string, add: boolean): void;
+    setItemsList(data: any): void;
     populateItemsList(uuid: string): string;
     setItemsQuantity(): void;
 }
@@ -16,9 +16,8 @@ export const ItemListProvider: React.FC = ({ children }) => {
     const [items, setItems] = useState([] as ItemInterface[])
     const [pantryUuid, setPantryUuid] = useState<string>()
 
-    const setItemsList = useCallback((data: any, uuid: string) => {
+    const setItemsList = useCallback((data: any) => {
         setItems(data)
-        setPantryUuid(uuid)
     }, [])
 
     const populateItemsList = useCallback(async(uuid: string) => {
@@ -31,12 +30,18 @@ export const ItemListProvider: React.FC = ({ children }) => {
         };
 
         console.log({data})
+        console.log({uuid})
+        console.log({items})
 
         return data.uuid
     }, [])
 
     const setItemsQuantity = useCallback(async(uuid: string, add: boolean) => {
         const data = await getPantryByUuid(pantryUuid)
+
+        if(!items){
+            setItems(data.items)
+        }
 
         const itemsList = await items.map((item: ItemInterface) => {
 
@@ -57,9 +62,9 @@ export const ItemListProvider: React.FC = ({ children }) => {
 
         console.log(JSON.stringify(items))
         console.log("itemsList")
-        console.log(JSON.stringify(itemsList))
+        console.log(JSON.stringify(data))
         
-        setItems(itemsList)
+        // setItems(itemsList)
     }, [])
 
     return (

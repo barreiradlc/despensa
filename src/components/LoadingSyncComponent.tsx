@@ -41,9 +41,6 @@ function LoadingSyncComponent(_, ref){
                     provision: item.provision,
                 }
             })
-            
-            console.log("pantry")
-            console.log(pantry[0])
 
             return {
                 id: pantry[0].id,
@@ -57,8 +54,9 @@ function LoadingSyncComponent(_, ref){
         
         // console.log(pantriesData.length)
         // console.log(pantriesData)
-        // console.log("pantriesData")
+        console.log("pantriesData")
         console.log(JSON.stringify(pantriesData))
+
         call({
             variables: pantries            
         })

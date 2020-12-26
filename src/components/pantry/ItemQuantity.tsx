@@ -3,14 +3,39 @@ import { Text, View } from 'react-native';
 import { QuantityContainer, QuantityTouchable } from '../../styles/components';
 import Icon from 'react-native-vector-icons/Feather';
 import { ItemListContext } from '../../context/ItemListContext';
+import { ItemInterface } from '../../services/local/PantryLocalService';
+import realm from '../../config/realmConfig/realm';
 
 const iconSize = 21
 
-const ItemQuantity: React.FC = ({item}) => {
-    const { setItemsQuantity } = useContext(ItemListContext)
+const ItemQuantity: React.FC = ({ item }) => {
+    const { setItemsQuantity, items, setItemsList } = useContext(ItemListContext)
 
-    function handleChangeQuantity(add: boolean) {
-        setItemsQuantity(item.uuid, add)
+    async function handleChangeQuantity(add: boolean) {
+        
+        const { uuid } = item
+
+        const itemsList = await items.map((item: ItemInterface) => {
+
+            if (item.uuid === uuid) {
+                realm.write(() => {
+                    const newQuantity = add ? item.quantity++ : item.quantity--
+
+                    // data.queue = true
+                    item.queue = true
+    
+                    return {
+                        ...item,
+                        quantity: newQuantity
+                    }
+                })
+            }
+            return item
+        })
+
+        setItemsList(itemsList)
+
+        // setItemsQuantity(item.uuid, add)
     }
 
     function handleAdd() {

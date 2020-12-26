@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const MANAGE_PANTRIES = gql`
-    mutation managePantries($pantries: [PantryInput!]!){
+    mutation managerDespensas($pantries: [PantryInput!]!){
         managePantries(pantryInput:$pantries){
             id
             name

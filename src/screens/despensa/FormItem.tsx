@@ -91,24 +91,11 @@ const Form: React.FC = () => {
     },[query])
 
     async function handleSaveItem() {
-
-        await handleProvisionChange()
-
-        console.log(pantryUuid)
-        
         const provision = await getProvision({ name: query })
-
-        console.log('provision')
-        console.log({provision})
-
-        setItemData({ ...itemData, provision })
-
-        console.log({itemData})
 
         if(!provision.name){
             return ToastAndroid.show("Não é possível salvar um item nem seu nome", 500)
         }
-        
         
         const item = await getItem(itemData, provision)    
         
@@ -130,9 +117,9 @@ const Form: React.FC = () => {
         }
         
         navigation.goBack()
-        setTimeout(() => {
-            populateItemsList(pantryUuid)
-        }, 500)
+        // setTimeout(() => {
+        //     populateItemsList(pantryUuid)
+        // }, 500)
     }
 
     useEffect(() => {

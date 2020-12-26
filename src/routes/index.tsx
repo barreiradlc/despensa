@@ -51,7 +51,7 @@ function App() {
         <>
             <Stack.Navigator initialRouteName={!!jwt ? 'Home' : 'Login'}>
                 <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false, title: 'Sair' }} />
                 <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="DashBoard" component={DrawerNavigation} options={{ headerShown: false }} />
                 <Stack.Screen name="ShowDespensa" component={ShowPantry} options={{ title: '' }} />

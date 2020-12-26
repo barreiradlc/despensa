@@ -24,6 +24,7 @@ const List: React.FC = () => {
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             refreshRef.current.reload()
+            reloadData()
         });      
         return unsubscribe;
     }, [])
