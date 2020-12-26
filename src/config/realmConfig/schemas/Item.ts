@@ -11,6 +11,6 @@ export default {
         provision: 'Provision',
         updatedAt: 'date?',
         deletedAt: 'date?',
-        fila: { type: 'bool?', default: false } //{type: 'int', default: 0},
+        queue: { type: 'bool?', default: false } //{type: 'int', default: 0},
     }
 }

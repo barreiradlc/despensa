@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import CardDespensa from '../../components/CardDespensa';
+import LoadingSyncComponent from '../../components/LoadingSyncComponent';
 import { getPantries, PantryInterface } from '../../services/local/PantryLocalService';
 import { Container, ContainerScroll, Label } from '../../styles/components';
+import { Button, ButtonLabel } from '../../styles/form';
 
 const List: React.FC = () => {
+    const refreshRef = useRef()
+    const navigation = useNavigation()
     const [ pantries, setPantries ] = useState<PantryInterface[]>([] as PantryInterface[])
 
     useEffect(() => {
@@ -16,12 +21,12 @@ const List: React.FC = () => {
         setPantries(data)
     }
 
-    // const navigation = useNavigation()
-    // useEffect(() => {
-    //     navigation.setOptions({
-    //         title: "ALOU"            
-    //     })
-    // }, [])
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            refreshRef.current.reload()
+        });      
+        return unsubscribe;
+    }, [])
 
   return (
         <ContainerScroll
@@ -32,7 +37,11 @@ const List: React.FC = () => {
                 <CardDespensa key={pantry.id} pantry={pantry} />
             )}
 
-            {/* <Label>{JSON.stringify(pantries)}</Label> */}
+            <Button onPress={() => navigation.navigate('FormPantry', {}) }>
+                <ButtonLabel>Nova despensa</ButtonLabel>
+            </Button>
+
+            <LoadingSyncComponent ref={refreshRef} />
 
         </ContainerScroll>      
   );

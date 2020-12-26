@@ -1,62 +1,84 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useContext, useEffect, useState } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
-import { Tooltip } from 'react-native-elements';
+// import { Tooltip, Button } from 'react-native-elements';
+import Tooltip from 'react-native-walkthrough-tooltip';
+
 import { ItemListContext } from '../../context/ItemListContext';
 import { ItemInterface } from '../../services/local/PantryLocalService';
 import { CardContainer, Label, Title, TooltipEditContainer, TooltipEditRowContainer } from '../../styles/components';
+import { Button, ButtonLabel } from '../../styles/form';
+import ItemActions from './ItemActions';
 import ItemQuantity from './ItemQuantity';
 
 // interface CardItemInterface{
 //     item: ItemInterface
 // }
 
-const CardItem: React.FC = ({ items: itemsProps }) => {
-    // const [items, setItems] = useState<ItemInterface[]>(itemsProps || [] as ItemInterface[])
-    const { items, setItemsList } = useContext(ItemListContext)
+const CardItem: React.FC = ({ items: itemsProps, pantry }) => {
+    const [toggle, setToggle] = useState<string>('')
+    const { items, setItemsList, populateItemsList, pantryUuid } = useContext(ItemListContext)
     const navigation = useNavigation()
 
     useEffect(() => {
-        setItemsList(itemsProps)
+        //     setItemsList(itemsProps, pantry.uuid)
+        handleReload()
     }, [])
 
-    function handleNavigateShow() {
-        // navigation.navigate('ShowDespensa', {
-        //     items: item.items
-        // })
+    function handleReload() {
+        populateItemsList(pantry.uuid)
     }
 
-    function EditOptions({item}) {
+    function EditOptions({ item }) {
 
         return (
             <TooltipEditRowContainer>
                 <TooltipEditContainer>
                     <ItemQuantity item={item} />
-                    <Title></Title>
-                    <Title>Editar</Title>
-                    <Title></Title>
-                    <Title>Deletar</Title>
+                    <ItemActions item={item} setToggle={setToggle} />
                 </TooltipEditContainer>
             </TooltipEditRowContainer>
         )
 
     }
 
+    function Item({ item, index }) {
+
+        return (
+            <Tooltip
+                key={item.uuid}
+                backgroundColor="rgba(250, 250, 250, 0.9)"
+                contentStyle={{ width: '100%', elevation: 25, height: 120 }}
+                onClose={() => setToggle('')}
+                // isVisible={false}
+                isVisible={item.uuid === toggle}
+                content={<EditOptions item={item} />}
+                placement={!!index ? 'top' : 'bottom'}
+            >
+                <CardContainer
+                    onPress={() => setToggle(item?.uuid)}  >
+                    <Title>{item.provision.name}</Title>
+                    <Label>{item.quantity} unidade{item.quantity !== 1 && 's'} {item.expiresAt && item.expiresAt} </Label>
+                </CardContainer>
+            </Tooltip>
+        )
+    }
+
     return (
         <>
-            {items?.map((item: ItemInterface) => 
-                <CardContainer onPress={handleNavigateShow} key={item.id} >            
-                    <Tooltip
-                        closeOnlyOnBackdropPress
-                        popover={<EditOptions item={item} />}
-                        backgroundColor="transparent"
-                        overlayColor="rgba(250, 250, 250, 0.9)"
-                        >
-                        <Title>{item.provision.name}</Title>
-                        <Label>{item.quantity} unidade{item.quantity !== 1 && 's'} {item.expiresAt && item.expiresAt} </Label>
-                    </Tooltip>                    
-                </CardContainer>
-            )}
+            {!!items.length ?
+                items?.map((item: ItemInterface, index: number) =>
+                    <Item item={item} index={index} />
+                )
+                :
+                itemsProps?.map((item: ItemInterface, index: number) =>
+                    <Item item={item} index={index} />
+                )
+            }
+
+            <Button onPress={() => navigation.navigate('FormItem', { populateItemsList, pantryUuid: pantry.uuid })}>
+                <ButtonLabel>Novo item</ButtonLabel>
+            </Button>
         </>
     );
 }

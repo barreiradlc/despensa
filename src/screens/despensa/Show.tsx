@@ -6,6 +6,7 @@ import CardItem from '../../components/pantry/CardItem';
 import { ItemListProvider } from '../../context/ItemListContext';
 import { getPantries, ItemInterface, PantryInterface } from '../../services/local/PantryLocalService';
 import { Container, ContainerScroll, Label } from '../../styles/components';
+import { Button, ButtonLabel } from '../../styles/form';
 
 const Show: React.FC = () => {
 
@@ -13,9 +14,10 @@ const Show: React.FC = () => {
     const routes = useRoute()
     const [items, setItems] = useState<ItemInterface[]>(routes.params?.items || [] as ItemInterface[])
 
-    useEffect(() => {
-        const { pantry } = routes.params
+    const { pantry } = routes.params
     
+    useEffect(() => {
+        
         navigation.setOptions({
             title: pantry.name
         })
@@ -24,8 +26,8 @@ const Show: React.FC = () => {
     }, [])
 
     async function reloadData() {
-        // const data = await getPantries()
-        // setPantries(data)
+        const data = await getPantries()
+        setItems(data.items)
     }
 
     return (
@@ -35,9 +37,10 @@ const Show: React.FC = () => {
                 showsVerticalScrollIndicator={false}
             >             
             
-            <CardItem items={items}  />             
+            <CardItem items={items} pantry={pantry} />             
 
             </ContainerScroll>
+
         </ItemListProvider>
     );
 }

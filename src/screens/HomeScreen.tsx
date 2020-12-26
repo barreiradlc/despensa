@@ -19,9 +19,7 @@ function HomeScreen() {
 
     useEffect(() => {
         if(data && readtimer){
-
             storePantries(data.me.pantries)
-            
             navigation.dispatch(
                 StackActions.replace('DashBoard',)
             );

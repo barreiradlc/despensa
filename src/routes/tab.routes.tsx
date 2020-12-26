@@ -78,7 +78,7 @@ const TabRoutes: React.FC = () => (
                     <Icon size={25} name="book-open" color={color} />
                 ),
                 title: 'Receitas',
-            }}
+            }}            
             component={MockPage}
             // component={Favorites}
         />

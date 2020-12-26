@@ -2,7 +2,7 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert, Keyboard, ToastAndroid } from 'react-native';
 
-import { Button, ButtonLabel, Container, Form, Input, LogoImage } from "../styles/form"
+import { Button, ButtonLabel, Container,  FormContainer, Input, LogoImage } from "../styles/form"
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../components/mutations/loginMutation';
 import { LoadingOverlayContext } from '../context/LoadingOverlayContext';
@@ -86,7 +86,7 @@ const Login: React.FC = () => {
     return (
         <Container>
 
-            <Form>
+            <FormContainer>
                 <LogoImage source={require(logo)} />
                 <Input
                     placeholder='Usuário'
@@ -105,7 +105,7 @@ const Login: React.FC = () => {
                 <Button invert onPress={handleGoToSignUp}>
                     <ButtonLabel>Ainda não é cadastrado? Cadastrar-me</ButtonLabel>
                 </Button>                
-            </Form>
+            </FormContainer>
 
             {/* <TouchableOpacity                
                 onPress={() => handleLogin(loginData)}
