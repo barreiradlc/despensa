@@ -18,10 +18,9 @@ const CardRecipe: React.FC<ListRecipeInterfaceProps> = ({recipe}) => {
     const navigation = useNavigation()
 
     function handleNavigateShow(){
-        // navigation.navigate('ShowDespensa', {
-        //     pantry,
-        //     items: pantry.items
-        // })
+        navigation.navigate('ShowRecipe', {
+            id: recipe.id
+        })
     }
 
     return (

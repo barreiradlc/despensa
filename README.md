@@ -20,7 +20,8 @@ ___
 - `updated`
 
 >> ### DELETE
-- Items
+- Pull Items
+- Pull from user
 
 <br>
 <br>

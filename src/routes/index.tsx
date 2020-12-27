@@ -21,6 +21,7 @@ import SignUpScreen from '../screens/SignUp';
 import ShowPantry from '../screens/pantry/Show';
 import FormItem from '../screens/pantry/FormItem';
 import FormPantry from '../screens/pantry/Form';
+import ShowRecipe from '../screens/recipe/Show';
 
 const Stack = createStackNavigator();
 
@@ -55,6 +56,7 @@ function App() {
                 <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="DashBoard" component={DrawerNavigation} options={{ headerShown: false }} />
                 <Stack.Screen name="ShowDespensa" component={ShowPantry} options={{ title: '' }} />
+                <Stack.Screen name="ShowRecipe" component={ShowRecipe} options={{ title: '' }} />
                 <Stack.Screen name="FormItem" component={FormItem} options={{ title: '' }} />
                 <Stack.Screen name="FormPantry" component={FormPantry} options={{ title: '' }} />
             </Stack.Navigator>

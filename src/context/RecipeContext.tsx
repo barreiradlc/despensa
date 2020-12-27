@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import React, { useCallback, useMemo, useState } from 'react';
 import { createContext } from "react";
-import { QUERY_RECIPES } from '../components/queries/recipeQuery';
+import { QUERY_RECIPES } from '../components/queries/recipesQuery';
 
 
 import realm from '../config/realmConfig/realm';
