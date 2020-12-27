@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
-import Estoque from '../screens/despensa/List';
+import Estoque from '../screens/pantry/List';
 import { RecipeProvider } from '../context/RecipeContext';
 import ListRecipe from '../screens/recipe/List';
 
@@ -50,16 +50,7 @@ const TabRoutes: React.FC = () => (
                 inactiveTintColor: '#B7B7CC',
             }}
         >
-            <Tab.Screen
-                name="Recipes"
-                options={{
-                    tabBarIcon: ({ color }) => (
-                        <Icon size={25} name="book-open" color={color} />
-                    ),
-                    title: 'Receitas',
-                }}
-                component={ListRecipe}
-            />
+           
             <Tab.Screen
                 name="Stock"
                 options={{
@@ -69,6 +60,16 @@ const TabRoutes: React.FC = () => (
                     title: 'Estoque',
                 }}
                 component={Estoque}
+            />
+             <Tab.Screen
+                name="Recipes"
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Icon size={25} name="book-open" color={color} />
+                    ),
+                    title: 'Receitas',
+                }}
+                component={ListRecipe}
             />
             <Tab.Screen
                 options={{

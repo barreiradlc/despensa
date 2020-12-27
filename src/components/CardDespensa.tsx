@@ -15,8 +15,8 @@ const CardDespensa: React.FC = ({pantry}) => {
 
     return (
         <CardContainer onPress={handleNavigateShow}>
-            <Title>{pantry.name} {__DEV__ && pantry.items.length}</Title>
-            <Label>{pantry.description} </Label>
+            <Title>{pantry.name} </Title>
+            <Label>{pantry.description}</Label>
         </CardContainer>
     );
 }   

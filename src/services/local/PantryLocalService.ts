@@ -23,104 +23,152 @@ export interface ItemInterface {
 
 export interface PantryInterface {
     id?: string;
+    queue: boolean;
     name: string;
     description?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedAt?: Date;
     items?: ItemInterface[];
 }
 
 export async function getProvision(provision: ProvisionInterface): Promise<ProvisionInterface> {
     const { id, name } = provision
 
-    console.log({name, id})
+    console.log({ name, id })
 
     let savedProvision
-    if(name){
-        savedProvision = await realm.objects<ProvisionInterface>('Provision').filtered('name = $0', name)[0]    
-    } else if(id){
+    if (name) {
+        savedProvision = await realm.objects<ProvisionInterface>('Provision').filtered('name = $0', name)[0]
+    } else if (id) {
         savedProvision = await realm.objects<ProvisionInterface>('Provision').filtered('id = $0', id)[0]
     }
 
-    console.log({savedProvision})
+    console.log({ savedProvision })
 
-    if (!savedProvision) {
-        realm.write(async () => {
-            return realm.create<ProvisionInterface>('Provision', {
-                id,
-                name
-            })
-        })
+    if (savedProvision) {
+        return savedProvision
     }
-    return savedProvision
+
+    realm.write(async () => {
+        return await realm.create<ProvisionInterface>('Provision', {
+            id,
+            name
+        })
+    })
 }
 
 export async function getItem(item: ItemInterface, provision: ProvisionInterface) {
-    let savedItem = await realm.objects('Item').filtered('id = $0 or uuid = $1', item.id, item.uuid)[0]
+    const { id, uuid } = item
+    let savedItem
+    
+    if (id) {
+        savedItem = await realm.objects('Item').filtered('id = $0', item.id)[0]
+    } else if (uuid) {
+        savedItem = await realm.objects('Item').filtered('uuid = $0', item.uuid)[0]
+    }
 
-    // console.log("savedItem")
-    // console.log(savedItem)
+    realm.write(() => {
 
-    realm.write(async () => {
+        console.log("savedItem")
+        console.log(savedItem)
+
         if (savedItem) {
             // savedItem.id = item.id
             // savedItem.uuid = !savedItem.uuid ? savedItem.uuid : uuidv4()
+            savedItem.queue = false
             savedItem.quantity = Number(item.quantity) || 1
             savedItem.provision = provision
             savedItem.updatedAt = item.updatedAt
 
-            return savedItem
+            // return savedItem
         } else {
-            savedItem = await realm.create('Item', {
+
+            savedItem = realm.create('Item', {
                 id: item.id,
                 uuid: uuidv4(),
                 quantity: Number(item.quantity) || 1,
+                // queue: false,
                 provision: provision
             })
         }
     })
 
-    // console.log("createdItem")
-    // console.log({ savedItem })
+    Promise.resolve(savedItem)
+
+    console.log("createdItem")
+    console.log({ savedItem })
 
     return savedItem
 }
 
 
-export async function getPantry(pantry: PantryInterface) {
+export async function getPantry(pantry: PantryInterface, local = false) {
+
+    const { id, uuid } = pantry
+
     realm.write(async () => {
 
         try {
-            let savedPantry = realm.objects('Pantry').filtered('id = $0', String(pantry.id))[0]
+            let savedPantry
+            if(id){
+                savedPantry = realm.objects('Pantry').filtered('id = $0', String(id))[0]
+            } else if(uuid){
+                savedPantry = realm.objects('Pantry').filtered('uuid = $0', String(uuid))[0]
+            }
+
+            if (pantry.deletedAt) {
+                savedPantry && realm.delete(savedPantry)
+                return
+            };
 
             if (savedPantry) {
                 // savedPantry.id = pantry.id
+                savedPantry.id = id
+                savedPantry.uuid = uuid
+                savedPantry.queue = local
                 savedPantry.name = pantry.name
                 savedPantry.description = pantry.description
+                savedPantry.createdAt = pantry.createdAt
+                savedPantry.updatedAt = pantry.updatedAt
 
             } else {
                 savedPantry = realm.create('Pantry', {
+                    queue: local,
                     id: pantry.id,
                     uuid: uuidv4(),
                     name: pantry.name,
                     description: pantry.description,
+                    createdAt: pantry.createdAt,
+                    updatedAt: pantry.updatedAt,
                 })
             }
 
             pantry.items?.map(async (item: ItemInterface) => {
-
                 const provision = await getProvision(item.provision)
 
-                let savedItem = await getItem(item, provision)
-                
+                getItem(item, provision)
+                    .then(async (savedItem) => {
+                        console.log("savedItem")
+                        console.log(savedItem)
 
-                let itemAdded = savedPantry.items.filter(i => i.id === item.id)[0]
+                        let itemAdded = await savedPantry.items.filter(async (i) => i.id === savedItem.id)[0]
 
-                if (!itemAdded) {
-                    realm.write(() => {
-                        savedPantry.items.push(savedItem)
+                        if (!itemAdded) {
+                            Promise.resolve(savedItem)
+                            console.log("savedItem")
+                            console.log({ savedItem })
+
+                            realm.write(() => {
+                                savedPantry.items.push(savedItem)
+                            })
+                        }
+
+                        return savedItem
                     })
-                }
-
-                return savedItem
+                    .catch((error) => {
+                        throw new Error(`ERROR WHILE SAVING ITEM ${JSON.stringify(error)}`);
+                    })
             })
 
             // console.log("p items")
@@ -137,8 +185,8 @@ export async function getPantry(pantry: PantryInterface) {
 
 export async function storePantries(pantries: PantryInterface[]) {
 
+    // const user = await AsyncStorage.getItem('@despensaJWT')
     // console.log(JSON.stringify(pantries))
-
     // return realm.write(() => realm.deleteAll() ) 
 
     try {
@@ -163,6 +211,7 @@ export async function storePantries(pantries: PantryInterface[]) {
             // if (itemsData) {
             //     savedPantry.items = itemsData
             // }
+
             return savedPantry
         })
     } catch (error) {
@@ -188,7 +237,7 @@ export async function moreQuantity(uuid: string) {
             const item = realm.objects('Item').filtered('uuid = $0', uuid)[0]
             item.quantity = item.quantity + 1
         } catch (error) {
-            throw new Error(`Error adding quantity: ${JSON.stringify(error)}`);                       
+            throw new Error(`Error adding quantity: ${JSON.stringify(error)}`);
         }
     })
 }
@@ -199,7 +248,7 @@ export async function minusQuantity(uuid: string) {
             const item = realm.objects('Item').filtered('uuid = $0', uuid)[0]
             item.quantity = item.quantity - 1
         } catch (error) {
-            throw new Error(`Error adding quantity: ${JSON.stringify(error)}`);                       
+            throw new Error(`Error adding quantity: ${JSON.stringify(error)}`);
         }
     })
 }
@@ -213,13 +262,13 @@ export async function deleteItem(uuid: string, id: string) {
         try {
             const item = realm.objects('Item').filtered('uuid = $0 or id = $1', uuid, id)[0]
 
-            if(!id){
+            if (!id) {
                 realm.delete(item)
             } else {
                 item.deletedAt = new Date()
             }
         } catch (error) {
-            
+
         }
     })
 }
@@ -229,36 +278,47 @@ export async function pushPantry(uuid: string, item: ItemInterface) {
 
     realm.write(() => {
         pantry?.items.push(item)
-        
+
         item.queue = true
         pantry.queue = true
     })
-    
+
     console.log(uuid)
     console.log(JSON.stringify(pantry))
-    
+
 }
 
 export async function handlePantryQueue(uuid: string, itemUuid: string) {
-    
+
     realm.write(() => {
         try {
-            const item = realm.objects('Item').filtered('uuid = $0', uuid)[0]
-            const pantry = realm.objects('Pantry').filtered('uuid = $0', itemUuid)[0]
-            
+            const item = realm.objects('Item').filtered('uuid = $0', itemUuid)[0]
+            const pantry = realm.objects('Pantry').filtered('uuid = $0', uuid)[0]
+
             item.queue = true
             pantry.queue = true
-            
+
         } catch (error) {
-            throw new Error("Error saving queue edits");         
-        }   
+            throw new Error("Error saving queue edits");
+        }
     })
-    
+
+}
+export async function deletePantry(uuid: string) {
+    const pantry = await realm.objects('Pantry').filtered('uuid = $0', uuid)[0]
+    realm.write(() => {
+        if (!pantry.id) {
+            realm.delete(pantry)
+        } else {
+            pantry.queue = true
+            pantry.deletedAt = new Date
+        }
+    })
 }
 
 export async function getQueuedPantries() {
     const pantries = await realm.objects('Pantry').filtered('queue = $0', true)
-    return pantries.map(( pantry: PantryInterface ) => {
+    return pantries.map((pantry: PantryInterface) => {
         const items = pantry.items?.filter((item: ItemInterface) => item.queue === true)
         return {
             ...pantries,

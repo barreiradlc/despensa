@@ -36,7 +36,13 @@ const Login: React.FC = () => {
         
         if (username && password) {
             Keyboard.dismiss()
-            login({ variables: { loginData } });
+            
+            login({ 
+                variables: { 
+                    loginData 
+                }
+            });
+
         } else {
             ToastAndroid.show("Preencha com suas credenciais para continuar", 500)
         }
@@ -90,11 +96,13 @@ const Login: React.FC = () => {
                 <LogoImage source={require(logo)} />
                 <Input
                     placeholder='Usuário'
+                    value={loginData.username}
                     onChange={(e: any) => handleChange(e, 'username')}
                     autoCapitalize='none'
                     />
                 <Input
                     placeholder='Senha'
+                    value={loginData.password}
                     secureTextEntry
                     onChange={(e: any) => handleChange(e, 'password')}
                     autoCapitalize='none'

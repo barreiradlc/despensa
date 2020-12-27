@@ -9,6 +9,8 @@ export default {
         description: 'string?',
         items: 'Item[]',
         compras: 'ItemCompras[]',
+        createdAt: 'date?',
+        updatedAt: 'date?',
         deletedAt: 'date?',
         queue: { type: 'bool?', default: false }, //{type: 'int', default: 0},
         thumbnail: 'string?',

@@ -13,6 +13,7 @@ const ItemActions: React.FC = ({ item, setToggle }) => {
     const navigation = useNavigation()
 
     function handleDelete() {
+        setToggle('')
         deleteItem(item.uuid, item.id)
     }
 

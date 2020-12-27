@@ -32,11 +32,11 @@ const Form: React.FC = () => {
     const { populateItemsList, pantryUuid, item } = route.params
 
     async function handleProvisionChange() {
-        console.log(query)        
+        console.log(query)
         const provision = await getProvision({ name: query })
 
         console.log('provision')
-        console.log({provision})
+        console.log({ provision })
 
         setItemData({ ...itemData, provision: provision })
     }
@@ -69,10 +69,11 @@ const Form: React.FC = () => {
     }
 
     useEffect(() => {
-        console.log({item})
+        console.log({ item })
 
-        if(item){            
+        if (item) {
             setItemData({
+                ...item,
                 quantity: String(item.quantity)
             })
 
@@ -80,46 +81,46 @@ const Form: React.FC = () => {
 
             setEdit(true)
         }
-    },[item])
+    }, [item])
 
     useEffect(() => {
-        if(query){
+        if (query) {
             setTimeout(() => {
                 provisionRef.current?.focus()
             }, 500)
         }
-    },[query])
+    }, [query])
 
     async function handleSaveItem() {
-        const provision = await getProvision({ name: query })
+        getProvision({ name: query })
+            .then((provision) => {
 
-        if(!provision.name){
-            return ToastAndroid.show("Não é possível salvar um item nem seu nome", 500)
-        }
+                if(!provision){
+                    return handleSaveItem()
+                }
+
+                if (!provision.name) {
+                    return ToastAndroid.show("Não é possível salvar um item nem seu nome", 500)
+                }
+
+                getItem(itemData, provision)
+                    .then(( item ) => {
+
+                        console.debug("item")
+                        console.debug(item)
+
+                        // return handleSaveItem()
+
+                        if (!edit) {
+                            pushPantry(pantryUuid, item)
+                        } else {
+                            handlePantryQueue(pantryUuid, itemData.uuid)
+                        }
         
-        const item = await getItem(itemData, provision)    
-        
-        
-        console.log("uuid")
-        console.log(pantryUuid)
-        console.log({item})
-        console.log("uuid")
-        
-        console.log(pantryUuid)
-        
-        
-        
-        
-        if(!edit){
-            pushPantry(pantryUuid, item)
-        } else {
-            handlePantryQueue(pantryUuid, itemData.uuid)
-        }
-        
-        navigation.goBack()
-        // setTimeout(() => {
-        //     populateItemsList(pantryUuid)
-        // }, 500)
+                        navigation.goBack()
+                    })
+            })
+
     }
 
     useEffect(() => {
@@ -139,7 +140,7 @@ const Form: React.FC = () => {
         }, 1500)
         // console.log(provisionRef)
     }
-    
+
     async function handleSaveLoginData() {
         // const { signIn } = data
 
@@ -198,9 +199,9 @@ const Form: React.FC = () => {
                     content={<TooltipProvisions />}
                     placement='top'
                 > */}
-                    
-                    {/* TODO - QUERY */}
-                        {/* <Input
+
+                {/* TODO - QUERY */}
+                {/* <Input
                             value={query}
                             style={{ display: queryProvision ? 'flex' : 'none' }}
                             ref={provisionRef}
@@ -212,30 +213,30 @@ const Form: React.FC = () => {
                         <Button onPress={queryProvisions} style={{ display: queryProvision ? 'none' : 'flex' }}>
                             <ButtonLabel>{itemData?.provision ? itemData?.provision.name : 'Nome'}</ButtonLabel>
                         </Button> */}
-                    {/* TODO - QUERY */}
-                    
+                {/* TODO - QUERY */}
 
-                    
-                    <Input
-                        ref={provisionOfflineRef}
-                        placeholder='Nome'
-                        value={query}
-                        onChange={(e: any) => setQuery(e.nativeEvent.text.toLowerCase())}
-                        // onBlur={(e: any) => handleProvisionChange(e)}
-                        autoCapitalize='none'
-                        
-                        />
 
-                    <Input
-                        ref={quantidadeRef}
-                        placeholder='Quantidade'
-                        value={itemData.quantity}
-                        onChange={(e: any) => handleChange(e, 'quantity')}
-                        autoCapitalize='none'
-                        />                    
-                    <Button onPress={handleSaveItem}>
-                        <ButtonLabel>Salvar</ButtonLabel>
-                    </Button>
+
+                <Input
+                    ref={provisionOfflineRef}
+                    placeholder='Nome'
+                    value={query}
+                    onChange={(e: any) => setQuery(e.nativeEvent.text.toLowerCase())}
+                    // onBlur={(e: any) => handleProvisionChange(e)}
+                    autoCapitalize='none'
+
+                />
+
+                <Input
+                    ref={quantidadeRef}
+                    placeholder='Quantidade'
+                    value={itemData.quantity}
+                    onChange={(e: any) => handleChange(e, 'quantity')}
+                    autoCapitalize='none'
+                />
+                <Button onPress={handleSaveItem}>
+                    <ButtonLabel>Salvar</ButtonLabel>
+                </Button>
                 {/* </Tooltip> */}
             </FormItemContainer>
 

@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import CardDespensa from '../../components/CardDespensa';
 import LoadingSyncComponent from '../../components/LoadingSyncComponent';
 import { getPantries, PantryInterface } from '../../services/local/PantryLocalService';
@@ -11,30 +12,52 @@ const List: React.FC = () => {
     const refreshRef = useRef()
     const navigation = useNavigation()
     const [ pantries, setPantries ] = useState<PantryInterface[]>([] as PantryInterface[])
+    const [ loading, setLoading ] = useState(true)
 
     useEffect(() => {
         reloadData()
     },[])
-
+    
     async function reloadData() {
         const data = await getPantries()
         setPantries(data)
+        setLoading(false)
+    }
+
+    function HeaderLeft() {
+        return (
+            <Button invert onPress={() => refreshRef.current.reload() }>
+                <Icon name="more-vertical" size={21} color="#555" />
+            </Button>
+        )
     }
 
     useEffect(() => {
+        setLoading(true)
+        setPantries([] as PantryInterface[])
+        navigation.setOptions({            
+            headerRight: () => <HeaderLeft />
+        })
+
         const unsubscribe = navigation.addListener('focus', () => {
             refreshRef.current.reload()
             reloadData()
         });      
         return unsubscribe;
     }, [])
+    
+    const validPantries = useMemo(() => {
+
+        return pantries.filter(p => !p.deletedAt)
+
+    }, [pantries])
 
   return (
         <ContainerScroll
             contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={false}
         >
-            {pantries?.map(( pantry: PantryInterface ) => 
+            {!loading && validPantries?.map(( pantry: PantryInterface ) => 
                 <CardDespensa key={pantry.id} pantry={pantry} />
             )}
 

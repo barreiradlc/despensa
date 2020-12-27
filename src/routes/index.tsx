@@ -18,9 +18,9 @@ import TabRoutes from './tab.routes';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import DrawerNavigation from './drawer.routes';
 import SignUpScreen from '../screens/SignUp';
-import ShowPantry from '../screens/despensa/Show';
-import FormItem from '../screens/despensa/FormItem';
-import FormPantry from '../screens/despensa/Form';
+import ShowPantry from '../screens/pantry/Show';
+import FormItem from '../screens/pantry/FormItem';
+import FormPantry from '../screens/pantry/Form';
 
 const Stack = createStackNavigator();
 

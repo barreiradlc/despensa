@@ -17,7 +17,7 @@ import ItemQuantity from './ItemQuantity';
 
 const CardItem: React.FC = ({ pantry }) => {
     const [toggle, setToggle] = useState<string>('')
-    const { items, setItemsList, populateItemsList, pantryUuid } = useContext(ItemListContext)
+    const { items, setItemsList, populateItemsList, validItems } = useContext(ItemListContext)
     const navigation = useNavigation()
 
     useEffect(() => {
@@ -41,13 +41,11 @@ const CardItem: React.FC = ({ pantry }) => {
                 </TooltipEditContainer>
             </TooltipEditRowContainer>
         )
-
     }
-
     
     return (
         <>
-            {items?.map((item: ItemInterface, index: number) =>
+            {validItems?.map((item: ItemInterface, index: number) =>
                 <Tooltip
                     backgroundColor="rgba(250, 250, 250, 0.9)"
                     contentStyle={{ width: '100%', elevation: 25, height: 120 }}

@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { createContext } from "react";
 import realm from '../config/realmConfig/realm';
 import { getPantry, getPantryByUuid, ItemInterface, minusQuantity, moreQuantity } from '../services/local/PantryLocalService';
 
 interface ItemListContextData {
     items: ItemInterface[];
+    validItems: ItemInterface[];
     setItemsList(data: any): void;
     populateItemsList(uuid: string): string;
     setItemsQuantity(): void;
@@ -67,8 +68,12 @@ export const ItemListProvider: React.FC = ({ children }) => {
         // setItems(itemsList)
     }, [])
 
+    const validItems = useMemo(() => {
+        return items.filter(i => !i.deletedAt)
+    }, [items])
+
     return (
-        <ItemListContext.Provider value={{ items, setItemsList, setItemsQuantity, populateItemsList, pantryUuid }}>
+        <ItemListContext.Provider value={{ validItems, items, setItemsList, setItemsQuantity, populateItemsList, pantryUuid }}>
             {children}
         </ItemListContext.Provider>
     );

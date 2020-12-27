@@ -1,8 +1,8 @@
-import { useMutation } from '@apollo/client';
+import { NetworkStatus, useMutation } from '@apollo/client';
 import React, { forwardRef, useEffect, useImperativeHandle } from 'react';
 import { ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getQueuedPantries, ItemInterface, PantryInterface } from '../services/local/PantryLocalService';
+import { getQueuedPantries, ItemInterface, PantryInterface, storePantries } from '../services/local/PantryLocalService';
 import {
     ContainerOverlay,
     TopContainer,
@@ -22,20 +22,27 @@ function LoadingSyncComponent(_, ref){
 
     useImperativeHandle(ref, () => ({
         reload: () => {    
-            console.log("REALOAD")        
-            // reloadData()
+            
+            // console.log("REALOAD")        
+            // console.log(NetworkStatus)        
+            // console.log(networkStatus)        
+            reloadData()
         }
     }))
 
     async function reloadData() {
-        const pantries = await getQueuedPantries()   
-        
+        const pantries = await getQueuedPantries()    
+
+        if(!pantries.length) {
+            return console.log("NOTHS TO RELOAD")  
+        }
+
         let pantriesData = pantries.map(( pantry: PantryInterface ) => {
 
             let items = pantry?.items.map(( item: ItemInterface ) => {
                 return {
                     id: item.id,
-                    // uuid: item.uuid,
+                    uuid: item.uuid,
                     quantity: item.quantity,
                     // TODO - expires
                     // expiresAt: item.expiresAt,
@@ -45,27 +52,33 @@ function LoadingSyncComponent(_, ref){
 
             return {
                 id: pantry[0].id,
-                // uuid: pantry[0].uuid,
+                uuid: pantry[0].uuid,
                 name: pantry[0].name,
                 description: pantry[0].description,
+                deletedAt: pantry[0].deletedAt,
                 items,
             }
         })
         
         
-        // console.log(pantriesData.length)
-        // console.log(pantriesData)
-        console.log("pantriesData")
+        console.log(pantriesData.length)
         console.log(JSON.stringify(pantriesData))
+        // console.log(pantriesData)
+        // console.log("pantriesData")
 
         call({
-            variables: pantries            
+            variables: {
+                pantries: pantriesData
+            }            
         })
     }
 
     useEffect(() => {
         console.log("DATA")
         console.log(data)
+        if(data){
+            data.managePantries && storePantries(data.managePantries)
+        }
     },[data])
     
     useEffect(() => {

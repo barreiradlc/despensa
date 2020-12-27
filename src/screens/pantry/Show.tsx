@@ -27,6 +27,8 @@ const Show: React.FC = () => {
 
     useEffect(() => {
 
+        // console.log(JSON.stringify(pantry))
+
         navigation.setOptions({
             title: pantry.name,
             headerRight: () => <HeaderLeft />

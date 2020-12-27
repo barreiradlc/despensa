@@ -5,7 +5,7 @@ import { Alert, Keyboard, ToastAndroid } from 'react-native';
 import { Button, ButtonLabel, Container, Input, LogoImage, FormContainer, FormItemContainer } from "../../styles/form"
 import { useMutation, useQuery } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getItem, getPantry, getProvision, handlePantryQueue, ItemInterface, PantryInterface, ProvisionInterface, pushPantry } from '../../services/local/PantryLocalService';
+import { deletePantry, getItem, getPantry, getProvision, handlePantryQueue, ItemInterface, PantryInterface, ProvisionInterface, pushPantry } from '../../services/local/PantryLocalService';
 import { PROVISIONS } from '../../components/queries/provisionListQuery';
 import { CardContainer, CardContainerProvision, ContainerScroll, Label, Title } from '../../styles/components';
 import Tooltip from 'react-native-walkthrough-tooltip';
@@ -26,7 +26,7 @@ const Form: React.FC = () => {
     const { pantry } = route.params
 
     function handleChange(event: any, attr: string) {
-        setPantryData({ ...pantryData, [attr]: event.nativeEvent.text.trim().toLowerCase() })
+        setPantryData({ ...pantryData, [attr]: event.nativeEvent.text })
     }
 
     useEffect(() => {
@@ -36,6 +36,8 @@ const Form: React.FC = () => {
             })
 
             setPantryData({
+                id: pantry.id,
+                uuid: pantry.uuid,
                 name: pantry.name,
                 description: pantry.description,
             })
@@ -50,11 +52,34 @@ const Form: React.FC = () => {
         nameRef.current.focus()
     }, [pantry])
 
+    async function handleDeletePantryConfirmed() {
+        deletePantry(pantryData.uuid)   
+        navigation.dispatch(
+            StackActions.replace('DashBoard')
+        );
+        return ToastAndroid.show("Despensa deletada com sucesso!", 500)
+    }
+
+    async function handleDeletePantry() {
+        Alert.alert(
+            'Deseja realmente deletar despensa?', 
+            "Esta ação deletará sua despensa e TODOS os itens que nela estão armazenados",
+            [
+                {
+                    text: 'Não',
+                    onPress: () => console.log('canceled')
+                },
+                {
+                    text: 'Sim',
+                    onPress: () => handleDeletePantryConfirmed()
+                }
+            ]
+        )
+    }
     async function handleSavePantry() {
-        getPantry(pantryData)
+        getPantry(pantryData, true)
 
         navigation.goBack()
-
     }
 
     useEffect(() => {
@@ -76,19 +101,24 @@ const Form: React.FC = () => {
                     ref={nameRef}
                     placeholder='Nome'
                     value={pantryData.name}
-                    onChange={(e: any) => handleChange(e, 'name')}
-                    autoCapitalize='none'
+                    onChange={(e: any) => handleChange(e, 'name')}                    
                 />
                 <Input
                     ref={quantidadeRef}
                     placeholder='Descrição'
                     value={pantryData.description}
                     onChange={(e: any) => handleChange(e, 'description')}
-                    autoCapitalize='none'
+                    // autoCapitalize
                 />
                 <Button  onPress={handleSavePantry}>
                     <ButtonLabel>Salvar</ButtonLabel>
                 </Button>
+
+                {edit && 
+                    <Button invert onPress={handleDeletePantry}>
+                        <ButtonLabel>Deletar</ButtonLabel>
+                    </Button>
+                }
 
             </FormItemContainer>
 
