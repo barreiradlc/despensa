@@ -22,6 +22,7 @@ import ShowPantry from '../screens/pantry/Show';
 import FormItem from '../screens/pantry/FormItem';
 import FormPantry from '../screens/pantry/Form';
 import ShowRecipe from '../screens/recipe/Show';
+import FormRecipe from '../screens/recipe/Form';
 
 const Stack = createStackNavigator();
 
@@ -59,6 +60,7 @@ function App() {
                 <Stack.Screen name="ShowRecipe" component={ShowRecipe} options={{ title: '' }} />
                 <Stack.Screen name="FormItem" component={FormItem} options={{ title: '' }} />
                 <Stack.Screen name="FormPantry" component={FormPantry} options={{ title: '' }} />
+                <Stack.Screen name="FormRecipe" component={FormRecipe} options={{ title: '' }} />
             </Stack.Navigator>
             {loading && <LoadingOverlayComponent label='Aguarde' />}
         </>

@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useContext, useEffect } from 'react';
 import { View } from 'react-native';
 import CardRecipe from '../../components/CardRecipe';
+import FabGroup from '../../components/FabGroup';
 import { RecipeContext } from '../../context/RecipeContext';
 import { ContainerScroll } from '../../styles/components';
 import { ButtonLabel } from '../../styles/form';
@@ -38,6 +39,7 @@ const List: React.FC = () => {
                 <CardRecipe recipe={recipe} key={recipe.id} />
             )}
 
+        <FabGroup />
         
         </ContainerScroll>
     );

@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import CardDespensa from '../../components/CardDespensa';
+import FabGroup from '../../components/FabGroup';
 import LoadingSyncComponent from '../../components/LoadingSyncComponent';
 import { getPantries, PantryInterface } from '../../services/local/PantryLocalService';
 import { Container, ContainerScroll, Label } from '../../styles/components';
@@ -66,6 +67,8 @@ const List: React.FC = () => {
             </Button>
 
             <LoadingSyncComponent ref={refreshRef} />
+
+            <FabGroup visible={true} />
 
         </ContainerScroll>      
   );
