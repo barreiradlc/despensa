@@ -2,12 +2,13 @@ import Realm from 'realm'
 
 import Pantry from './schemas/Pantry'
 import Item from './schemas/Item'
-import ItemCompras from './schemas/ItemCompras'
+import ShoppingList from './schemas/ShoppingList'
 import Provision from './schemas/Provision'
+import ShoppingItem from './schemas/ShoppingItem'
 
-const SCHEMA_VERSION = 45
+const SCHEMA_VERSION = 50
 
 export default new Realm({
-    schema: [Pantry, Item, Provision, ItemCompras],
+    schema: [Pantry, Item, Provision, ShoppingList, ShoppingItem],
     schemaVersion: SCHEMA_VERSION
 });

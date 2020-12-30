@@ -23,6 +23,8 @@ import FormItem from '../screens/pantry/FormItem';
 import FormPantry from '../screens/pantry/Form';
 import ShowRecipe from '../screens/recipe/Show';
 import FormRecipe from '../screens/recipe/Form';
+import FormShoppingList from '../screens/shoppingList/Form';
+import ShowShoppingList from '../screens/shoppingList/Show';
 
 const Stack = createStackNavigator();
 
@@ -58,9 +60,11 @@ function App() {
                 <Stack.Screen name="DashBoard" component={DrawerNavigation} options={{ headerShown: false }} />
                 <Stack.Screen name="ShowDespensa" component={ShowPantry} options={{ title: '' }} />
                 <Stack.Screen name="ShowRecipe" component={ShowRecipe} options={{ title: '' }} />
+                <Stack.Screen name="ShowShoppingList" component={ShowShoppingList} options={{ title: '' }} />
                 <Stack.Screen name="FormItem" component={FormItem} options={{ title: '' }} />
                 <Stack.Screen name="FormPantry" component={FormPantry} options={{ title: '' }} />
                 <Stack.Screen name="FormRecipe" component={FormRecipe} options={{ title: '' }} />
+                <Stack.Screen name="FormShoppingList" component={FormShoppingList} options={{ title: '' }} />
             </Stack.Navigator>
             {loading && <LoadingOverlayComponent label='Aguarde' />}
         </>

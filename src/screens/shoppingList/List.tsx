@@ -3,25 +3,36 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import CardDespensa from '../../components/CardDespensa';
+import CardShoppingList from '../../components/CardShoppingList';
 import FabGroup from '../../components/FabGroup';
 import LoadingSyncComponent from '../../components/LoadingSyncComponent';
-import { getPantries, PantryInterface } from '../../services/local/PantryLocalService';
+import { getPantries, getShoppingsList, PantryInterface } from '../../services/local/PantryLocalService';
 import { Container, ContainerScroll, Label } from '../../styles/components';
 import { Button, ButtonLabel } from '../../styles/form';
 
+
+interface ShoppingListInterface{
+    uuid?: string;
+    pantryUuid: string;
+    done: boolean;
+    name: string;
+}
+
+
 const List: React.FC = () => {
     const refreshRef = useRef()
-    const navigation = useNavigation()
-    const [ pantries, setPantries ] = useState<PantryInterface[]>([] as PantryInterface[])
+    const navigation = useNavigation()    
+    const [ shoppingLists, setShoppingLists ] = useState<ShoppingListInterface[]>([] as ShoppingListInterface[])
     const [ loading, setLoading ] = useState(true)
 
     useEffect(() => {
         reloadData()
     },[])
     
-    async function reloadData() {
-        const data = await getPantries()
-        setPantries(data)
+    async function reloadData() {        
+        const data = await getShoppingsList()
+        console.log({data})
+        setShoppingLists(data)
         setLoading(false)
     }
 
@@ -34,32 +45,25 @@ const List: React.FC = () => {
     }
 
     useEffect(() => {
-        setLoading(true)
-        setPantries([] as PantryInterface[])
+        setLoading(true)        
         navigation.setOptions({            
             headerRight: () => <HeaderLeft />
         })
 
-        const unsubscribe = navigation.addListener('focus', () => {
-            refreshRef.current.reload()
-            reloadData()
-        });      
-        return unsubscribe;
+        // const unsubscribe = navigation.addListener('focus', () => {
+        //     refreshRef.current.reload()
+        //     reloadData()
+        // });      
+        // return unsubscribe;
     }, [])
-    
-    const validPantries = useMemo(() => {
-
-        return pantries.filter(p => !p.deletedAt)
-
-    }, [pantries])
 
   return (
         <ContainerScroll
             contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={false}
         >
-            {!loading && validPantries?.map(( pantry: PantryInterface ) => 
-                <CardDespensa key={pantry.id} pantry={pantry} />
+            {shoppingLists?.map(( shoppingList: ShoppingListInterface ) => 
+                <CardShoppingList shoppingList={shoppingList} />
             )}
 
             {/* <Button onPress={() => navigation.navigate('FormPantry', {}) }>

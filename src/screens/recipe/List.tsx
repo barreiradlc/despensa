@@ -39,7 +39,7 @@ const List: React.FC = () => {
                 <CardRecipe recipe={recipe} key={recipe.id} />
             )}
 
-        <FabGroup />
+        <FabGroup visible={true} />
         
         </ContainerScroll>
     );

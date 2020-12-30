@@ -10,6 +10,7 @@ import { RecipeProvider } from '../context/RecipeContext';
 import ListRecipe from '../screens/recipe/List';
 import { FAB, Portal } from 'react-native-paper';
 import { cor1, cor2 } from '../styles/components';
+import ShoppingList from '../screens/shoppingList/List';
 
 const Tab = createBottomTabNavigator();
 
@@ -81,7 +82,7 @@ const TabRoutes: React.FC = () => {
                         title: 'Listagem',
                     }}
                     name="ShoppingList"
-                    component={MockPage}
+                    component={ShoppingList}
                 />
             </Tab.Navigator>
         </RecipeProvider>

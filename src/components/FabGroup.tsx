@@ -17,34 +17,37 @@ const FabGroup: React.FC = ({visible = false}) => {
 
     const { open, visibleFab } = state;
 
-    // useEffect(() => {
+    useEffect(() => {
     //     setVisible(true)
 
+    // onVisibleStateChange({visibleFab :true})
     //     return setVisible(false)
-    // },[])
+    return onVisibleStateChange({visibleFab :false})
+    },[])
 
 
     return (
 
         <Portal>
             <FAB.Group
-                visible={visibleFab}
+                // visible={visibleFab}
+                visible
                 style={{ marginBottom: 45 }}
                 open={open}
                 color={cor2}
                 fabStyle={{ backgroundColor: cor1 }}
                 icon={open ? 'close' : 'plus'}
                 actions={[
-                    { icon: 'plus', onPress: () => console.log('Pressed add') },
+                    // { icon: 'plus', onPress: () => console.log('Pressed add') },
                     {
                         icon: 'fridge',
                         label: 'Adicionar despensa',
-                        onPress: () => console.log('Pressed star'),
+                        onPress: () => navigation.navigate('FormPantry', {}),
                     },
                     {
                         icon: 'format-list-bulleted',
-                        label: 'Adicionar lista de compras',
-                        onPress: () => console.log('Pressed email'),
+                        label: 'Adicionar lista de compras',                        
+                        onPress: () => navigation.navigate('FormShoppingList', {}),
                     },
                     {
                         icon: 'food',

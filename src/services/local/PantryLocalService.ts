@@ -33,6 +33,15 @@ export interface PantryInterface {
     items?: ItemInterface[];
 }
 
+export interface ShoppingListInterface {
+    pantryUuid: string;
+    uuid?: string;
+    name: string;
+    done?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 export async function getProvision(provision: ProvisionInterface): Promise<ProvisionInterface> {
     const { id, name } = provision
 
@@ -232,7 +241,15 @@ export async function storePantries(pantries: PantryInterface[]) {
 }
 
 export async function getPantries() {
-    return realm.objects('Pantry')
+    return realm.objects<PantryInterface[]>('Pantry')
+}
+
+export async function getShoppingList(uuid: string) {
+    return realm.objectForPrimaryKey<ShoppingListInterface[]>('ShoppingList', uuid)
+}
+
+export async function getShoppingsList() {
+    return realm.objects<ShoppingListInterface[]>('ShoppingList')
 }
 
 export async function getPantryByUuid(uuid) {
@@ -312,6 +329,7 @@ export async function handlePantryQueue(uuid: string, itemUuid: string) {
     })
 
 }
+
 export async function deletePantry(uuid: string) {
     const pantry = await realm.objects('Pantry').filtered('uuid = $0', uuid)[0]
     realm.write(() => {
@@ -331,6 +349,56 @@ export async function getQueuedPantries() {
         return {
             ...pantries,
             items
+        }
+    })
+}
+
+export async function deleteShoppingList(uuid: string) {
+    const shoppingList = await realm.objects('ShoppingList').filtered('uuid = $0', uuid)[0]
+    realm.write(() => {        
+        realm.delete(shoppingList)        
+    })
+}
+
+
+export async function manageShoppingList(shoppingList: ShoppingListInterface) {
+    realm.write(async () => {
+        try {
+            if(shoppingList?.uuid){
+                console.log("UPDATE")
+                let shoppingListSaved = await realm.objectForPrimaryKey<ShoppingListInterface>('ShoppingList', shoppingList?.uuid)
+                
+                if(shoppingListSaved){
+                    shoppingListSaved.name = shoppingList.name;
+                    shoppingListSaved.pantryUuid = shoppingList.pantryUuid;
+                    shoppingListSaved.createdAt = new Date();
+                    shoppingListSaved.updatedAt = new Date();
+                    
+                    return shoppingListSaved
+                } else {
+                    throw new Error("List not found");                    
+                }
+                
+            } else {
+                
+                const attr = {
+                    pantryUuid: shoppingList.pantryUuid,
+                    name: shoppingList.name,
+                    uuid: uuidv4(),
+                    done: false,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                }
+                console.log("NEW")
+                console.log(attr)
+
+                const newshoppingList = await realm.create('ShoppingList', attr)
+
+                console.log({newshoppingList})
+
+            }
+        } catch (error) {
+            throw new Error(`Error saving shopping list: ${JSON.stringify(error)}`);            
         }
     })
 }
