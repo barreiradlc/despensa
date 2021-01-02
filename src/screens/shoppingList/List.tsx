@@ -50,11 +50,10 @@ const List: React.FC = () => {
             headerRight: () => <HeaderLeft />
         })
 
-        // const unsubscribe = navigation.addListener('focus', () => {
-        //     refreshRef.current.reload()
-        //     reloadData()
-        // });      
-        // return unsubscribe;
+        const unsubscribe = navigation.addListener('focus', () => {            
+            reloadData()
+        });      
+        return unsubscribe;
     }, [])
 
   return (
@@ -63,7 +62,7 @@ const List: React.FC = () => {
             showsVerticalScrollIndicator={false}
         >
             {shoppingLists?.map(( shoppingList: ShoppingListInterface ) => 
-                <CardShoppingList shoppingList={shoppingList} />
+                <CardShoppingList key={shoppingList.uuid} shoppingList={shoppingList} />
             )}
 
             {/* <Button onPress={() => navigation.navigate('FormPantry', {}) }>

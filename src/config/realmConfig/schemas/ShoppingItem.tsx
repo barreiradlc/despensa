@@ -3,11 +3,11 @@ export default {
     primaryKey: 'uuid',
     properties: {        
         uuid: 'string',        
-        done: 'bool',
+        done:  { type: 'bool?', default: false },
         quantity: 'int',
         provision: 'Provision',
-        createdAt: 'date',
-        updatedAt: 'date',
+        createdAt: { type: 'date', default: new Date() },
+        updatedAt: { type: 'date', default: new Date() },
         deletedAt: 'date?'
     }
 }

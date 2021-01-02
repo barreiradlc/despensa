@@ -38,9 +38,22 @@ export interface ShoppingListInterface {
     uuid?: string;
     name: string;
     done?: boolean;
+    items: ShoppingItemInterface[];
     createdAt?: Date;
     updatedAt?: Date;
 }
+
+
+export interface ShoppingItemInterface {
+    uuid?: string;
+    provision: ProvisionInterface;
+    quantity: number;
+    done?: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedAt?: Date;
+}
+
 
 export async function getProvision(provision: ProvisionInterface): Promise<ProvisionInterface> {
     const { id, name } = provision
@@ -100,6 +113,43 @@ export async function getItem(item: ItemInterface, provision: ProvisionInterface
                 quantity: Number(item.quantity) || 1,
                 // queue: false,
                 provision: provision
+            })
+        }
+    })
+
+    Promise.resolve(savedItem)
+
+    console.log("createdItem")
+    console.log({ savedItem })
+
+    return savedItem
+}
+
+export async function getShoppingItem(item: ShoppingItemInterface, provision: ProvisionInterface) {
+    const { uuid } = item
+    let savedItem : ShoppingItemInterface
+    
+    if (uuid) {
+        savedItem = await realm.objects<ShoppingItemInterface>('ShoppingItem').filtered('uuid = $0', item.uuid)[0]
+    }
+
+    realm.write(() => {
+
+        console.log("savedItem")
+        console.log(savedItem)
+
+        if (savedItem) {
+            savedItem.done = false
+            savedItem.quantity = Number(item.quantity) || 1
+            savedItem.provision = provision
+            savedItem.updatedAt = new Date()
+        } else {
+
+            savedItem = realm.create<ShoppingItemInterface>('ShoppingItem', {
+                uuid: uuidv4(),
+                quantity: Number(item.quantity) || 1,
+                provision: provision
+                // queue: false,
             })
         }
     })
@@ -310,11 +360,10 @@ export async function pushPantry(uuid: string, item: ItemInterface) {
 
     console.log(uuid)
     console.log(JSON.stringify(pantry))
-
 }
 
 export async function handlePantryQueue(uuid: string, itemUuid: string) {
-
+    
     realm.write(() => {
         try {
             const item = realm.objects('Item').filtered('uuid = $0', itemUuid)[0]
@@ -391,14 +440,45 @@ export async function manageShoppingList(shoppingList: ShoppingListInterface) {
                 }
                 console.log("NEW")
                 console.log(attr)
-
+                
                 const newshoppingList = await realm.create('ShoppingList', attr)
-
+                
                 console.log({newshoppingList})
-
+                
             }
         } catch (error) {
             throw new Error(`Error saving shopping list: ${JSON.stringify(error)}`);            
         }
+    })
+    
+}
+
+export async function pushShoppingList(shoppingList: ShoppingListInterface, item: ShoppingItemInterface) {
+    realm.write(() => {
+        try {
+            shoppingList?.items.push(item)            
+        } catch (error) {
+            throw new Error(`Error saving item ${JSON.stringify(error)}`);            
+        }
+    })
+}
+
+export async function toggleDoneShoppingItem(uuid: string, value: boolean) {
+
+    const item = await realm.objectForPrimaryKey<ShoppingItemInterface>('ShoppingItem', uuid)
+
+    realm.write(() => {
+        try {
+            item.done = value            
+        } catch (error) {
+            throw new Error(`Error toggling ShoppingItem ${JSON.stringify(error)}`);            
+        }
+    })
+    console.log({item})
+}
+
+export async function editShoppingItem(item: ShoppingItemInterface) {
+    realm.write(() => {
+        
     })
 }

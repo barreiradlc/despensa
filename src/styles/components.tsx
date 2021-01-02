@@ -18,7 +18,12 @@ export const Container = styled.View`
   padding: 40px 20px;
 `
 
+export const ContainerEnd = styled.View`
+  justify-content: flex-end;
+`
+
 export const ContainerScroll = styled.ScrollView`
+  flex-direction: column;
   /* flex: 1; */
 `
 
@@ -90,6 +95,7 @@ export const Label = styled.Text`
 export const Title = styled.Text`
   color: ${cor2};
   font-size:18px;
+  opacity: ${ props => props.opaque ? 0.4 : 1};
 `
 
 // LOADING

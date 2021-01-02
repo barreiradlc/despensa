@@ -1,7 +1,7 @@
 import styled from 'styled-components/native'
 import { cor2, cor4, cor5 } from './components'
 
-export const Container = styled.View`
+export const Container = styled.SafeAreaView`
   background-color: papayawhip;
   flex: 1;
   width: 100%;
@@ -15,9 +15,9 @@ export const FormContainer = styled.View`
 `
 
 export const FormItemContainer = styled.View`
-
-  justify-content: center;  
-  margin: 20px;
+  justify-content: flex-start;  
+  flex-direction: column;
+  margin: 0 20px;
   flex:1;
 `
 
@@ -42,9 +42,35 @@ export const Button = styled.TouchableOpacity`
   background-color: ${ props => !props.invert ? cor5 : 'transparent'};
 `
 
+
 export const ButtonLabel = styled.Text`
+  elevation: 29;
   color: ${cor4};
   font-size:15px;
   align-items: center;
 `
 
+export const TouchableItem = styled.TouchableOpacity`  
+  align-items: center;
+  justify-content: center;
+  elevation: 30;
+  padding: 20px 35px;
+  /* height: 15px; */
+  /* background-color: ${ props => !props.invert ? cor5 : 'transparent'}; */
+`
+
+export const TouchableItemLabel = styled.Text`
+  text-align: center;  
+  color: ${cor5};
+  font-size:15px;
+  align-items: center;
+`
+
+// BOTTOM SHEET
+
+export const FormContainerBottomSheet = styled.SafeAreaView`
+  justify-content: flex-start;  
+  flex-direction: column;
+  margin: 0 20px;
+  /* flex:1; */
+`

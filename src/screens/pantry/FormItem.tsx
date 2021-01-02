@@ -226,7 +226,6 @@ const Form: React.FC = () => {
                     autoCapitalize='none'
 
                 />
-
                 <Input
                     ref={quantidadeRef}
                     placeholder='Quantidade'
@@ -234,6 +233,7 @@ const Form: React.FC = () => {
                     onChange={(e: any) => handleChange(e, 'quantity')}
                     autoCapitalize='none'
                 />
+
                 <Button onPress={handleSaveItem}>
                     <ButtonLabel>Salvar</ButtonLabel>
                 </Button>

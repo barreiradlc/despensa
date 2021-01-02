@@ -186,6 +186,9 @@ android {
 }
 
 dependencies {
+
+    implementation project(':react-native-community-checkbox')
+
     implementation project(':watermelondb')  // ⬅️ This!
 
     implementation project(':realm')

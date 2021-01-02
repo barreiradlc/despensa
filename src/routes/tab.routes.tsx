@@ -34,7 +34,7 @@ const MockPage: React.FC = ({ navigation }) => {
 
 
 const TabRoutes: React.FC = () => {
-    
+
     const route = useRoute()
     const navigation = useNavigation()
 
@@ -54,7 +54,14 @@ const TabRoutes: React.FC = () => {
                 }}
             >
 
-
+                <Tab.Screen
+                    options={{
+                        tabBarIcon: ({ color }) => <Icon size={25} name="list" color={color} />,
+                        title: 'Listagem',
+                    }}
+                    name="ShoppingList"
+                    component={ShoppingList}
+                />
 
                 <Tab.Screen
                     name="Stock"
@@ -66,6 +73,7 @@ const TabRoutes: React.FC = () => {
                     }}
                     component={Estoque}
                 />
+
                 <Tab.Screen
                     name="Recipes"
                     options={{
@@ -76,14 +84,7 @@ const TabRoutes: React.FC = () => {
                     }}
                     component={ListRecipe}
                 />
-                <Tab.Screen
-                    options={{
-                        tabBarIcon: ({ color }) => <Icon size={25} name="list" color={color} />,
-                        title: 'Listagem',
-                    }}
-                    name="ShoppingList"
-                    component={ShoppingList}
-                />
+
             </Tab.Navigator>
         </RecipeProvider>
     )
