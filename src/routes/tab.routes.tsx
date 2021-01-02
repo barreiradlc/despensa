@@ -58,7 +58,7 @@ const TabRoutes: React.FC = () => {
                 <Tab.Screen
                     options={{
                         tabBarIcon: ({ color }) => <Icon size={25} name="list" color={color} />,
-                        title: 'Listagem',
+                        title: 'Compras',
                     }}
                     name="ShoppingList"
                     component={ShoppingList}

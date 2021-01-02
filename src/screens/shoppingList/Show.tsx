@@ -13,8 +13,8 @@ import BottomSheet, { useBottomSheet, useBottomSheetModal } from '@gorhom/bottom
 import Form from '../../components/bottomSheet/Form';
 import CardShoppingItem from '../../components/CardShoppingItem';
 import Tooltip from 'react-native-walkthrough-tooltip';
-import ItemQuantity from '../../components/pantry/ItemQuantity';
-import ItemActions from '../../components/pantry/ItemActions';
+import ItemQuantity from '../../components/shoppingList/ItemQuantity';
+import ItemActions from '../../components/shoppingList/ItemActions';
 
 interface ShoppingListInterface {
     uuid?: string;
@@ -146,7 +146,7 @@ const Show: React.FC = () => {
         return (
             <TooltipEditRowContainer>
                 <TooltipEditContainer>
-                    <ItemQuantity item={item} />
+                    <ItemQuantity item={item} reloadData={reloadData} />
                     <ItemActions item={item} setToggle={setToggle} />
                 </TooltipEditContainer>
             </TooltipEditRowContainer>
