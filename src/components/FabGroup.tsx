@@ -55,9 +55,11 @@ const FabGroup: React.FC = ({visible = false}) => {
             <FAB.Group
                 // visible={visibleFab}
                 visible
-                
+                style={{
+                    marginBottom: 50
+                }}
                 open={open}
-                color={cor2}
+                color='#fff'
                 fabStyle={{ backgroundColor: cor1 }}
                 icon={open ? 'close' : 'plus'}
                 actions={[

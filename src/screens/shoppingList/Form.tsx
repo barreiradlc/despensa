@@ -15,7 +15,7 @@ import {Picker} from '@react-native-picker/picker';
 interface ShoppingListInterface{
     uuid?: string;
     pantryUuid: string;
-    done: boolean;
+    done?: boolean;
     name: string;
 }
 
@@ -37,8 +37,17 @@ const Form: React.FC = () => {
 
     useEffect(() => {
         if (list) {
+            console.log(list.uuid)
+            console.log(list.name)
+            console.log(list.pantryUuid)
+
             navigation.setOptions({
                 title: "Editar Lista de compras"
+            })
+            setShoppingList({
+                uuid: list.uuid,
+                name: list.name,
+                pantryUuid: list.pantryUuid,
             })
             setEdit(true)
         } else {

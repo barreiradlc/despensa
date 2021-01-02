@@ -7,12 +7,14 @@ import CardShoppingList from '../../components/CardShoppingList';
 import FabGroup from '../../components/FabGroup';
 import LoadingSyncComponent from '../../components/LoadingSyncComponent';
 import { getPantries, getShoppingList, getShoppingsList, PantryInterface, ShoppingItemInterface } from '../../services/local/PantryLocalService';
-import { Container, ContainerEnd, ContainerScroll, Label } from '../../styles/components';
+import { Container, ContainerEnd, ContainerScroll, Label, TooltipEditContainer, TooltipEditRowContainer } from '../../styles/components';
 import { Button, ButtonLabel } from '../../styles/form';
 import BottomSheet, { useBottomSheet, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import Form from '../../components/bottomSheet/Form';
 import CardShoppingItem from '../../components/CardShoppingItem';
-
+import Tooltip from 'react-native-walkthrough-tooltip';
+import ItemQuantity from '../../components/pantry/ItemQuantity';
+import ItemActions from '../../components/pantry/ItemActions';
 
 interface ShoppingListInterface {
     uuid?: string;
@@ -21,7 +23,7 @@ interface ShoppingListInterface {
     name: string;
 }
 
-const Show: React.FC = () => {    
+const Show: React.FC = () => {
     const bottomSheet = useBottomSheet()
     const refreshRef = useRef()
     const toggleRef = useRef()
@@ -30,6 +32,7 @@ const Show: React.FC = () => {
     const [shoppingListCheckout, setShoppingListCheckout] = useState<ShoppingItemInterface[]>([] as ShoppingItemInterface[])
     const [shoppingList, setShoppingList] = useState<ShoppingListInterface>({} as ShoppingListInterface)
     const [loading, setLoading] = useState(true)
+    const [toggle, setToggle] = useState('')
     const [index, setIndex] = useState(-1)
 
     const bottomSheetRef = useRef<BottomSheet>(null);
@@ -37,18 +40,18 @@ const Show: React.FC = () => {
 
     async function reloadData() {
         const data = await getShoppingList(shoppingListProps.uuid)
-        setShoppingList(data)
         setLoading(false)
         navigation.setOptions({
             title: data.name,
             headerRight: () => <HeaderLeft />
         })
         setIndex(-1)
-
         
-        Keyboard.dismiss()            
+        
+        Keyboard.dismiss()
         // bottomSheetRef.current?.close()
-
+        
+        setShoppingList(data)
         const itemsDone = data?.items.filter((item: ShoppingItemInterface) => item.done)
         setShoppingListCheckout(itemsDone)
 
@@ -59,6 +62,14 @@ const Show: React.FC = () => {
         setLoading(true)
         bottomSheetRef.current?.close()
         reloadData()
+        
+    }, [])
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {            
+            reloadData()
+        });      
+        return unsubscribe;        
     }, [])
 
     // ref
@@ -76,11 +87,18 @@ const Show: React.FC = () => {
         }
     }, []);
 
+    function handleEditShoppingList() {
+        console.debug('shoppingList')
+        console.debug(shoppingListProps)
 
+        navigation.navigate('FormShoppingList', {
+            list: shoppingListProps
+        })
+    }
 
     function HeaderLeft() {
         return (
-            <Button invert onPress={() => refreshRef.current.reload()}>
+            <Button invert onPress={handleEditShoppingList}>
                 <Icon name="more-vertical" size={21} color="#555" />
             </Button>
         )
@@ -96,22 +114,22 @@ const Show: React.FC = () => {
             return bottomSheetRef.current?.close()
         }
     }, [])
-    
+
     const handleCloseBottomSheet = useCallback((e: any) => {
-        console.log({bottomSheet})
-        
+        console.log({ bottomSheet })
+
         bottomSheetRef.current?.close()
         reloadData()
     }, [])
 
-    function handleManageItems(item: ShoppingItemInterface){
-        
+    function handleManageItems(item: ShoppingItemInterface) {
+
         const checkout = shoppingListCheckout.filter(prevItem => prevItem.uuid !== item.uuid)
         console.log(item)
         console.log(checkout.length === shoppingListCheckout.length)
 
-        if(checkout.length === shoppingListCheckout.length){
-            if(item.done){                
+        if (checkout.length === shoppingListCheckout.length) {
+            if (item.done) {
 
                 console.log('push')
                 console.log([...shoppingListCheckout, item])
@@ -122,22 +140,50 @@ const Show: React.FC = () => {
             setShoppingListCheckout(checkout)
         }
     }
-    
+
+    function EditOptions({ item }) {
+
+        return (
+            <TooltipEditRowContainer>
+                <TooltipEditContainer>
+                    <ItemQuantity item={item} />
+                    <ItemActions item={item} setToggle={setToggle} />
+                </TooltipEditContainer>
+            </TooltipEditRowContainer>
+        )
+    }
+
+    function handleToggleToolTip( uuid:string ) {
+        if(toggle === uuid){
+            return setToggle('')
+        }
+        return setToggle(uuid)
+    }
 
     return (
         <>
             <ContainerScroll
                 contentContainerStyle={{ flexGrow: 1 }}
             >
-                {shoppingList.items?.map((shoppingItem: ShoppingItemInterface) =>
-                    <CardShoppingItem key={shoppingItem.uuid} handleManageItems={handleManageItems} shoppingItem={shoppingItem} />
+                {shoppingList.items?.map((shoppingItem: ShoppingItemInterface, index: number) =>
+                    <Tooltip
+                        backgroundColor="rgba(250, 250, 250, 0.9)"
+                        contentStyle={{ width: '100%', elevation: 25, height: 120 }}
+                        onClose={() => setToggle('')}
+                        // isVisible={false}
+                        isVisible={shoppingItem.uuid === toggle}
+                        content={<EditOptions item={shoppingItem} />}
+                        placement={!!index ? 'top' : 'bottom'}
+                    >
+                        <CardShoppingItem key={shoppingItem.uuid} handleManageItems={handleManageItems} shoppingItem={shoppingItem} toolTip={handleToggleToolTip} />
+                    </Tooltip>
                 )}
 
             </ContainerScroll>
 
             {index <= 0 &&
                 <>
-                    {!!shoppingListCheckout.length && 
+                    {!!shoppingListCheckout.length &&
                         <ContainerEnd style={{ elevation: 0 }}>
                             <Button onPress={handleToggleBottomSheet}>
                                 <ButtonLabel>Finalizar compra de {shoppingListCheckout.length} ite{shoppingListCheckout.length > 1 ? 'ns' : 'm'} </ButtonLabel>

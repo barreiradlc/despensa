@@ -60,7 +60,24 @@ export const CardContainer = styled.TouchableOpacity`
   elevation: 4;
   background-color: #fff;
   border-radius: 25px;
+  border-radius: 25px;  
+`
+export const CardRowContainer = styled.TouchableOpacity`
+  elevation: 4;
+  border-radius: 25px;
+  margin: 10px 25px ;
+  padding: 25px 10px;
   width: 90%;
+  justify-content: space-between;
+  flex-direction: row;
+  background-color: #fff;
+`
+
+export const CardInnerContainer = styled.View``
+
+export const CardColContainer = styled.View`
+  flex-direction: column;
+  justify-content: center;
 `
 
 export const CardContainerProvision = styled.TouchableOpacity`
@@ -75,7 +92,7 @@ export const TooltipEditContainer = styled.View`
   justify-content: flex-start;
 `
 export const TooltipEditRowContainer = styled.View`  
-  
+  elevation: 35;
   
 `
 
@@ -90,12 +107,13 @@ export const LogoImage = styled.Image`
 export const Label = styled.Text`
   color: ${cor2};
   font-size:14px;
+  opacity: ${props => props.opaque ? 0.4 : 1};
 `
 
 export const Title = styled.Text`
   color: ${cor2};
   font-size:18px;
-  opacity: ${ props => props.opaque ? 0.4 : 1};
+  opacity: ${props => props.opaque ? 0.4 : 1};
 `
 
 // LOADING
@@ -147,5 +165,5 @@ export const QuantityContainer = styled.View`
 
 export const QuantityTouchable = styled.TouchableOpacity`
   padding: 15px;
-  opacity: ${ props => props.one ? 0.4 : 1};
+  opacity: ${props => props.one ? 0.4 : 1};
 `

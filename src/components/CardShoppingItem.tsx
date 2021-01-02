@@ -1,12 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { CardContainer, Label, Title } from '../styles/components';
+import { CardColContainer, CardContainer, CardInnerContainer, CardRowContainer, Label, Title } from '../styles/components';
 import CheckBox from '@react-native-community/checkbox';
 import { toggleDoneShoppingItem } from '../services/local/PantryLocalService';
 
 
-const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems}) => {
+const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip}) => {
     const navigation = useNavigation()
     const [toggleCheckBox, setToggleCheckBox] = useState(shoppingItem.done)
 
@@ -24,20 +24,33 @@ const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems}) => {
     }
 
     function handleNavigateShow(){
+        toolTip(shoppingItem.uuid)
         // navigation.navigate('ShowShoppingList', {
         //     shoppingList            
         // })
     }
 
     return (
-        <CardContainer onPress={handleNavigateShow} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Title opaque={toggleCheckBox} >{shoppingItem.provision.name} </Title>
-            <CheckBox
-                disabled={false}
-                value={toggleCheckBox}
-                onValueChange={(newValue) => handleToggle(newValue)}
-            />
-        </CardContainer>
+        <CardRowContainer onPress={handleNavigateShow}>
+            <CardColContainer >
+                <CardInnerContainer  >
+                    <Title opaque={toggleCheckBox} >{shoppingItem.provision.name} </Title>
+                    <Label opaque={toggleCheckBox} >{shoppingItem.quantity} unidade{shoppingItem.quantity > 1 && 's'}</Label>                    
+                </CardInnerContainer>
+            </CardColContainer>
+            <CardColContainer>
+                <CheckBox
+                    style={{
+                        // backgroundColor: '#dedede',
+                        width: 50,
+                        height: 35,
+                    }}
+                    disabled={false}
+                    value={toggleCheckBox}
+                    onValueChange={(newValue) => handleToggle(newValue)}
+                />
+            </CardColContainer>
+        </CardRowContainer>
     );
 }   
 

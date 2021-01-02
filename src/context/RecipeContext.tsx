@@ -9,6 +9,9 @@ import { getPantry, getPantryByUuid, ItemInterface, minusQuantity, moreQuantity 
 
 interface RecipeContextData {
     recipes: any[];
+    loading: boolean;
+    error: any;
+    reload(): any;
     handleInfiniteScrollRecipe(): void[];
 }
 
@@ -49,7 +52,6 @@ export const RecipeProvider: React.FC = ({ children }) => {
 
         const { page, haveMore } = pageInfo        
         
-
         if(haveMore){
             console.log({pageInfo})
 
@@ -61,43 +63,20 @@ export const RecipeProvider: React.FC = ({ children }) => {
                     }
                 }                
             })
-
             setPageInfo({
                 ...pageInfo,
                 // haveMore,
                 page: page + 1,                        
             })
-            // console.log(pageInfo.page)
-
-            // fetchMore({
-            //     variables: {
-            //         skip: pageInfo.page * 10,
-            //         take: 10
-            //     },
-            // })
-            // .then(({data}) => {
-            //     console.log({data})
-
-            //     let haveMore = true
-
-            //     if(!data.recipes.length){
-            //         haveMore = false
-            //     }
-    
-            //     setPageInfo({
-            //         haveMore,
-            //         page: page + 1,                        
-            //     })
-    
-            // })
-
-
-
         }
     }, [pageInfo])
 
+    const reload = useCallback(() => {
+        refetch()
+    }, [data])
+
     return (
-        <RecipeContext.Provider value={{ recipes, handleInfiniteScrollRecipe, loading }}>
+        <RecipeContext.Provider value={{ recipes, handleInfiniteScrollRecipe, loading, error, reload }}>
             {children}
         </RecipeContext.Provider>
     );

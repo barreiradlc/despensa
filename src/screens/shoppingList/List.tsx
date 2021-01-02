@@ -71,7 +71,7 @@ const List: React.FC = () => {
 
             <LoadingSyncComponent ref={refreshRef} />
 
-            <FabGroup visible={true} />
+            {/* <FabGroup visible={true} /> */}
 
         </ContainerScroll>      
   );
