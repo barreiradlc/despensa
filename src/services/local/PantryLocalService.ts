@@ -11,6 +11,7 @@ export interface ProvisionInterface {
 }
 
 export interface ItemInterface {
+    queue: boolean;
     id: string;
     uuid?: string;
     provision: ProvisionInterface;
@@ -409,6 +410,13 @@ export async function deleteShoppingList(uuid: string) {
     })
 }
 
+export async function deleteShoppingItem(uuid: string) {
+    const shoppingItem = await realm.objects('ShoppingItem').filtered('uuid = $0', uuid)[0]
+    realm.write(() => {
+        realm.delete(shoppingItem)
+    })
+}
+
 
 export async function manageShoppingList(shoppingList: ShoppingListInterface) {
     try {
@@ -490,6 +498,41 @@ export async function toggleDoneShoppingItem(uuid: string, value: boolean) {
 
 export async function editShoppingItem(item: ShoppingItemInterface) {
     realm.write(() => {
-
+        
     })
+}
+
+export async function handleShoppingListCheckout(shoppingListCheckout: ShoppingItemInterface[], pantryUuid: string) {
+    const pantry = await realm.objectForPrimaryKey<PantryInterface>('Pantry', pantryUuid)
+
+    if(pantry){
+        shoppingListCheckout.map(async( itemCheckout: ShoppingItemInterface ) => {
+            const itemSaved = await pantry.items?.find(( item ) => item.provision.name === itemCheckout.provision.name)
+            realm.write(() => {
+                try {
+                    if(itemSaved){                    
+                        itemSaved.queue = true
+                        itemSaved.updatedAt = new Date()
+                        itemSaved.quantity = itemSaved.quantity + itemCheckout.quantity                
+                    } else {
+                        const newItem = realm.create('Item', {                        
+                            uuid: uuidv4(),
+                            quantity: Number(itemCheckout.quantity) || 1,
+                            queue: true,
+                            provision: itemCheckout.provision
+                        })
+                        pantry.items?.push(newItem)
+                    }
+                    console.log({itemCheckout})
+                    realm.delete(itemCheckout)
+                } catch (error) {
+                    console.error(error)
+                    throw new Error("Error checking out items");                    
+                }
+            })
+    
+        })
+    }
+
+    // console.log(shoppingListCheckout)
 }

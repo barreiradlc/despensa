@@ -167,3 +167,8 @@ export const QuantityTouchable = styled.TouchableOpacity`
   padding: 15px;
   opacity: ${props => props.one ? 0.4 : 1};
 `
+
+export const ActionTouchable = styled.TouchableOpacity`
+  padding: 15px;
+  opacity: ${props => props.done ? 0.4 : 1};
+`

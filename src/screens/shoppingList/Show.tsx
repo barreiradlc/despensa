@@ -6,7 +6,7 @@ import CardDespensa from '../../components/CardDespensa';
 import CardShoppingList from '../../components/CardShoppingList';
 import FabGroup from '../../components/FabGroup';
 import LoadingSyncComponent from '../../components/LoadingSyncComponent';
-import { getPantries, getShoppingList, getShoppingsList, PantryInterface, ShoppingItemInterface } from '../../services/local/PantryLocalService';
+import { getPantries, getShoppingList, getShoppingsList, handleShoppingListCheckout, PantryInterface, ShoppingItemInterface } from '../../services/local/PantryLocalService';
 import { Container, ContainerEnd, ContainerScroll, Label, TooltipEditContainer, TooltipEditRowContainer } from '../../styles/components';
 import { Button, ButtonLabel } from '../../styles/form';
 import BottomSheet, { useBottomSheet, useBottomSheetModal } from '@gorhom/bottom-sheet';
@@ -24,19 +24,25 @@ interface ShoppingListInterface {
 }
 
 const Show: React.FC = () => {
+    const route = useRoute()
+
+    const { shoppingList: shoppingListProps } = route.params
+    const navigation = useNavigation()
+
+    // navigation.setOptions({
+    //     title: shoppingListProps.name,
+    // })
+
     const bottomSheet = useBottomSheet()
     const refreshRef = useRef()
     const toggleRef = useRef()
-    const navigation = useNavigation()
-    const route = useRoute()
     const [shoppingListCheckout, setShoppingListCheckout] = useState<ShoppingItemInterface[]>([] as ShoppingItemInterface[])
-    const [shoppingList, setShoppingList] = useState<ShoppingListInterface>({} as ShoppingListInterface)
+    const [shoppingList, setShoppingList] = useState<ShoppingListInterface>(shoppingListProps)
     const [loading, setLoading] = useState(true)
     const [toggle, setToggle] = useState('')
     const [index, setIndex] = useState(-1)
 
     const bottomSheetRef = useRef<BottomSheet>(null);
-    const { shoppingList: shoppingListProps } = route.params
 
     async function reloadData() {
         const data = await getShoppingList(shoppingListProps.uuid)
@@ -141,13 +147,18 @@ const Show: React.FC = () => {
         }
     }
 
+    function handleEditItem(shoppingItem: ShoppingItemInterface) {
+        toggleRef.current.toggleEdit(shoppingItem)
+        bottomSheetRef.current?.expand()
+    }
+
     function EditOptions({ item }) {
 
         return (
             <TooltipEditRowContainer>
                 <TooltipEditContainer>
                     <ItemQuantity item={item} reloadData={reloadData} />
-                    <ItemActions item={item} setToggle={setToggle} />
+                    <ItemActions item={item} setToggle={setToggle} reloadData={reloadData} handleEditItem={handleEditItem} />
                 </TooltipEditContainer>
             </TooltipEditRowContainer>
         )
@@ -158,6 +169,11 @@ const Show: React.FC = () => {
             return setToggle('')
         }
         return setToggle(uuid)
+    }
+
+    async function handleCheckout() {
+        await handleShoppingListCheckout(shoppingListCheckout, shoppingList.pantryUuid)
+        await reloadData()
     }
 
     return (
@@ -185,7 +201,7 @@ const Show: React.FC = () => {
                 <>
                     {!!shoppingListCheckout.length &&
                         <ContainerEnd style={{ elevation: 0 }}>
-                            <Button onPress={handleToggleBottomSheet}>
+                            <Button onPress={handleCheckout}>
                                 <ButtonLabel>Finalizar compra de {shoppingListCheckout.length} ite{shoppingListCheckout.length > 1 ? 'ns' : 'm'} </ButtonLabel>
                             </Button>
                         </ContainerEnd>

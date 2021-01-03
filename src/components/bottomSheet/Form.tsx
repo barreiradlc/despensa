@@ -5,7 +5,7 @@ import { Alert, Keyboard, Text, ToastAndroid, TouchableOpacity, View } from 'rea
 import { Button, ButtonLabel, Container, Input, LogoImage, FormContainer, FormItemContainer, TouchableItem, TouchableItemLabel, FormContainerBottomSheet } from "../../styles/form"
 import { useMutation, useQuery } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getItem, getProvision, getShoppingItem, handlePantryQueue, ItemInterface, ProvisionInterface, pushPantry, pushShoppingList, ShoppingListInterface } from '../../services/local/PantryLocalService';
+import { getItem, getProvision, getShoppingItem, handlePantryQueue, ItemInterface, ProvisionInterface, pushPantry, pushShoppingList, ShoppingItemInterface, ShoppingListInterface } from '../../services/local/PantryLocalService';
 import { PROVISIONS } from '../../components/queries/provisionListQuery';
 import { CardContainer, CardContainerProvision, ContainerScroll, Label, Title } from '../../styles/components';
 import Tooltip from 'react-native-walkthrough-tooltip';
@@ -36,7 +36,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
             }
         },
     });
-    const [itemData, setItemData] = useState<ItemInterface>({} as ItemInterface)
+    const [itemData, setItemData] = useState<ShoppingItemInterface>({} as ShoppingItemInterface)
     const navigation = useNavigation()
     const route = useRoute()
 
@@ -82,6 +82,22 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
             setTimeout(() => {
                 provisionOfflineRef.current.focus()
             },150)
+            
+            // provisionRef.current?.focus()
+        },
+        toggleEdit: (shoppingItem: ShoppingItemInterface) => {            
+            
+                setEdit(true)
+                setItemData({
+                    uuid: shoppingItem.uuid,
+                    quantity: shoppingItem.quantity || 1,
+                    provision: shoppingItem.provision                                        
+                })
+                setQuery(shoppingItem.provision.name)
+            
+                setTimeout(() => {
+                    provisionOfflineRef.current.focus()
+                },150)
             // provisionRef.current?.focus()
         }
     }),[shoppingList])
@@ -143,7 +159,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
                             pushShoppingList(shoppingList, item)
                         }
 
-                        console.debug(shoppingList)
+                        console.debug({shoppingList})
                         
                         close()
                     })
@@ -309,7 +325,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
                 <Input
                     ref={quantidadeRef}
                     placeholder='Quantidade'
-                    value={itemData.quantity}
+                    value={String(itemData.quantity || 1)}
                     onChange={(e: any) => handleChange(e, 'quantity')}
                     autoCapitalize='none'
                 />
