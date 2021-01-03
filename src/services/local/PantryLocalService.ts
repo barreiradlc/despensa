@@ -4,7 +4,7 @@ import realm from '../../config/realmConfig/realm';
 import { CreateConfigItemOptions } from '@babel/core';
 
 export interface ProvisionInterface {
-    id: string;
+    id?: string;
     name: string;
     createdAt?: Date
     updatedAt?: Date

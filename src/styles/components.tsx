@@ -72,6 +72,16 @@ export const CardRowContainer = styled.TouchableOpacity`
   flex-direction: row;
   background-color: #fff;
 `
+export const RowContainer = styled.View`
+  justify-content: space-between;
+
+  flex-direction: row;  
+`
+
+export const ColContainer = styled.View`
+  flex-direction: column;
+  justify-content: center;
+`
 
 export const CardInnerContainer = styled.View``
 
@@ -80,11 +90,14 @@ export const CardColContainer = styled.View`
   justify-content: center;
 `
 
-export const CardContainerProvision = styled.TouchableOpacity`
+export const CardItemProvision = styled.TouchableOpacity`
   elevation: 15;
-  padding: 10px 25px ;
-  justify-content: flex-start;
   background-color: #fff;
+  padding: 10px 25px ;
+`
+
+export const CardContainerProvision = styled.TouchableOpacity`
+  justify-content: flex-start;
 `
 
 export const TooltipEditContainer = styled.View`  

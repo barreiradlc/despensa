@@ -5,7 +5,7 @@ import { View, Text } from 'react-native';
 import DashboardError from '../../components/DashboardError';
 import LoadingOverlayComponent from '../../components/LoadingOverlayComponent';
 import { QUERY_RECIPE } from '../../components/queries/recipeQuery';
-import { Container, Label } from '../../styles/components';
+import { CardContainer, CardContainerProvision, CardItemProvision, ColContainer, Container, Label, RowContainer } from '../../styles/components';
 
 const Show: React.FC = () => {
     const navigation = useNavigation()
@@ -37,7 +37,20 @@ const Show: React.FC = () => {
 
     return (
         <Container>
+            {/* <Label>{JSON.stringify(recipe)}</Label> */}
             <Label>{recipe.description}</Label>
+
+            <RowContainer>
+                <ColContainer>
+                    <Label>Ingredientes: {`\n`}</Label>
+                    {recipe.ingredients.map(( ingredient ) =>
+                        <CardItemProvision>
+                            <Label>{ingredient.provision.name}</Label>
+                        </CardItemProvision>
+                    )}
+                </ColContainer>
+            </RowContainer>
+
             <Label>{__DEV__ && JSON.stringify(error)}</Label>
         </Container>
     );

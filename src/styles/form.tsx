@@ -6,6 +6,8 @@ export const Container = styled.SafeAreaView`
   flex: 1;
   width: 100%;
 `
+export const ContainerScroll = styled.ScrollView``
+
 
 export const FormContainer = styled.View`
   flex: 1;
@@ -27,7 +29,7 @@ export const LogoImage = styled.Image`
 
 export const Input = styled.TextInput`
   color: ${cor2};
-
+  justify-content: flex-start;
   elevation: 2;
   background: #dedede;
   font-size:18px;
@@ -56,7 +58,7 @@ export const TouchableItem = styled.TouchableOpacity`
   elevation: 30;
   padding: 20px 35px;
   /* height: 15px; */
-  /* background-color: ${ props => !props.invert ? cor5 : 'transparent'}; */
+  color: ${ props => !props.invert ? cor5 : cor2};
 `
 
 export const TouchableItemLabel = styled.Text`
@@ -69,6 +71,13 @@ export const TouchableItemLabel = styled.Text`
 // BOTTOM SHEET
 
 export const FormContainerBottomSheet = styled.SafeAreaView`
+  justify-content: flex-start;  
+  flex-direction: column;
+  margin: 0 20px;
+  /* flex:1; */
+`
+
+export const FormContainerScroll = styled.View`
   justify-content: flex-start;  
   flex-direction: column;
   margin: 0 20px;

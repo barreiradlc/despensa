@@ -15,6 +15,14 @@ export const QUERY_RECIPE = gql`
           name        
         }
       }
+      steps{
+        order
+        description
+      }
+      author{
+        id      
+        username      
+      }
     }
   }
 `;
