@@ -25,27 +25,31 @@ interface ShoppingListInterface {
 
 const Show: React.FC = () => {
     const route = useRoute()
-
-    const { shoppingList: shoppingListProps } = route.params
     const navigation = useNavigation()
 
-    // navigation.setOptions({
-    //     title: shoppingListProps.name,
-    // })
+    // const { shoppingListItem } = route.params
+    // console.log("shoppingListItem")
+    // console.log(route.params.shoppingListItem)
+    // console.log("shoppingListItem")
 
+    const { shoppingListItem } = route.params
+    // navigation.setOptions({
+    //     title: shoppingListItem.name,
+    // })
+    
     const bottomSheet = useBottomSheet()
     const refreshRef = useRef()
     const toggleRef = useRef()
     const [shoppingListCheckout, setShoppingListCheckout] = useState<ShoppingItemInterface[]>([] as ShoppingItemInterface[])
-    const [shoppingList, setShoppingList] = useState<ShoppingListInterface>(shoppingListProps)
+    const [shoppingList, setShoppingList] = useState<ShoppingListInterface>(shoppingListItem)
     const [loading, setLoading] = useState(true)
     const [toggle, setToggle] = useState('')
     const [index, setIndex] = useState(-1)
-
+    
     const bottomSheetRef = useRef<BottomSheet>(null);
-
+    
     async function reloadData() {
-        const data = await getShoppingList(shoppingListProps.uuid)
+        const data = await getShoppingList(shoppingListItem.uuid)
         setLoading(false)
         navigation.setOptions({
             title: data.name,
@@ -53,55 +57,55 @@ const Show: React.FC = () => {
         })
         setIndex(-1)
         
-        
         Keyboard.dismiss()
         // bottomSheetRef.current?.close()
         
         setShoppingList(data)
         const itemsDone = data?.items.filter((item: ShoppingItemInterface) => item.done)
         setShoppingListCheckout(itemsDone)
-
+        
         console.log("RELOADED")
     }
-
+    
     useEffect(() => {
         setLoading(true)
         bottomSheetRef.current?.close()
         reloadData()
         
     }, [])
-
+    
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {            
             reloadData()
         });      
         return unsubscribe;        
     }, [])
-
+    
     // ref
-
+    
     // variables
     const snapPoints = useMemo(() => ['30%', '85%'], []);
-
+    
     // callbacks
     const handleSheetChanges = useCallback((i: number) => {
         console.log('handleSheetChanges', i);
         setIndex(i)
         if (i === -1 || i === 0) {
-            toggleRef.current.toggle()
+            Keyboard.dismiss()
+            // toggleRef.current.toggle()
             return bottomSheetRef.current?.close()
         }
     }, []);
-
-    function handleEditShoppingList() {
+    
+    function handleEditShoppingList() {        
         console.debug('shoppingList')
-        console.debug(shoppingListProps)
-
+        console.debug(shoppingListItem)
+        
         navigation.navigate('FormShoppingList', {
-            list: shoppingListProps
+            list: shoppingListItem
         })
     }
-
+    
     function HeaderLeft() {
         return (
             <Button invert onPress={handleEditShoppingList}>
@@ -122,9 +126,13 @@ const Show: React.FC = () => {
     }, [])
 
     const handleCloseBottomSheet = useCallback((e: any) => {
-        console.log({ bottomSheet })
-
-        bottomSheetRef.current?.close()
+        console.log({ bottomSheetRef })
+        setIndex(2)
+        Keyboard.dismiss()
+        bottomSheetRef.current?.collapse()
+        setTimeout(() => {
+            bottomSheetRef.current?.close()
+        }, 10)
         reloadData()
     }, [])
 
@@ -197,7 +205,7 @@ const Show: React.FC = () => {
 
             </ContainerScroll>
 
-            {index <= 0 &&
+            {index !== 1 &&
                 <>
                     {!!shoppingListCheckout.length &&
                         <ContainerEnd style={{ elevation: 0 }}>

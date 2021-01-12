@@ -43,7 +43,7 @@ function HomeScreen() {
         refetch()
     }, [data])
     
-    if (error) return <DashboardError refetch={reload} />;
+    if (error && !loading) return <DashboardError refetch={reload} />;
 
     return <LoadingComponent />;
 }

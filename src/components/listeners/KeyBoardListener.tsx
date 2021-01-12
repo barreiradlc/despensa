@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Keyboard, TextInput, StyleSheet } from "react-native";
+import { useEffect } from "react";
+import { Keyboard } from "react-native";
 
 const KeyBoardListener = ({ hide, show }) => {
 
@@ -15,6 +15,8 @@ const KeyBoardListener = ({ hide, show }) => {
   }, []);
 
   const _keyboardDidShow = () => {
+
+    console.debug("SHOW")
 
     show()
   };

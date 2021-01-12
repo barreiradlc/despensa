@@ -5,7 +5,7 @@ import { Alert, Keyboard, ToastAndroid } from 'react-native';
 import { Button, ButtonLabel, Container, Input, LogoImage, FormContainer, FormItemContainer } from "../../styles/form"
 import { useMutation, useQuery } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { deletePantry, getItem, getPantries, getPantry, getProvision, handlePantryQueue, ItemInterface, manageShoppingList, PantryInterface, ProvisionInterface, pushPantry } from '../../services/local/PantryLocalService';
+import { deletePantry, deleteShoppingList, getItem, getPantries, getPantry, getProvision, handlePantryQueue, ItemInterface, manageShoppingList, PantryInterface, ProvisionInterface, pushPantry } from '../../services/local/PantryLocalService';
 import { PROVISIONS } from '../../components/queries/provisionListQuery';
 import { CardContainer, CardContainerProvision, ContainerScroll, Label, Title } from '../../styles/components';
 import Tooltip from 'react-native-walkthrough-tooltip';
@@ -66,12 +66,12 @@ const Form: React.FC = () => {
             setShoppingList({ ...shoppingList, pantryUuid: pantries[0].uuid })
         }
     }
-
+    
     async function handleDeleteShoppingListConfirmed() {
-        deleteShoppingList(shoppingList.uuid)
-        navigation.dispatch(
-            StackActions.replace('DashBoard')
-        );
+        
+        deleteShoppingList(String(shoppingList.uuid))
+        navigation.goBack()
+        navigation.goBack()
         return ToastAndroid.show("Lista de compras deletada com sucesso!", 500)
     }
 

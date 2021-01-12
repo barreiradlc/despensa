@@ -27,6 +27,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
     const [selectProvision, setSelectProvision] = useState(false)
     const [queryProvision, setQueryProvision] = useState(false)
     const [focus, setFocus] = useState(false)
+    const [provisionId, setProvisionId] = useState<String>()
     const [edit, setEdit] = useState(false)
     const { loading, error, data, refetch } = useQuery(PROVISIONS, {
         variables: {
@@ -135,7 +136,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
     }, [query])
 
     async function handleSaveItem() {
-        getProvision({ name: query })
+        getProvision({ name: query, id: provisionId })
             .then((provision) => {
 
                 if (!provision) {
@@ -152,6 +153,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
                         console.debug("item")
                         console.debug(item)
                         console.debug(edit)
+                        console.debug(shoppingList)
                         
                         // return handleSaveItem()
                         
@@ -161,6 +163,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
 
                         console.debug({shoppingList})
                         
+                        Keyboard.dismiss()
                         close()
                     })
             })
@@ -202,6 +205,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
 
     function handleSelectQuery(provision: ProvisionInterface) {
         console.log({ provision })
+        setProvisionId(provision.id)
         setQuery(provision.name)
         setSelectProvision(false)
         quantidadeRef.current.focus()
@@ -231,7 +235,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
 
     return (
         <>
-            <KeyBoardListener hide={hideKeyBoard} />
+            <KeyBoardListener hide={hideKeyBoard} show={() => console.log("SHOW") }/>
             <FormContainerBottomSheet
                 style={{
                     elevation: 5,
