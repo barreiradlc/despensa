@@ -193,15 +193,23 @@ const Form: React.FC = () => {
         console.log(toolTipVisible)
 
         if(data){
-            setTimeout(() => {
-                if(toolTipVisible){
+            
+            if(toolTipVisible){
+                setTimeout(() => {
                     provisionOfflineRef.current.focus()
-                }
-            }, 50)
+                }, 700)
+            }
+            
             return data.provisions
         }
         return []
     }, [data])
+
+    useEffect(() => {
+        if(!!items.length){
+            provisionOfflineRef.current.focus()
+        }
+    }, [items])
 
     function ItemsTooltip(){
         return(
@@ -258,9 +266,11 @@ const Form: React.FC = () => {
                         </Button> */}
                 {/* TODO - QUERY */}
 
-                <SafeAreaView>
                     <Tooltip
-                        animated
+                        tooltipStyle={{
+                            width: '100%'
+                        }}
+                        animated={false}
                         //(Optional) When true, tooltip will animate in/out when showing/hiding
                         arrowSize={{width: 16, height: 8}}
                         //(Optional) Dimensions of arrow bubble p`ointing to the highlighted element
@@ -274,8 +284,9 @@ const Form: React.FC = () => {
                         //(Must) top, bottom, left, right, auto.
                         onClose={() => setToolTipVisible(false)}
                         //(Optional) Callback fired when the user taps the tooltip
-                    />
+                        >
 
+                        {/* <SafeAreaView style={{ width: '100%', height: 10 }} /> */}
                     <Input
                         autoFocus={toolTipVisible && !!items.length}
                         ref={provisionOfflineRef}
@@ -285,8 +296,9 @@ const Form: React.FC = () => {
                         // onBlur={(e: any) => handleProvisionChange(e)}
                         autoCapitalize='none'
                     />
-                </SafeAreaView>         
+                    </Tooltip>
 
+                
                 <Input
                     ref={quantidadeRef}
                     placeholder='Quantidade'

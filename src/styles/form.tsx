@@ -16,7 +16,7 @@ export const FormContainer = styled.View`
   margin: 20px;
 `
 
-export const FormItemContainer = styled.View`
+export const FormItemContainer = styled.SafeAreaView`
   justify-content: center;  
   flex-direction: column;
   margin: 0 20px;
