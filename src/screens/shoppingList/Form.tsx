@@ -1,31 +1,25 @@
-import { StackActions, useNavigation, useRoute } from '@react-navigation/native';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Alert, Keyboard, ToastAndroid } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, ToastAndroid } from 'react-native';
 
-import { Button, ButtonLabel, Container, Input, LogoImage, FormContainer, FormItemContainer } from "../../styles/form"
-import { useMutation, useQuery } from '@apollo/client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { deletePantry, deleteShoppingList, getItem, getPantries, getPantry, getProvision, handlePantryQueue, ItemInterface, manageShoppingList, PantryInterface, ProvisionInterface, pushPantry } from '../../services/local/PantryLocalService';
-import { PROVISIONS } from '../../components/queries/provisionListQuery';
-import { CardContainer, CardContainerProvision, ContainerScroll, Label, Title } from '../../styles/components';
-import Tooltip from 'react-native-walkthrough-tooltip';
-import { Divider } from 'react-native-elements';
+import { Button, ButtonLabel, Container, Input, FormItemContainer } from "../../styles/form"
+import { deleteShoppingList, getPantries, manageShoppingList, PantryInterface } from '../../services/local/PantryLocalService';
 import {Picker} from '@react-native-picker/picker';
 
-interface ShoppingListInterface{
+interface ShoppingListInterface {
     uuid?: string;
     pantryUuid: string;
     done?: boolean;
     name: string;
 }
 
-const Form: React.FC = () => {    
-    const nameRef = useRef()    
+const Form: React.FC = () => {  
+    const nameRef = useRef()  
 
     const [edit, setEdit] = useState(false)
     const [pantriesList, setPantriesList] = useState<PantryInterface[]>([] as PantryInterface[])
     const [shoppingList, setShoppingList] = useState<ShoppingListInterface>({} as ShoppingListInterface)
-    const [pantryData, setPantryData] = useState<PantryInterface>({} as PantryInterface)
+    const [] = useState<PantryInterface>({} as PantryInterface)
     const navigation = useNavigation()
     const route = useRoute()
 
@@ -44,11 +38,13 @@ const Form: React.FC = () => {
             navigation.setOptions({
                 title: "Editar Lista de compras"
             })
+
             setShoppingList({
                 uuid: list.uuid,
                 name: list.name,
                 pantryUuid: list.pantryUuid,
             })
+
             setEdit(true)
         } else {
             navigation.setOptions({
@@ -68,7 +64,6 @@ const Form: React.FC = () => {
     }
     
     async function handleDeleteShoppingListConfirmed() {
-        
         deleteShoppingList(String(shoppingList.uuid))
         navigation.goBack()
         navigation.goBack()
@@ -91,6 +86,7 @@ const Form: React.FC = () => {
             ]
         )
     }
+    
     async function handleSaveShoppingList() {        
         if(!shoppingList.name){
             return ToastAndroid.show("Dê um nome a sua lista de compras para continuar!", 500)
@@ -107,7 +103,7 @@ const Form: React.FC = () => {
                 <Picker
                     selectedValue={shoppingList.pantryUuid}
                     // style={{height: 50, width: 100}}
-                    onValueChange={(itemValue, itemIndex) =>
+                    onValueChange={(itemValue) =>
                         setShoppingList({ ...shoppingList, pantryUuid : itemValue })
                     }>
                     

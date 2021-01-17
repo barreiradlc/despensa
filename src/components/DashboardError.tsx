@@ -16,7 +16,7 @@ import {
 
 const logo = '../assets/logo.png'
 
-const DashboardError: React.FC = ({ refetch }: any) => {
+const DashboardError: React.FC = ({ refetch }) => {
     const navigation = useNavigation()
 
     function handleGoOffline() {

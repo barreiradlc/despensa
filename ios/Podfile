@@ -7,6 +7,7 @@ target 'Despensa' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
+  pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi', :modular_headers => true
 
   target 'DespensaTests' do
     inherit! :complete
@@ -17,10 +18,34 @@ target 'Despensa' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
-  use_flipper!
+  # use_flipper!
+
+  
   post_install do |installer|
-    flipper_post_install(installer)
+    # flipper_post_install(installer)
+    # PROCURA POR "IPHONEOS_DEPLOYMENT_TARGET"
+    # EM VERSÕES DESATUALIZADAS E AS CORRIGE PARA A MÏNIMA ACEITA
+    fix_deployment_target(installer)
   end
+  
+  def fix_deployment_target(installer)
+    return if !installer
+    project = installer.pods_project
+    project_deployment_target = project.build_configurations.first.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+  
+    puts "Make sure all pods deployment target is #{project_deployment_target.green}"
+    project.targets.each do |target|
+      puts "  #{target.name}".blue
+      target.build_configurations.each do |config|
+        old_target = config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+        new_target = project_deployment_target
+        next if old_target == new_target
+        puts "    #{config.name}: #{old_target.yellow} -> #{new_target.green}"
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = new_target
+      end
+    end
+  end
+
 end
 
 target 'Despensa-tvOS' do

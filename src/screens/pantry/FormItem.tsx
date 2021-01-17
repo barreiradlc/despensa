@@ -1,6 +1,6 @@
 import { StackActions, useNavigation, useRoute } from '@react-navigation/native';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Alert, Keyboard, ToastAndroid } from 'react-native';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Alert, Keyboard, SafeAreaView, ToastAndroid } from 'react-native';
 
 import { Button, ButtonLabel, Container, Input, LogoImage, FormContainer, FormItemContainer } from "../../styles/form"
 import { useMutation, useQuery } from '@apollo/client';
@@ -8,23 +8,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getItem, getProvision, handlePantryQueue, ItemInterface, ProvisionInterface, pushPantry } from '../../services/local/PantryLocalService';
 import { PROVISIONS } from '../../components/queries/provisionListQuery';
 import { CardContainer, CardContainerProvision, ContainerScroll, Label, Title } from '../../styles/components';
-import Tooltip from 'react-native-walkthrough-tooltip';
 import { Divider } from 'react-native-elements';
+import Tooltip from 'react-native-walkthrough-tooltip';
+
 
 const Form: React.FC = () => {
+    const [toolTipVisible, setToolTipVisible] = useState(false);
     const provisionOfflineRef = useRef()
     const provisionRef = useRef()
     const quantidadeRef = useRef()
     const [query, setQuery] = useState('')
     const [queryProvision, setQueryProvision] = useState(false)
     const [edit, setEdit] = useState(false)
-    // const { loading, error, data, refetch } = useQuery(PROVISIONS, {
-    //     variables: {
-    //         queryListInput: {
-    //             query
-    //         }
-    //     },
-    // });
+    const { loading, error, data, refetch } = useQuery(PROVISIONS, {
+        variables: {
+            queryListInput: {
+                query,
+                take: 3
+            }
+        },
+    });
     const [itemData, setItemData] = useState<ItemInterface>({} as ItemInterface)
     const navigation = useNavigation()
     const route = useRoute()
@@ -185,10 +188,50 @@ const Form: React.FC = () => {
     //     return null
     // }
 
-    return (
-        <Container>
+    const items = useMemo(() => {
+        console.log(data)
+        console.log(toolTipVisible)
 
-            <FormItemContainer>
+        if(data){
+            setTimeout(() => {
+                if(toolTipVisible){
+                    provisionOfflineRef.current.focus()
+                }
+            }, 50)
+            return data.provisions
+        }
+        return []
+    }, [data])
+
+    function ItemsTooltip(){
+        return(
+            <ContainerScroll>
+                {items.map(( i ) => {
+                    return (
+                        <Button key={i.id} onPress={() => console.log(i.id)}>
+                            <ButtonLabel>{i.name}</ButtonLabel>
+                        </Button>
+                    )
+                })}
+            </ContainerScroll>
+        )
+    }
+
+    function handleChangeQuery({ nativeEvent: { text } }){
+        console.log("text")
+        console.log(text)
+
+        setQuery(text.toLowerCase())
+        setToolTipVisible(true)
+    }
+
+    return (
+        <Container
+            
+        >
+
+            <FormItemContainer
+            >
                 {/* <Tooltip
                     backgroundColor="rgba(250, 250, 250, 1)"
                     contentStyle={{ width: '100%' }}
@@ -215,17 +258,35 @@ const Form: React.FC = () => {
                         </Button> */}
                 {/* TODO - QUERY */}
 
+                <SafeAreaView>
+                    <Tooltip
+                        animated
+                        //(Optional) When true, tooltip will animate in/out when showing/hiding
+                        arrowSize={{width: 16, height: 8}}
+                        //(Optional) Dimensions of arrow bubble p`ointing to the highlighted element
+                        backgroundColor="rgba(0,0,0,0.5)"
+                        //(Optional) Color of the fullscreen background beneath the tooltip.
+                        isVisible={toolTipVisible && !!items.length}
+                        //(Must) When true, tooltip is displayed
+                        content={<ItemsTooltip />}
+                        //(Must) This is the view displayed in the tooltip
+                        placement="top"
+                        //(Must) top, bottom, left, right, auto.
+                        onClose={() => setToolTipVisible(false)}
+                        //(Optional) Callback fired when the user taps the tooltip
+                    />
 
+                    <Input
+                        autoFocus={toolTipVisible && !!items.length}
+                        ref={provisionOfflineRef}
+                        placeholder='Nome'
+                        value={query}
+                        onChange={(e: any) => handleChangeQuery(e) }
+                        // onBlur={(e: any) => handleProvisionChange(e)}
+                        autoCapitalize='none'
+                    />
+                </SafeAreaView>         
 
-                <Input
-                    ref={provisionOfflineRef}
-                    placeholder='Nome'
-                    value={query}
-                    onChange={(e: any) => setQuery(e.nativeEvent.text.toLowerCase())}
-                    // onBlur={(e: any) => handleProvisionChange(e)}
-                    autoCapitalize='none'
-
-                />
                 <Input
                     ref={quantidadeRef}
                     placeholder='Quantidade'

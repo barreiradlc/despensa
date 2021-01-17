@@ -4,7 +4,7 @@ import { cor2, cor4, cor5 } from './components'
 export const Container = styled.SafeAreaView`
   background-color: papayawhip;
   flex: 1;
-  width: 100%;
+  width: 100%;  
 `
 export const ContainerScroll = styled.ScrollView``
 
@@ -17,7 +17,7 @@ export const FormContainer = styled.View`
 `
 
 export const FormItemContainer = styled.View`
-  justify-content: flex-start;  
+  justify-content: center;  
   flex-direction: column;
   margin: 0 20px;
   flex:1;
@@ -28,7 +28,9 @@ export const LogoImage = styled.Image`
 `
 
 export const Input = styled.TextInput`
+  width: 100%;
   color: ${cor2};
+  flex-direction: row;
   justify-content: flex-start;
   elevation: 2;
   background: #dedede;

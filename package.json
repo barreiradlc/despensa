@@ -5,6 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "ios:rebuild": "cd ios && rm -rf build && rm -rf Pods && xcodebuild clean && npx pod-install && cd .. ",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
@@ -48,7 +49,7 @@
     "react-native-vector-icons": "^7.1.0",
     "react-native-walkthrough-tooltip": "^1.1.11",
     "react-redux": "^7.2.2",
-    "realm": "^10.1.2",
+    "realm": "6.1.5",
     "styled-components": "^5.2.1",
     "uuid": "^8.3.2",
     "uuidv4": "^5.0.1"
