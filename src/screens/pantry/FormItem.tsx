@@ -195,9 +195,7 @@ const Form: React.FC = () => {
         if(data){
             
             if(toolTipVisible){
-                setTimeout(() => {
-                    provisionOfflineRef.current.focus()
-                }, 700)
+                provisionOfflineRef.current.focus()
             }
             
             return data.provisions
@@ -239,6 +237,7 @@ const Form: React.FC = () => {
         >
 
             <FormItemContainer
+                keyboardOpen={toolTipVisible && !!items.length}
             >
                 {/* <Tooltip
                     backgroundColor="rgba(250, 250, 250, 1)"
@@ -267,10 +266,13 @@ const Form: React.FC = () => {
                 {/* TODO - QUERY */}
 
                     <Tooltip
+
+
                         tooltipStyle={{
+                            height: '100%',
                             width: '100%'
                         }}
-                        animated={false}
+                        animated
                         //(Optional) When true, tooltip will animate in/out when showing/hiding
                         arrowSize={{width: 16, height: 8}}
                         //(Optional) Dimensions of arrow bubble p`ointing to the highlighted element

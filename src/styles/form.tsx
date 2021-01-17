@@ -17,7 +17,7 @@ export const FormContainer = styled.View`
 `
 
 export const FormItemContainer = styled.SafeAreaView`
-  justify-content: center;  
+  justify-content: ${ props => props.keyboardOpen ? 'flex-end' : 'center' };  
   flex-direction: column;
   margin: 0 20px;
   flex:1;
