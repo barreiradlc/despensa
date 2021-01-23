@@ -1,13 +1,15 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { RectButton } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
-import CardDespensa from '../../components/CardDespensa';
+import CardDespensa from '../../components/CardPantry';
 import CardItem from '../../components/pantry/CardItem';
 import { ItemListProvider } from '../../context/ItemListContext';
 import { getPantries, getPantryByUuid, ItemInterface, PantryInterface } from '../../services/local/PantryLocalService';
 import { Container, ContainerScroll, Label } from '../../styles/components';
 import { Button, ButtonLabel } from '../../styles/form';
+
 
 const Show: React.FC = () => {
 
@@ -19,9 +21,9 @@ const Show: React.FC = () => {
 
     function HeaderLeft() {
         return (
-            <Button invert onPress={() => navigation.navigate('FormPantry', { pantry })}>
+            <RectButton onPress={() => navigation.navigate('FormPantry', { pantry })} style={{ paddingHorizontal: 15 }}>
                 <Icon name="more-vertical" size={21} color="#555" />
-            </Button>
+            </RectButton>
         )
     }
 

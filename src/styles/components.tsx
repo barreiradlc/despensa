@@ -1,19 +1,19 @@
 import styled from 'styled-components/native'
+import { cor1, cor2, cor3, cor4, cor5 } from '../constants/CORES'
 
-export const cor1 = '#c93b4a'
-export const cor2 = '#4e1017'
-export const cor3 = '#dedede'
-export const cor4 = '#fff'
-export const cor5 = '#555'
+// export const cor1 = '#c93b4a'
+// export const cor2 = '#4e1017'
+// export const cor3 = '#dedede'
+// export const cor4 = '#fff'
+// export const cor5 = '#555'
 export const cor6 = '#999999'
 export const cor7 = '#000'
 
 
 // GERAL
 export const Container = styled.View`
-  background-color: papayawhip;
   flex: 1;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   padding: 40px 20px;
 `
@@ -54,11 +54,12 @@ export const ContainerOverlay = styled.View`
 `
 
 export const CardContainer = styled.TouchableOpacity`
+  width: 90%;
   margin: 10px 25px ;
-  padding: 25px 10px;
+  padding: 15px 25px;
   justify-content: flex-start;
   elevation: 4;
-  background-color: #fff;
+  background-color: ${cor1};
   border-radius: 25px;
   border-radius: 25px;  
 `
@@ -111,6 +112,7 @@ export const TooltipEditRowContainer = styled.View`
 
 export const TopContainer = styled.View`  
   justify-content: center;
+  margin: 20px;
 `
 
 export const LogoImage = styled.Image`
@@ -118,13 +120,15 @@ export const LogoImage = styled.Image`
 `
 
 export const Label = styled.Text`
-  color: ${cor2};
+  color: ${cor5};
+  font-weight: bold;
   font-size:14px;
+  margin-top: 5px;
   opacity: ${props => props.opaque ? 0.4 : 1};
 `
 
 export const Title = styled.Text`
-  color: ${cor2};
+  color: ${cor5};
   font-size:18px;
   opacity: ${props => props.opaque ? 0.4 : 1};
 `
@@ -132,14 +136,14 @@ export const Title = styled.Text`
 // LOADING
 export const LoadingLabelContainer = styled.View`  
   flex-direction: column;
-  justify-content: flex-end;
   elevation: 10;
 `
 
 export const LoadingLabel = styled.Text`
-  color: ${cor2};
-  font-size:18px;
-  margin-top: 40px;
+  margin-top: 10px;
+  color: ${cor4};
+  font-size:32px;
+  font-weight: bold;
 `
 
 export const LoadingLabelBold = styled.Text`

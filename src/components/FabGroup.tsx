@@ -3,8 +3,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Portal, FAB } from 'react-native-paper';
 import { cor1, cor2 } from '../styles/components';
-import https from "https"
-// import { Container } from './styles';
+import { getBottomSpace } from 'react-native-iphone-x-helper'
+import { cor3, cor4, cor6 } from '../constants/CORES';
 
 const FabGroup: React.FC = ({visible = false}) => {
     const route = useRoute()
@@ -25,13 +25,14 @@ const FabGroup: React.FC = ({visible = false}) => {
         
             <FAB.Group
                 // visible={visibleFab}
-                visible
+                visible={false}
                 style={{
-                    marginBottom: 50
+                    marginBottom: getBottomSpace() + 45,
+                    elevation: 34
                 }}
                 open={open}
                 color='#fff'
-                fabStyle={{ backgroundColor: cor1 }}
+                fabStyle={{ backgroundColor: cor4 }}
                 icon={open ? 'close' : 'plus'}
                 actions={[
                     // { icon: 'plus', onPress: () => console.log("ALOU") },

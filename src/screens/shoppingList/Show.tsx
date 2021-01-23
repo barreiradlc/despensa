@@ -2,7 +2,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Keyboard, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import CardDespensa from '../../components/CardDespensa';
+import CardDespensa from '../../components/CardPantry';
 import CardShoppingList from '../../components/CardShoppingList';
 import FabGroup from '../../components/FabGroup';
 import LoadingSyncComponent from '../../components/LoadingSyncComponent';

@@ -2,7 +2,7 @@ import { StackActions, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Alert, Keyboard, ToastAndroid } from 'react-native';
 
-import { Button, ButtonLabel, Container, Input, LogoImage, FormContainer, FormItemContainer } from "../../styles/form"
+import { Button, ButtonLabel, Container, InputEnd as Input, LogoImage, FormContainer, FormItemContainer, ContainerInput } from "../../styles/form"
 import { useMutation, useQuery } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { deletePantry, getItem, getPantry, getProvision, handlePantryQueue, ItemInterface, PantryInterface, ProvisionInterface, pushPantry } from '../../services/local/PantryLocalService';
@@ -32,7 +32,8 @@ const Form: React.FC = () => {
     useEffect(() => {
         if (pantry) {
             navigation.setOptions({
-                title: "Editar Despensa"
+                title: "Editar Despensa",
+
             })
 
             setPantryData({
@@ -76,9 +77,19 @@ const Form: React.FC = () => {
             ]
         )
     }
+
     async function handleSavePantry() {
         getPantry(pantryData, true)
+        
+        if(edit){
+        //     return navigation.navigate('ShowDespensa', {
+        //         pantry: pantryData,
+        //         items: pantryData.items
+        //     })
+            navigation.goBack()
+        }
 
+        
         navigation.goBack()
     }
 
@@ -95,32 +106,38 @@ const Form: React.FC = () => {
     return (
         <Container>
 
-            <FormItemContainer>
+            <FormContainer>
 
-                <Input
-                    ref={nameRef}
-                    placeholder='Nome'
-                    value={pantryData.name}
-                    onChange={(e: any) => handleChange(e, 'name')}                    
-                />
-                <Input
-                    ref={quantidadeRef}
-                    placeholder='Descrição'
-                    value={pantryData.description}
-                    onChange={(e: any) => handleChange(e, 'description')}
-                    // autoCapitalize
-                />
-                <Button  onPress={handleSavePantry}>
+                <ContainerInput>
+                    <Input
+                        ref={nameRef}
+                        placeholder='Nome'
+                        value={pantryData.name}
+                        onChange={(e: any) => handleChange(e, 'name')}                    
+                    />                    
+                </ContainerInput>
+
+                <ContainerInput>
+                    <Input
+                        ref={quantidadeRef}
+                        placeholder='Descrição'
+                        value={pantryData.description}
+                        onChange={(e: any) => handleChange(e, 'description')}
+                        // autoCapitalize
+                    />
+                </ContainerInput>
+
+                <Button onPress={handleSavePantry}>
                     <ButtonLabel>Salvar</ButtonLabel>
                 </Button>
 
                 {edit && 
                     <Button invert onPress={handleDeletePantry}>
-                        <ButtonLabel>Deletar</ButtonLabel>
+                        <ButtonLabel invert>Deletar</ButtonLabel>
                     </Button>
                 }
 
-            </FormItemContainer>
+            </FormContainer>
 
         </Container>
     );

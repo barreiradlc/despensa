@@ -25,7 +25,7 @@ export interface ItemInterface {
 export interface PantryInterface {
     id?: string;
     uuid?: string;
-    queue: boolean;
+    queue?: boolean;
     name: string;
     description?: string;
     createdAt?: Date;

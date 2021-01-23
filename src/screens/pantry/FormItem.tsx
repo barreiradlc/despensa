@@ -2,7 +2,7 @@ import { StackActions, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Keyboard, SafeAreaView, ToastAndroid } from 'react-native';
 
-import { Button, ButtonLabel, Container, Input, LogoImage, FormContainer, FormItemContainer } from "../../styles/form"
+import { Button, ButtonLabel, Container, Input, LogoImage, FormContainer, FormItemContainer, ContainerInput } from "../../styles/form"
 import { useMutation, useQuery } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getItem, getProvision, handlePantryQueue, ItemInterface, ProvisionInterface, pushPantry } from '../../services/local/PantryLocalService';
@@ -239,33 +239,8 @@ const Form: React.FC = () => {
             <FormItemContainer
                 keyboardOpen={toolTipVisible && !!items.length}
             >
-                {/* <Tooltip
-                    backgroundColor="rgba(250, 250, 250, 1)"
-                    contentStyle={{ width: '100%' }}
-                    onClose={() => console.log("TOOLTIP")}
-                    isVisible={false}
-                    // isVisible={!!data && !error}
-                    // isVisible
-                    content={<TooltipProvisions />}
-                    placement='top'
-                > */}
-
-                {/* TODO - QUERY */}
-                {/* <Input
-                            value={query}
-                            style={{ display: queryProvision ? 'flex' : 'none' }}
-                            ref={provisionRef}
-                            placeholder='Nome'
-                            onChange={(e: any) => handleChangeProvision(e)}
-                            autoCapitalize='none'
-                            />
-                                                    
-                        <Button onPress={queryProvisions} style={{ display: queryProvision ? 'none' : 'flex' }}>
-                            <ButtonLabel>{itemData?.provision ? itemData?.provision.name : 'Nome'}</ButtonLabel>
-                        </Button> */}
-                {/* TODO - QUERY */}
-
-                    <Tooltip
+               
+                    {/* <Tooltip
 
 
                         tooltipStyle={{
@@ -286,28 +261,30 @@ const Form: React.FC = () => {
                         //(Must) top, bottom, left, right, auto.
                         onClose={() => setToolTipVisible(false)}
                         //(Optional) Callback fired when the user taps the tooltip
-                        >
+                        > */}
 
-                        {/* <SafeAreaView style={{ width: '100%', height: 10 }} /> */}
+                        <ContainerInput>
+                            <Input
+                                autoFocus={toolTipVisible && !!items.length}
+                                ref={provisionOfflineRef}
+                                placeholder='Nome'
+                                value={query}
+                                onChange={(e: any) => handleChangeQuery(e) }
+                                // onBlur={(e: any) => handleProvisionChange(e)}
+                                autoCapitalize='none'
+                            />
+                        </ContainerInput>
+                    {/* </Tooltip> */}
+
+                <ContainerInput>
                     <Input
-                        autoFocus={toolTipVisible && !!items.length}
-                        ref={provisionOfflineRef}
-                        placeholder='Nome'
-                        value={query}
-                        onChange={(e: any) => handleChangeQuery(e) }
-                        // onBlur={(e: any) => handleProvisionChange(e)}
+                        ref={quantidadeRef}
+                        placeholder='Quantidade'
+                        value={itemData.quantity}
+                        onChange={(e: any) => handleChange(e, 'quantity')}
                         autoCapitalize='none'
                     />
-                    </Tooltip>
-
-                
-                <Input
-                    ref={quantidadeRef}
-                    placeholder='Quantidade'
-                    value={itemData.quantity}
-                    onChange={(e: any) => handleChange(e, 'quantity')}
-                    autoCapitalize='none'
-                />
+                </ContainerInput>
 
                 <Button onPress={handleSaveItem}>
                     <ButtonLabel>Salvar</ButtonLabel>

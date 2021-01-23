@@ -16,6 +16,7 @@ import {
     ErrorTitle,
     ErrorTouchableContainer
 } from "../styles/components"
+import { Button, ButtonLabel } from "../styles/form"
 
 const logo = '../assets/logo.png'
 
@@ -52,13 +53,13 @@ const LogoutPage: React.FC = () => {
             <ErrorTitle>Deseja realmente sair?</ErrorTitle>
 
             <ErrorTouchableContainer>
-                <ErrorTouchable onPress={handleLogout}>
-                    <ErrorLabel>Sim</ErrorLabel>
-                </ErrorTouchable>
+                <Button onPress={handleLogout}>
+                    <ButtonLabel>Sim</ButtonLabel>
+                </Button>
 
-                <ErrorTouchable onPress={handleGoBack}>
-                    <ErrorLabel>Não</ErrorLabel>
-                </ErrorTouchable>
+                <Button onPress={handleGoBack}>
+                    <ButtonLabel>Não</ButtonLabel>
+                </Button>
 
             </ErrorTouchableContainer>
         </Container>        

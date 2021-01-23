@@ -1,59 +1,15 @@
 > # PENDENCIAS
 <br>
 
-> ## Despensa
-___
->> ### CREATE
-- `id`
-- `uuid`
-- `name`
-- `description`
-- `created`
-- `updated`
+## ANÁLISE DE LAYOUT
 
->> ### UPDATE
-- `id`
-- `uuid`
-- `name`
-- `description`
-- `created`
-- `updated`
-
->> ### DELETE
-- Pull Items
-- Pull from user
-
-<br>
-<br>
-
-> ## Item
-___
->> ### CREATE
-- id
-- uuid
-- quantity
-- expiresAt
-- provimento
-- created
-- updated
-
->> ### UPDATE
-- id
-- uuid
-- quantity
-- expiresAt
-- provimento
-- created
-- updated
-
->> ### DELETE
-- Despensa -> Desfazer vinculo
 
 <br>
 
 ## OUTRAS PENDENCIAS
 - BUSCA DE PROVIMENTOS NO FORM DE ITEMS
 - LOGIN SOCIAL
+- RECUPERAR SENHA
 - MODULO DE IMAGENS
 - DESPENSAS COMPRATILHADAS
 - FECHAR BOTTOM SHEET NO CADASTRO DE ITENS NA LISTAS DE COMPRAS

@@ -1,10 +1,12 @@
 import styled from 'styled-components/native'
-import { cor2, cor4, cor5 } from './components'
+import { Dimensions } from 'react-native'
+
+import { cor1, cor2, cor3, cor4, cor5, cor6 } from '../constants/CORES'
+
+const { width, height } = Dimensions.get('screen')
 
 export const Container = styled.SafeAreaView`
-  background-color: papayawhip;
   flex: 1;
-  width: 100%;  
 `
 export const ContainerScroll = styled.ScrollView``
 
@@ -19,7 +21,7 @@ export const FormContainer = styled.View`
 export const FormItemContainer = styled.SafeAreaView`
   justify-content: ${ props => props.keyboardOpen ? 'flex-end' : 'center' };  
   flex-direction: column;
-  margin: 0 20px;
+  margin: 0 10px;
   flex:1;
 `
 
@@ -27,30 +29,71 @@ export const LogoImage = styled.Image`
   margin: 20px;
 `
 
+export const ContainerInput = styled.View`
+  width: ${width - 20}px;
+  flex-direction: row;
+  padding-left: 20px;
+  padding-right: 40px;
+  padding-vertical: 10px;
+  border-radius: 10px;
+  border: 1px ${cor3} solid;
+  margin-top: 10px;
+`
+
+export const Form = styled.SafeAreaView``
+
 export const Input = styled.TextInput`
+  padding-left: 20px;
   width: 100%;
   color: ${cor2};
   flex-direction: row;
   justify-content: flex-start;
   elevation: 2;
-  background: #dedede;
+  font-size:18px;
+`
+
+export const InputEnd = styled.TextInput`
+  padding-left: 0px;
+  width: 100%;
+  color: ${cor2};
+  flex-direction: row;
+  justify-content: flex-start;
+  elevation: 2;
   font-size:18px;
 `
 
 export const Button = styled.TouchableOpacity`
   align-items: center;
+  width: ${width - 20}px;
   justify-content: center;
   margin: 15px 0px;
-  padding: 10px 35px;
-  elevation: ${ props => !props.invert ? 2 : 0};
-  background-color: ${ props => !props.invert ? cor5 : 'transparent'};
+  padding: 15px 0px;
+  background-color: ${ props => !props.invert ? cor1 : 'transparent'};
+  border-radius: 10px;
 `
 
 
 export const ButtonLabel = styled.Text`
-  elevation: 29;
-  color: ${cor4};
-  font-size:15px;
+  color: ${ props => !props.invert ? cor5 : cor3};
+  font-weight: bold;
+  font-size:17px;
+  align-items: center;
+`
+export const ButtonAdd = styled.TouchableOpacity`
+  align-items: center;
+  width: ${width - 20}px;
+  justify-content: center;
+  margin: 15px 0px;
+  padding: 15px 0px;
+  background-color: ${cor2};
+  border-radius: 10px;
+`
+
+
+export const ButtonLabelAdd = styled.Text`
+  color: ${cor6};
+  font-weight: bold;
+  font-size:17px;
   align-items: center;
 `
 

@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { cor4 } from '../constants/CORES';
 import {
     Container,
     TopContainer,
     LogoImage,
     LoadingLabel,
     LoadingLabelContainer,
-    cor2
 } from "../styles/components"
 import getInitialLabel from '../utils/initialLabel';
 
-
-const logo = '../assets/logo.png'
+const quoteBackground = '../assets/board-near-ingredients-for-pasta.jpg'
 
 interface LoadingData {
     label: string
@@ -29,19 +28,26 @@ const LoadingComponent: React.FC = () => {
     if (!label) return null;
 
     return (
-        <Container>
-            <TopContainer>
-                <LogoImage source={require(logo)} />
-                <ActivityIndicator size={60} color={cor2} />
-            </TopContainer>
+        <ImageBackground
+            style={{ flex: 1 }}            
+            imageStyle={{
+                opacity: 0.3
+            }}
+            source={require(quoteBackground)}
+        >
+            <Container>
 
-            <LoadingLabelContainer>
-                <Icon name="quote-left" />
-                <LoadingLabel>{`${label}`}</LoadingLabel>
-                <Icon name="quote-right" />
-            </LoadingLabelContainer>
+                <LoadingLabelContainer>
+                    <Icon name="quote-left" color={cor4} size={26} />
+                    <LoadingLabel>{`${label}`}</LoadingLabel>
+                </LoadingLabelContainer>
 
-        </Container>
+                {/* <TopContainer>
+                    <ActivityIndicator size='large' color={cor4} />
+                </TopContainer> */}
+
+            </Container>
+        </ImageBackground>
     );
 }
 

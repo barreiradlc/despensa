@@ -2,13 +2,11 @@ import { gql, useQuery } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
-import { User } from "realm";
 import DashboardError from "../components/DashboardError";
 import LoadingComponent from "../components/LoadingComponent";
 import { ME } from "../components/queries/meQuery";
 import { storePantries } from "../services/local/PantryLocalService";
 import getInitialLabel from "../utils/initialLabel";
-
 
 function HomeScreen() {
     const { loading, error, data, refetch } = useQuery(ME);

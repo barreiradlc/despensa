@@ -2,14 +2,18 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert, Keyboard, ToastAndroid } from 'react-native';
 
-import { Button, ButtonLabel, Container,  FormContainer, Input, LogoImage } from "../styles/form"
+import Icon from 'react-native-vector-icons/Feather';
+
+import { Button, ButtonLabel, Container,  FormContainer, Input, LogoImage, ContainerInput } from "../styles/form"
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../components/mutations/loginMutation';
 import { LoadingOverlayContext } from '../context/LoadingOverlayContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { cor2 } from '../constants/CORES';
+
+import Toast from 'react-native-simple-toast';
 
 const logo = '../assets/logo.png'
-
 
 export interface LoginDTO{
     username: string;
@@ -44,7 +48,7 @@ const Login: React.FC = () => {
             });
 
         } else {
-            ToastAndroid.show("Preencha com suas credenciais para continuar", 500)
+            Toast.showWithGravity("Preencha com suas credenciais para continuar", 500, Toast.CENTER)
         }
     }
 
@@ -94,24 +98,33 @@ const Login: React.FC = () => {
 
             <FormContainer>
                 <LogoImage source={require(logo)} />
-                <Input
-                    placeholder='Usuário'
-                    value={loginData.username}
-                    onChange={(e: any) => handleChange(e, 'username')}
-                    autoCapitalize='none'
+
+                <ContainerInput >
+                    <Icon size={25} name="user" color={cor2} />
+                    <Input
+                        placeholder='Usuário'
+                        value={loginData.username}
+                        onChange={(e: any) => handleChange(e, 'username')}
+                        autoCapitalize='none'
+                        />
+                </ContainerInput>
+                
+                <ContainerInput>
+                    <Icon size={25} name="lock" color={cor2} />
+                    <Input
+                        placeholder='Senha'
+                        value={loginData.password}
+                        secureTextEntry
+                        onChange={(e: any) => handleChange(e, 'password')}
+                        autoCapitalize='none'
                     />
-                <Input
-                    placeholder='Senha'
-                    value={loginData.password}
-                    secureTextEntry
-                    onChange={(e: any) => handleChange(e, 'password')}
-                    autoCapitalize='none'
-                />
+                </ContainerInput>
+
                 <Button onPress={handleLogin}>
                     <ButtonLabel>Login</ButtonLabel>
                 </Button>
                 <Button invert onPress={handleGoToSignUp}>
-                    <ButtonLabel>Ainda não é cadastrado? Cadastrar-me</ButtonLabel>
+                    <ButtonLabel invert>Ainda não é cadastrado? Cadastrar-me</ButtonLabel>
                 </Button>                
             </FormContainer>
 
