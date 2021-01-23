@@ -7,7 +7,7 @@ import ItemsAccordion from './shoppingList/ItemsAccordion';
 
 const CardShoppingList: React.FC = ({ shoppingList }) => {
     const navigation = useNavigation()
-    const [expanded, setExpanded] = React.useState(true);
+    const [expanded, setExpanded] = React.useState(false);
 
     function handleNavigateShow(){
         console.log("shoppingList")

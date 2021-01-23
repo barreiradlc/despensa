@@ -1,12 +1,12 @@
 import styled from 'styled-components/native'
-import { cor1, cor2, cor3, cor4, cor5 } from '../constants/CORES'
+import { cor1, cor2, cor3, cor4, cor5, cor6 } from '../constants/CORES'
 
 // export const cor1 = '#c93b4a'
 // export const cor2 = '#4e1017'
 // export const cor3 = '#dedede'
 // export const cor4 = '#fff'
 // export const cor5 = '#555'
-export const cor6 = '#999999'
+// export const cor6 = '#999999'
 export const cor7 = '#000'
 
 
@@ -63,17 +63,41 @@ export const CardContainer = styled.TouchableOpacity`
   border-radius: 25px;
   border-radius: 25px;  
 `
-export const CardRowContainer = styled.TouchableOpacity`
+export const CardRowContainerInner = styled.View`
   elevation: 4;
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 25px;
-  margin: 0 20px ;
-  padding: 25px 15px;
+  margin: 0 20px;
+  padding: 5px 5px;
   width: 90%;
-  justify-content: space-between;
+  flex-direction: row;
+  background-color: #fff;
+  align-items: center;
+  justify-content: space-between; 
+`
+
+export const CardRowContainer = styled.TouchableOpacity`
+  elevation: 4;
+  margin: 0 15px;
+  padding: 15px 0;
+  
+  justify-content: flex-start;
   flex-direction: row;
   background-color: #fff;
 `
+export const AddShoppingItemTouchable = styled.TouchableOpacity`
+  elevation: 4;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  margin: 0 20px;
+  padding: 10px 15px 15px 15px;
+  width: 50%;
+  justify-content: center;
+  flex-direction: row;
+  background-color: ${cor6};
+  align-self: center;
+`
+
 export const RowContainer = styled.View`
   justify-content: space-between;
 
