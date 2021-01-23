@@ -6,6 +6,7 @@ import { cor1, cor2, cor3, cor4, cor5, cor6 } from '../constants/CORES'
 const { width, height } = Dimensions.get('screen')
 
 export const Container = styled.SafeAreaView`
+  background-color: ${cor5};
   flex: 1;
 `
 export const ContainerScroll = styled.ScrollView``
@@ -43,7 +44,7 @@ export const ContainerInput = styled.View`
 export const Form = styled.SafeAreaView``
 
 export const Input = styled.TextInput`
-  padding-left: 20px;
+  padding-left: ${props => props.end ? '0px' : '20px'};
   width: 100%;
   color: ${cor2};
   flex-direction: row;
@@ -108,7 +109,7 @@ export const TouchableItem = styled.TouchableOpacity`
 
 export const TouchableItemLabel = styled.Text`
   text-align: center;  
-  color: ${cor5};
+  color: ${cor2};
   font-size:15px;
   align-items: center;
 `

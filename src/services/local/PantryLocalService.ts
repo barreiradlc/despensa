@@ -459,10 +459,9 @@ export async function manageShoppingList(shoppingList: ShoppingListInterface) {
             console.log(attr)
 
             realm.write(async () => {
-                const newshoppingList = await realm.create('ShoppingList', attr)
+                const newshoppingList = await realm.create('ShoppingList', attr)                
             })
 
-            console.log({ newshoppingList })
 
         }
     } catch (error) {

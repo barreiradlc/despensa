@@ -8,73 +8,78 @@ import FabGroup from '../../components/FabGroup';
 import LoadingSyncComponent from '../../components/LoadingSyncComponent';
 import { getPantries, getShoppingsList, PantryInterface } from '../../services/local/PantryLocalService';
 import { Container, ContainerScroll, Label } from '../../styles/components';
-import { Button, ButtonLabel } from '../../styles/form';
+import { ButtonAdd as Button, ButtonLabelAdd as ButtonLabel, FormContainer } from '../../styles/form';
 
 
-interface ShoppingListInterface{
+interface ShoppingListInterface {
     uuid?: string;
     pantryUuid: string;
     done: boolean;
     name: string;
 }
 
-
 const List: React.FC = () => {
     const refreshRef = useRef()
-    const navigation = useNavigation()    
-    const [ shoppingLists, setShoppingLists ] = useState<ShoppingListInterface[]>([] as ShoppingListInterface[])
-    const [ loading, setLoading ] = useState(true)
+    const navigation = useNavigation()
+    const [shoppingLists, setShoppingLists] = useState<ShoppingListInterface[]>([] as ShoppingListInterface[])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         reloadData()
-    },[])
-    
-    async function reloadData() {        
+    }, [])
+
+    async function reloadData() {
         const data = await getShoppingsList()
-        console.log({data})
+        console.log({ data })
         setShoppingLists(data)
         setLoading(false)
     }
 
     function HeaderLeft() {
         return (
-            <Button invert onPress={() => refreshRef.current.reload() }>
+            <Button invert onPress={() => refreshRef.current.reload()}>
                 <Icon name="more-vertical" size={21} color="#555" />
             </Button>
         )
     }
 
     useEffect(() => {
-        setLoading(true)        
-        navigation.setOptions({            
+        setLoading(true)
+        navigation.setOptions({
             headerRight: () => <HeaderLeft />
         })
 
-        const unsubscribe = navigation.addListener('focus', () => {            
+        const unsubscribe = navigation.addListener('focus', () => {
             reloadData()
-        });      
+        });
         return unsubscribe;
     }, [])
 
-  return (
+    return (
         <ContainerScroll
             contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={false}
         >
-            {shoppingLists?.map(( shoppingList: ShoppingListInterface ) => 
+            {shoppingLists?.map((shoppingList: ShoppingListInterface) =>
                 <CardShoppingList key={shoppingList.uuid} shoppingList={shoppingList} />
             )}
 
-            {/* <Button onPress={() => navigation.navigate('FormPantry', {}) }>
-                <ButtonLabel>Nova despensa</ButtonLabel>
-            </Button> */}
+            <FormContainer
+                style={{
+                    justifyContent: 'flex-end'
+                }}
+            >
+                <Button onPress={() => navigation.navigate('FormShoppingList', {})}>
+                    <ButtonLabel>Nova lista de compras</ButtonLabel>
+                </Button>
+            </FormContainer>
 
             <LoadingSyncComponent ref={refreshRef} />
 
             {/* <FabGroup visible={true} /> */}
 
-        </ContainerScroll>      
-  );
+        </ContainerScroll>
+    );
 }
 
 export default List;

@@ -1,20 +1,22 @@
 import { StackActions, useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View } from 'react-native';
+import { ImageBackground, View } from 'react-native';
+import Icon from 'react-native-vector-icons/Feather';
+import { cor2, cor4 } from '../constants/CORES';
 import {
     Container,
     TopContainer,
     LogoImage,
     LoadingLabel,
     LoadingLabelContainer,
-    cor2,
     ErrorTouchable,
     ErrorLabel,
     ErrorTitle,
     ErrorTouchableContainer
 } from "../styles/components"
 
-const logo = '../assets/logo.png'
+const quoteBackground = '../assets/board-near-ingredients-for-pasta.jpg'
+
 
 const DashboardError: React.FC = ({ refetch }) => {
     const navigation = useNavigation()
@@ -26,9 +28,19 @@ const DashboardError: React.FC = ({ refetch }) => {
     }
 
     return (
+        <ImageBackground
+            style={{ flex: 1 }}            
+            imageStyle={{
+                opacity: 0.3
+            }}
+            source={require(quoteBackground)}
+        >
+
         <Container>
 
-            <ErrorTitle>Ocorreu um erro ao buscar seus dados</ErrorTitle>
+
+            <Icon name="cloud-off" color={cor2} size={34} />
+            <ErrorTitle>Ocorreu um erro ao{`\n`} buscar seus dados</ErrorTitle>
 
             <ErrorTouchableContainer>
                 <ErrorTouchable onPress={refetch}>
@@ -40,6 +52,7 @@ const DashboardError: React.FC = ({ refetch }) => {
                 </ErrorTouchable>
             </ErrorTouchableContainer>
         </Container>        
+        </ImageBackground>
     );
 }
 

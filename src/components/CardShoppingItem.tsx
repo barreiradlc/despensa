@@ -4,6 +4,8 @@ import { Text, View } from 'react-native';
 import { CardColContainer, CardContainer, CardInnerContainer, CardRowContainer, Label, Title } from '../styles/components';
 import CheckBox from '@react-native-community/checkbox';
 import { toggleDoneShoppingItem } from '../services/local/PantryLocalService';
+import { cor1, cor4 } from '../constants/CORES';
+import capitalize from '../utils/capitalize';
 
 
 const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip}) => {
@@ -34,8 +36,8 @@ const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip}) 
         <CardRowContainer onPress={handleNavigateShow}>
             <CardColContainer >
                 <CardInnerContainer  >
-                    <Title opaque={toggleCheckBox} >{shoppingItem.provision.name} </Title>
-                    <Label opaque={toggleCheckBox} >{shoppingItem.quantity} unidade{shoppingItem.quantity > 1 && 's'}</Label>                    
+                    <Title color={cor4} opaque={toggleCheckBox} >{capitalize(shoppingItem.provision.name)} </Title>
+                    <Label color={cor4} opaque={toggleCheckBox} >{shoppingItem.quantity} unidade{shoppingItem.quantity > 1 && 's'}</Label>                    
                 </CardInnerContainer>
             </CardColContainer>
             <CardColContainer>

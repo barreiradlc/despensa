@@ -56,7 +56,7 @@ export const ContainerOverlay = styled.View`
 export const CardContainer = styled.TouchableOpacity`
   width: 90%;
   margin: 10px 25px ;
-  padding: 15px 25px;
+  padding: 25px 25px;
   justify-content: flex-start;
   elevation: 4;
   background-color: ${cor1};
@@ -65,9 +65,10 @@ export const CardContainer = styled.TouchableOpacity`
 `
 export const CardRowContainer = styled.TouchableOpacity`
   elevation: 4;
-  border-radius: 25px;
-  margin: 10px 25px ;
-  padding: 25px 10px;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  margin: 0 20px ;
+  padding: 25px 15px;
   width: 90%;
   justify-content: space-between;
   flex-direction: row;
@@ -120,7 +121,7 @@ export const LogoImage = styled.Image`
 `
 
 export const Label = styled.Text`
-  color: ${cor5};
+  color: ${props => props.color ? props.color : cor5};
   font-weight: bold;
   font-size:14px;
   margin-top: 5px;
@@ -128,8 +129,9 @@ export const Label = styled.Text`
 `
 
 export const Title = styled.Text`
-  color: ${cor5};
+  color: ${props => props.color ? props.color : cor5};
   font-size:18px;
+  font-weight: bold;
   opacity: ${props => props.opaque ? 0.4 : 1};
 `
 
@@ -164,14 +166,15 @@ export const ErrorTouchable = styled.TouchableOpacity`
 
 export const ErrorLabel = styled.Text`
   color: ${cor2};
-  font-size:14px;
+  font-size:16px;
   margin-top: 40px;
 `
 
 export const ErrorTitle = styled.Text`
   color: ${cor2};
-  font-size:18px;
-  margin-top: 40px;
+  font-size:32px;
+  margin-top: 25px;
+  margin-bottom: 10px;
 `
 
 // QUANTITY

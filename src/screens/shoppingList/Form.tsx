@@ -2,7 +2,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, ToastAndroid } from 'react-native';
 
-import { Button, ButtonLabel, Container, Input, FormItemContainer } from "../../styles/form"
+import { Button, ButtonLabel, Container, Input, FormItemContainer, ContainerInput } from "../../styles/form"
 import { deleteShoppingList, getPantries, manageShoppingList, PantryInterface } from '../../services/local/PantryLocalService';
 import {Picker} from '@react-native-picker/picker';
 
@@ -113,12 +113,15 @@ const Form: React.FC = () => {
                     
                 </Picker>
 
-                <Input
-                    ref={nameRef}
-                    placeholder='Nome'
-                    value={shoppingList.name}
-                    onChange={(e: any) => handleChange(e, 'name')}                    
-                />
+                <ContainerInput>
+                    <Input
+                        end
+                        ref={nameRef}
+                        placeholder='Nome'
+                        value={shoppingList.name}
+                        onChange={(e: any) => handleChange(e, 'name')}                    
+                    />
+                </ContainerInput>
                 
                 <Button  onPress={handleSaveShoppingList}>
                     <ButtonLabel>Salvar</ButtonLabel>
