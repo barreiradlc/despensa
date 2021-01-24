@@ -1,9 +1,17 @@
 import styled from 'styled-components/native'
-import { Dimensions } from 'react-native'
+import { Dimensions, Platform } from 'react-native'
 
 import { cor1, cor2, cor3, cor4, cor5, cor6 } from '../constants/CORES'
 
 const { width, height } = Dimensions.get('screen')
+
+export const BottomSheetContainer = styled.SafeAreaView`
+  padding-top: 20px;
+  padding-bottom: 20px;
+  height: 100%;
+  background-color: ${cor5};
+  flex: 1;
+`
 
 export const Container = styled.SafeAreaView`
   background-color: ${cor5};
@@ -32,10 +40,12 @@ export const LogoImage = styled.Image`
 
 export const ContainerInput = styled.View`
   width: ${width - 20}px;
+  justify-content: space-between;
+  align-items: center;
   flex-direction: row;
   padding-left: 20px;
   padding-right: 40px;
-  padding-vertical: 10px;
+  padding-vertical: 5px;
   border-radius: 10px;
   border: 1px ${cor3} solid;
   margin-top: 10px;
@@ -44,12 +54,12 @@ export const ContainerInput = styled.View`
 export const Form = styled.SafeAreaView``
 
 export const Input = styled.TextInput`
-  padding-left: ${props => props.end ? '0px' : '20px'};
+  margin-vertical: ${Platform.OS === 'ios' ? `10px` : '0'};
+  padding-left: ${props => props.noIconStart ? '0px' : '20px'};
   width: 100%;
   color: ${cor2};
   flex-direction: row;
   justify-content: flex-start;
-  elevation: 2;
   font-size:18px;
 `
 
@@ -59,7 +69,6 @@ export const InputEnd = styled.TextInput`
   color: ${cor2};
   flex-direction: row;
   justify-content: flex-start;
-  elevation: 2;
   font-size:18px;
 `
 
@@ -82,10 +91,10 @@ export const ButtonLabel = styled.Text`
 `
 export const ButtonAdd = styled.TouchableOpacity`
   align-items: center;
-  width: ${width - 20}px;
+  /* width: 100%; */
   justify-content: center;
   margin: 15px 0px;
-  padding: 15px 0px;
+  padding: 15px;
   background-color: ${cor2};
   border-radius: 10px;
 `

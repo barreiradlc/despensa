@@ -187,6 +187,8 @@ android {
 
 dependencies {
 
+    implementation project(path: ':@react-native-picker_picker')
+
     implementation project(':react-native-community-checkbox')
 
     implementation project(':watermelondb')  // ⬅️ This!

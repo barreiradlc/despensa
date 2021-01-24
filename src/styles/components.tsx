@@ -58,13 +58,13 @@ export const CardContainer = styled.TouchableOpacity`
   margin: 10px 25px ;
   padding: 25px 25px;
   justify-content: flex-start;
-  elevation: 4;
+  
   background-color: ${cor1};
   border-radius: 25px;
   border-radius: 25px;  
 `
 export const CardRowContainerInner = styled.View`
-  elevation: 4;
+  
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 25px;
   margin: 0 20px;
@@ -77,7 +77,7 @@ export const CardRowContainerInner = styled.View`
 `
 
 export const CardRowContainer = styled.TouchableOpacity`
-  elevation: 4;
+  
   margin: 0 15px;
   padding: 15px 0;
   

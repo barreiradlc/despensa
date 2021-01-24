@@ -26,7 +26,7 @@ export interface SignUpDTO{
 }
 
 const SignUp: React.FC = () => {
-    const [hidePassword, setHidePassword] = useState(false)
+    const [hidePassword, setHidePassword] = useState(true)
     const [signUpData, setSignUpData] = useState<SignUpDTO>({} as SignUpDTO)
     const [signUp, { data, error, loading }] = useMutation(SIGNUP_USER);
     const { toggleOverlay } = useContext(LoadingOverlayContext)

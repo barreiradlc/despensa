@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android:rebuild": "cd android && ./gradlew clean && cd .. && react-native run-android",
     "ios": "react-native run-ios",
-    "ios:rebuild": "cd ios && rm -rf build && rm -rf Pods && xcodebuild clean && npx pod-install && cd .. ",
+    "ios:rebuild": "cd ios && rm -rf build && rm -rf Pods && xcodebuild clean && npx pod-install && cd .. && react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"

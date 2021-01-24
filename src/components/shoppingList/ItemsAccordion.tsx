@@ -1,25 +1,16 @@
 import * as React from 'react';
+
+
 import { useCallback, useState } from 'react';
 import { BottomSheet, ListItem } from 'react-native-elements';
 import { List } from 'react-native-paper';
 import { cor1, cor2, cor3, cor4, cor6 } from '../../constants/CORES';
 import { AddShoppingItemTouchable, CardRowContainer, Label, Title } from '../../styles/components';
+import FormShoppingItem from '../bottomSheet/FormShoppingItem';
 import CardShoppingItem from '../CardShoppingItem';
 
 const ItemsAccordion = ({ expanded, setExpanded, pending, shoppingList }) => {
     const [isVisible, setIsVisible] = useState(false);
-    const list = [
-        { title: 'List Item 1' },
-        { title: 'List Item 2' },
-        {
-            title: 'Cancel',
-            containerStyle: { backgroundColor: 'red' },
-            titleStyle: { color: 'white' },
-            onPress: () => setIsVisible(false),
-        },
-    ];
-
-
     const handlePress = () => setExpanded(!expanded);
 
     const handleManageItems = useCallback(() => {
@@ -30,17 +21,26 @@ const ItemsAccordion = ({ expanded, setExpanded, pending, shoppingList }) => {
 
     }, [])
 
-    const handleToggleBottomSheet = useCallback(() => {
-        
+    const handleToggleBottomSheet = useCallback(() => {        
+        console.log("isVisible")
+        console.log(isVisible)
+
         setIsVisible(!isVisible)   
     }, []) 
+
+    const handleGetPendingLabel = useCallback(() => {
+        if(pending){
+            return `- ${pending} ite${pending > 1 ? 'ns' : 'm'} pendentes`
+        }
+        return ''
+    }, [pending])
 
     return (
         <>
             <List.Accordion
                 style={{ backgroundColor: cor1, margin: 15, marginBottom: 0, borderRadius: 15 }}
                 titleStyle={{ color: cor6, backgroundColor: cor1, }}
-                title={`${shoppingList.name} ${`\n`} ${pending} ite${pending > 1 ? 'ns' : 'm'} pendentes`}
+                title={`${shoppingList.name} ${handleGetPendingLabel()}`}
                 // left={props => <List.Icon {...props} icon="folder" color={cor2} />}
                 expanded={expanded}
                 onPress={handlePress}>
@@ -61,7 +61,9 @@ const ItemsAccordion = ({ expanded, setExpanded, pending, shoppingList }) => {
                 isVisible={isVisible}
                 containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)' }}
             >        
-                <Label>BOTTOM SHEET</Label>            
+
+                <FormShoppingItem  close={handleToggleBottomSheet} shoppingList={shoppingList} />
+                      
             </BottomSheet>           
         </>
     );

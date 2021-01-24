@@ -14,7 +14,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import io.realm.react.RealmReactPackage;
 import com.nozbe.watermelondb.WatermelonDBPackage; // ⬅️ This!
 import com.reactnativecommunity.checkbox.ReactCheckBoxPackage;
-
+import com.reactnativecommunity.picker.RNCPickerPackage;
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -34,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
           new RealmReactPackage();
           new WatermelonDBPackage(); // ⬅️ Here!
           new ReactCheckBoxPackage();
+          new RNCPickerPackage();
 
 
           // Packages that cannot be autolinked yet can be added manually here, for example:
