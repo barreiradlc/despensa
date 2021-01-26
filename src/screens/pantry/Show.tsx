@@ -40,12 +40,19 @@ const Show: React.FC = () => {
     useEffect(() => {
 
         // console.log(JSON.stringify(pantry))
-
-        navigation.setOptions({
-            title: pantry.name,
-            headerRight: () => <HeaderRight />,
-            headerLeft: () => <HeaderLeft />,
-        })
+        if(Platform.OS === 'ios'){
+            navigation.setOptions({
+                title: pantry.name,
+                headerRight: () => <HeaderRight />,
+                headerLeft: () => <HeaderLeft />,
+            })
+        } else {
+            navigation.setOptions({
+                title: pantry.name,
+                headerRight: () => <HeaderRight />,
+                // headerLeft: () => <HeaderLeft />,
+            })
+        }
 
         // reloadData()
     }, [])

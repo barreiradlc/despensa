@@ -75,7 +75,7 @@ const TabRoutes: React.FC = () => {
                     component={Estoque}
                 />
 
-                <Tab.Screen
+                {/* <Tab.Screen
                     name="Recipes"
                     options={{
                         tabBarIcon: ({ color }) => (
@@ -84,7 +84,7 @@ const TabRoutes: React.FC = () => {
                         title: 'Receitas',
                     }}
                     component={ListRecipe}
-                />
+                /> */}
 
             </Tab.Navigator>
 

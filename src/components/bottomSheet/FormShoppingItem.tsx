@@ -273,7 +273,7 @@ function FormShoppingItem({ close, shoppingList }: FormShoppingListProps, ref: (
         </ButtonAdd>
         <Container
             style={{
-                paddingBottom: 25
+                paddingTop: 25
             }}
         >
             <KeyBoardListener hide={hideKeyBoard} show={() => console.log("SHOW")} />

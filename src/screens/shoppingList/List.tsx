@@ -7,7 +7,9 @@ import CardDespensa from '../../components/CardPantry';
 import CardShoppingList from '../../components/CardShoppingList';
 import FabGroup from '../../components/FabGroup';
 import LoadingSyncComponent from '../../components/LoadingSyncComponent';
-import { getPantries, getShoppingsList, PantryInterface } from '../../services/local/PantryLocalService';
+import ItemsAccordion from '../../components/shoppingList/ItemsAccordion';
+import { getPantries, getShoppingsList, handleShoppingListsCheckout, PantryInterface } from '../../services/local/PantryLocalService';
+import { getShoppingFinished } from '../../services/local/ShoppingListLocalService';
 import { Container, ContainerScroll, Label } from '../../styles/components';
 import { ButtonAdd as Button, ButtonLabelAdd as ButtonLabel, FormContainer } from '../../styles/form';
 import Form from './Form';
@@ -21,14 +23,16 @@ interface ShoppingListInterface {
 }
 
 const List: React.FC = () => {
-    const refreshRef = useRef()
-    const navigation = useNavigation()
-    const [shoppingLists, setShoppingLists] = useState<ShoppingListInterface[]>([] as ShoppingListInterface[])
-    const [loading, setLoading] = useState(true)
+    const refreshRef = useRef();
+    const navigation = useNavigation();
+    const [shoppingLists, setShoppingLists] = useState<ShoppingListInterface[]>([] as ShoppingListInterface[]);
+    const [loading, setLoading] = useState(true);
+    const [showFinish, setShowFinish] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
         reloadData()
+        getFinishedShopping()
     }, [])
 
     async function reloadData() {
@@ -65,13 +69,29 @@ const List: React.FC = () => {
         setIsVisible(value)
     }, [])
 
+    const handleFinishShopping = useCallback( async() => {
+        handleShoppingListsCheckout()
+            .then( _ => {
+                reloadData()
+                getFinishedShopping()
+            })
+    }, [shoppingLists])
+
+    const getFinishedShopping = useCallback( async() => {
+        const value = await getShoppingFinished()
+        console.log("getShoppingFinished()")
+        console.log(!!value)
+
+        setShowFinish(!!value)
+    }, [shoppingLists])
+
     return (
         <ContainerScroll
             contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={false}
         >
             {shoppingLists?.map((shoppingList: ShoppingListInterface) =>
-                <CardShoppingList key={shoppingList.uuid} shoppingList={shoppingList} />
+                <ItemsAccordion key={shoppingList.uuid} shoppingList={shoppingList} getFinishedShopping={getFinishedShopping} />
             )}
 
             <FormContainer
@@ -80,6 +100,12 @@ const List: React.FC = () => {
                 }}
             >
                 {/* <Button onPress={() => navigation.navigate('FormShoppingList')}> */}
+                {showFinish && 
+                    <Button onPress={handleFinishShopping}>
+                        <ButtonLabel>Finalizar compras</ButtonLabel>
+                    </Button>
+                }
+
                 <Button onPress={() => toggleBottomSheet(true)}>
                     <ButtonLabel>Adicionar lista de compras</ButtonLabel>
                 </Button>

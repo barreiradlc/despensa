@@ -12,7 +12,7 @@ export interface ProvisionInterface {
 
 export interface ItemInterface {
     queue: boolean;
-    id: string;
+    id?: string;
     uuid?: string;
     provision: ProvisionInterface;
     quantity: number;
@@ -501,6 +501,69 @@ export async function editShoppingItem(item: ShoppingItemInterface) {
     })
 }
 
+export async function handleShoppingListsCheckout() {
+
+    
+     realm.objects<ShoppingListInterface>('ShoppingList')        
+        .map(async( shoppingList: ShoppingListInterface ) => {
+        
+        if(!shoppingList.items.length){
+            return
+        }
+
+        const pantry: PantryInterface = realm.objectForPrimaryKey<PantryInterface>('Pantry', shoppingList.pantryUuid)
+
+        if(!pantry){
+            realm.write(() => {
+                return realm.delete(shoppingList)
+            })
+        }
+
+        await shoppingList.items
+            .filter(shoppingItem => shoppingItem.done)
+            .map(async( item ) => {
+
+                let savedItem: ItemInterface
+                
+                await pantry.items?.map(( i: ItemInterface ) => {
+
+                    console.log("i")
+                    console.log(i)
+
+                    if(!i.provision){
+                        return
+                    }
+
+                    if(i?.provision.name === item.provision.name || i.provision.id === item.provision.id){
+                        savedItem = i
+                    }
+
+                    realm.write(() => {
+                        if(!!savedItem){
+                            savedItem.quantity = savedItem.quantity + i.quantity
+                        } else {
+                            // const newItem = getItem(item as ItemInterface, item.provision)                        
+                            pantry.items?.push({
+                                // id: item.id,
+                                uuid: uuidv4(),
+                                quantity: Number(item.quantity) || 1,
+                                queue: false,
+                                provision: item.provision
+                            })                        
+                        }
+                        realm.delete(item)
+                    })
+                })
+        })
+
+        if(!shoppingList.items.length){
+            realm.write(() => {
+                realm.delete(shoppingList)
+            })
+        }
+    })    
+}
+
 export async function handleShoppingListCheckout(shoppingListCheckout: ShoppingItemInterface[], pantryUuid: string) {
     const pantry = await realm.objectForPrimaryKey<PantryInterface>('Pantry', pantryUuid)
 
@@ -532,6 +595,5 @@ export async function handleShoppingListCheckout(shoppingListCheckout: ShoppingI
     
         })
     }
-
     // console.log(shoppingListCheckout)
 }

@@ -57,7 +57,7 @@ const CardItem: React.FC = ({ pantry }) => {
                         >
                         <CardContainer
                             onPress={() => setToggle(item?.uuid)}  >
-                            <Title>{item.provision.name}</Title>
+                            <Title>{item.provision ? item.provision.name : 'ITEM INVÁLIDO'}</Title>
                             <Label>{item.quantity} unidade{item.quantity !== 1 && 's'} {item.expiresAt && item.expiresAt} </Label>
                         </CardContainer>
                     </Tooltip>

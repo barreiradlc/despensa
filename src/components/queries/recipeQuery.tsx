@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const QUERY_RECIPE = gql`
-  query getRecipe($id: String!){
-    recipe(id:$id){
+  query getRecipe($id: String!) {
+    recipe(id:$id) {
       id
       name
       description
@@ -10,18 +10,18 @@ export const QUERY_RECIPE = gql`
         id
         unit
         quantity
-        provision{
+        provision {
           id
-          name        
+          name   
         }
       }
-      steps{
+      steps {
         order
         description
       }
-      author{
-        id      
-        username      
+      author {
+        id
+        username
       }
     }
   }

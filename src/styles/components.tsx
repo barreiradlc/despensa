@@ -53,6 +53,15 @@ export const ContainerOverlay = styled.View`
   elevation: 10;
 `
 
+export const CardContainerOuter = styled.View`
+  margin: 0 25px; 
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  background-color: #fff;
+  bottom: 5;
+  z-index: -1;
+`
+
 export const CardContainer = styled.TouchableOpacity`
   width: 90%;
   margin: 10px 25px ;
@@ -64,9 +73,6 @@ export const CardContainer = styled.TouchableOpacity`
   border-radius: 25px;  
 `
 export const CardRowContainerInner = styled.View`
-  
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
   margin: 0 20px;
   padding: 5px 5px;
   width: 90%;
@@ -77,16 +83,15 @@ export const CardRowContainerInner = styled.View`
 `
 
 export const CardRowContainer = styled.TouchableOpacity`
-  
   margin: 0 15px;
   padding: 15px 0;
-  
   justify-content: flex-start;
   flex-direction: row;
   background-color: #fff;
 `
 export const AddShoppingItemTouchable = styled.TouchableOpacity`
-  elevation: 4;
+  elevation: -2;
+  z-index: -2;
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 25px;
   margin: 0 20px;
@@ -147,7 +152,7 @@ export const LogoImage = styled.Image`
 export const Label = styled.Text`
   color: ${props => props.color ? props.color : cor5};
   font-weight: bold;
-  font-size:14px;
+  font-size:12px;
   margin-top: 5px;
   opacity: ${props => props.opaque ? 0.4 : 1};
 `

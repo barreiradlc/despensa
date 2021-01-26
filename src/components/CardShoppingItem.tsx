@@ -3,15 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import { CardColContainer, CardContainer, CardInnerContainer, CardRowContainer, CardRowContainerInner, Label, Title } from '../styles/components';
 import CheckBox from '@react-native-community/checkbox';
-import { toggleDoneShoppingItem } from '../services/local/PantryLocalService';
+import { ShoppingItemInterface, toggleDoneShoppingItem } from '../services/local/PantryLocalService';
 import { cor1, cor4 } from '../constants/CORES';
 import capitalize from '../utils/capitalize';
 import { RectButton } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
+import realm from '../config/realmConfig/realm';
 
-const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip}) => {
+import Toast from 'react-native-simple-toast';
+
+const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip, handleUpdateItem}) => {
     const navigation = useNavigation()
-    const [toggleCheckBox, setToggleCheckBox] = useState(shoppingItem.done)
+    // const [shoppingItem, setShoppingItem] = useState(shoppingItemProps)
+    const [toggleCheckBox, setToggleCheckBox] = useState(shoppingItem.done) 
 
     function handleToggle(newValue){
         const itemToSend = {
@@ -35,12 +39,18 @@ const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip}) 
 
     function Add() {
         function handleAdd(){
+            realm.write(() => {
+                let item: ShoppingItemInterface = realm.objectForPrimaryKey<ShoppingItemInterface>(`ShoppingItem`, shoppingItem.uuid)
 
+                item.quantity = shoppingItem.quantity + 1
+                handleUpdateItem(item)
+                // setShoppingItem(item)
+            })
         }
 
         return (
             <RectButton onPress={handleAdd} style={{ paddingHorizontal: 15 }}>
-                <Icon name="plus" size={21} color="#555" />
+                <Icon name="plus" size={26} color="#555" />
             </RectButton>
         )
     }
@@ -48,12 +58,23 @@ const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip}) 
     function Minus() {
 
         function handleMinus(){
+            if(shoppingItem.quantity === 1){
+                return Toast.showWithGravity("Não é permitida uma quantidade abaixo de 1", 500, Toast.CENTER)
+            }
 
+            realm.write(() => {
+                let item: ShoppingItemInterface = realm.objectForPrimaryKey<ShoppingItemInterface>(`ShoppingItem`, shoppingItem.uuid)
+
+                item.quantity = shoppingItem.quantity - 1
+                
+                handleUpdateItem(item)
+                // setShoppingItem(item)
+            })
         }
 
         return (
-            <RectButton onPress={handleMinus} style={{ paddingHorizontal: 15 }}>
-                <Icon name="minus" size={21} color="#555" />
+            <RectButton onPress={handleMinus} style={{ paddingHorizontal: 15, opacity: shoppingItem.quantity > 1 ? 1 : 0.4 }}>
+                <Icon name="minus" size={26} color="#555" />
             </RectButton>
         )
     }
@@ -70,19 +91,19 @@ const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip}) 
                         }}
                         disabled={false}
                         value={toggleCheckBox}
-                        onValueChange={(newValue) => handleToggle(newValue)}
+                        onValueChange={(newValue) => { handleToggle(newValue), handleUpdateItem({ done: newValue, ...shoppingItem}) }}
                     />
                 </CardColContainer>
                 <CardColContainer >
                     <CardInnerContainer  >
                         <Title color={cor4} opaque={toggleCheckBox} >{capitalize(shoppingItem.provision.name)} </Title>
-                        <Label color={cor4} opaque={toggleCheckBox} >{shoppingItem.quantity} unidade{shoppingItem.quantity > 1 && 's'}</Label>                    
+                        {/* <Label color={cor4} opaque={toggleCheckBox} >{shoppingItem.quantity} unidade{shoppingItem.quantity > 1 && 's'}</Label>                     */}
                     </CardInnerContainer>
                 </CardColContainer>
 
             </CardRowContainer>
             <CardColContainer style={{ alignSelf: 'center' }}>
-                <CardInnerContainer style={{ alignSelf: 'center', flexDirection: 'row' }} >
+                <CardInnerContainer style={{ alignSelf: 'center', alignItems: 'center', flexDirection: 'row' , justifyContent: 'center', opacity: toggleCheckBox ? 0.4 : 1 }} >
                     <Minus />
                     <Label color={cor4} opaque={toggleCheckBox} >{shoppingItem.quantity}</Label>                    
                     <Add />
