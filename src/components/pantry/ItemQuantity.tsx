@@ -8,7 +8,7 @@ import realm from '../../config/realmConfig/realm';
 
 const iconSize = 21
 
-const ItemQuantity: React.FC = ({ item }) => {
+const ItemQuantity: React.FC = ({ item, pantryUuid }) => {
     const { setItemsQuantity, items, setItemsList } = useContext(ItemListContext)
 
     async function handleChangeQuantity(add: boolean) {
@@ -17,11 +17,16 @@ const ItemQuantity: React.FC = ({ item }) => {
 
         const itemsList = await items.map((item: ItemInterface) => {
 
+            const pantry = realm.objectForPrimaryKey('Pantry', pantryUuid)
+
             if (item.uuid === uuid) {
                 realm.write(() => {
                     const newQuantity = add ? item.quantity++ : item.quantity--
 
+                    console.log({ item })
+
                     // data.queue = true
+                    pantry.queue = true
                     item.queue = true
     
                     return {

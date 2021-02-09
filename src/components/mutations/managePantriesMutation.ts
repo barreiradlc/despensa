@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const MANAGE_PANTRIES = gql`
 mutation managerPantries($pantries: [PantryInput!]!){
     managePantries(pantryInput:$pantries){
-      id
+      _id
       uuid
       name
       description   
@@ -11,11 +11,11 @@ mutation managerPantries($pantries: [PantryInput!]!){
       updatedAt
       deletedAt
       items{
-        id
+        _id
         uuid
         quantity        
         provision{
-          id
+          _id
           name
         }
       }

@@ -21,6 +21,10 @@ const List: React.FC = () => {
     
     async function reloadData() {
         const data = await getPantries()
+
+        console.log("data")
+        console.log(JSON.stringify(data))
+
         setPantries(data)
         setLoading(false)
     }
@@ -59,7 +63,7 @@ const List: React.FC = () => {
             showsVerticalScrollIndicator={false}
         >
             {!loading && validPantries?.map(( pantry: PantryInterface ) => 
-                <CardPantry key={pantry.id} pantry={pantry} />
+                <CardPantry key={pantry._id} pantry={pantry} />
             )}
 
             <FormContainer

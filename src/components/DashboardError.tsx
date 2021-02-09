@@ -17,8 +17,11 @@ import {
 
 const quoteBackground = '../assets/board-near-ingredients-for-pasta.jpg'
 
+interface DashboardErrorInterface{
+    refetch(): void
+}
 
-const DashboardError: React.FC = ({ refetch }) => {
+const DashboardError: React.FC<DashboardErrorInterface> = ({ refetch }) => {
     const navigation = useNavigation()
 
     function handleGoOffline() {

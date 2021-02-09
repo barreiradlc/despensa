@@ -4,7 +4,7 @@ export default {
     primaryKey: 'uuid',
     properties: {
         uuid: 'string',
-        id: 'string?',
+        _id: 'string?',
         name: 'string?',
         description: 'string?',
         items: 'Item[]',        

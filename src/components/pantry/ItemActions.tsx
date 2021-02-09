@@ -14,7 +14,7 @@ const ItemActions: React.FC = ({ item, setToggle }) => {
 
     function handleDelete() {
         setToggle('')
-        deleteItem(item.uuid, item.id)
+        deleteItem(item.uuid, item._id)
     }
 
     function handleEdit() {

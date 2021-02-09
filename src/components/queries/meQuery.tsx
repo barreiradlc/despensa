@@ -3,27 +3,25 @@ import { gql } from "@apollo/client";
 export const ME = gql`
     query me {
         me {
-            user{
-                id
-                name
-                username
-                token
-                email
-            }
+            _id
+            name
+            username
+            token
+            email
             pantries {
-                id
+                _id
                 name
                 description
                 items {
-                    id
+                    _id
                     quantity
                     provision {
-                        id
+                        _id
                         name
                     }
                 }
                 users {
-                    id
+                    _id
                     username
                 }
             }

@@ -1,7 +1,7 @@
 export default {
     name: 'Provision',
     properties: {
-        id: 'string?',
+        _id: 'string?',
         name: 'string',
     }
 }

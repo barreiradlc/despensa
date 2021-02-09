@@ -5,17 +5,17 @@ import { Text, View } from 'react-native';
 import Tooltip from 'react-native-walkthrough-tooltip';
 
 import { ItemListContext } from '../../context/ItemListContext';
-import { ItemInterface } from '../../services/local/PantryLocalService';
+import { ItemInterface, PantryInterface } from '../../services/local/PantryLocalService';
 import { CardContainer, Label, Title, TooltipEditContainer, TooltipEditRowContainer } from '../../styles/components';
 import { ButtonAdd as Button, ButtonLabelAdd as ButtonLabel, Container, FormContainer } from '../../styles/form';
 import ItemActions from './ItemActions';
 import ItemQuantity from './ItemQuantity';
 
-// interface CardItemInterface{
-//     item: ItemInterface
-// }
+interface CardPantryInterface{
+    pantry: PantryInterface
+}
 
-const CardItem: React.FC = ({ pantry }) => {
+const CardItem: React.FC<CardPantryInterface> = ({ pantry }) => {
     const [toggle, setToggle] = useState<string>('')
     const { items, setItemsList, populateItemsList, validItems } = useContext(ItemListContext)
     const navigation = useNavigation()
@@ -36,7 +36,7 @@ const CardItem: React.FC = ({ pantry }) => {
         return (
             <TooltipEditRowContainer>
                 <TooltipEditContainer>
-                    <ItemQuantity item={item} />
+                    <ItemQuantity item={item} pantryUuid={pantry.uuid} />
                     <ItemActions item={item} setToggle={setToggle} />
                 </TooltipEditContainer>
             </TooltipEditRowContainer>

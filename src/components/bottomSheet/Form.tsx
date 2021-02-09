@@ -27,7 +27,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
     const [selectProvision, setSelectProvision] = useState(false)
     const [queryProvision, setQueryProvision] = useState(false)
     const [focus, setFocus] = useState(false)
-    const [provisionId, setProvisionId] = useState<String>()
+    const [provisionId, setProvisionId] = useState<string>()
     const [edit, setEdit] = useState(false)
     const { loading, error, data, refetch } = useQuery(PROVISIONS, {
         variables: {
@@ -136,9 +136,8 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
     }, [query])
 
     async function handleSaveItem() {
-        getProvision({ name: query, id: provisionId })
+        getProvision({ name: query, _id: provisionId })
             .then((provision) => {
-
                 if (!provision) {
                     return handleSaveItem()
                 }
@@ -290,8 +289,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
                         // autoFocus={focus}                        
                         placeholder="Item"
                         keyboardShouldPersistTaps={'handled'}
-                        hideResults={showResults}
-                        
+                        hideResults={showResults}                        
                         data={provisions}
                         defaultValue={query}
                         onStartShouldSetResponder={() => {
@@ -314,7 +312,7 @@ function Form({ close, shoppingList, index }: FormShoppingListProps, ref: ((inst
                                 <>
                                     {index !== 0 && <Divider />}
                                     <TouchableItem 
-                                        key={item.id} 
+                                        key={item._id} 
                                         invert 
                                         onPress={() => handleSelectQuery(item)} 
                                         >

@@ -10,9 +10,10 @@ import { RectButton } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 import realm from '../config/realmConfig/realm';
 
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import Toast from 'react-native-simple-toast';
 
-const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip, handleUpdateItem}) => {
+const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip, handleUpdateItem, handleRemoveItem}) => {
     const navigation = useNavigation()
     // const [shoppingItem, setShoppingItem] = useState(shoppingItemProps)
     const [toggleCheckBox, setToggleCheckBox] = useState(shoppingItem.done) 
@@ -79,7 +80,24 @@ const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip, h
         )
     }
 
+
     return (
+        <GestureRecognizer
+        onSwipe={(direction, state) => console.log({direction, state})  }
+        onSwipeUp={(state) => console.log({onSwipeUp : state})}
+        onSwipeDown={(state) => console.log({onSwipeDown : state})}
+        onSwipeLeft={() => handleRemoveItem(shoppingItem)}
+        onSwipeRight={(state) => console.log({onSwipeRight : state})}
+        config={{
+            velocityThreshold: 0.3,
+            directionalOffsetThreshold: 80
+        }}
+        style={{
+          flex: 1,
+        //   backgroundColor: this.state.backgroundColor
+        }}
+        >
+
         <CardRowContainerInner>
             <CardRowContainer onPress={handleNavigateShow}>
                 <CardColContainer>
@@ -110,6 +128,7 @@ const CardShoppingItem: React.FC = ({shoppingItem, handleManageItems, toolTip, h
                 </CardInnerContainer>
             </CardColContainer>
         </CardRowContainerInner>
+        </GestureRecognizer>
     );
 }   
 

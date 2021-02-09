@@ -33,6 +33,8 @@ function LoadingSyncComponent(_, ref){
     async function reloadData() {
         const pantries = await getQueuedPantries()    
 
+        console.log({ pantries })
+
         if(!pantries.length) {
             return console.log("NOTHS TO RELOAD")  
         }
@@ -41,7 +43,7 @@ function LoadingSyncComponent(_, ref){
 
             let items = pantry?.items.map(( item: ItemInterface ) => {
                 return {
-                    id: item.id,
+                    _id: item._id,
                     uuid: item.uuid,
                     quantity: item.quantity,
                     // TODO - expires
@@ -51,7 +53,7 @@ function LoadingSyncComponent(_, ref){
             })
 
             return {
-                id: pantry[0].id,
+                _id: pantry[0]._id,
                 uuid: pantry[0].uuid,
                 name: pantry[0].name,
                 description: pantry[0].description,

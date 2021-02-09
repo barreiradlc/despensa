@@ -10,7 +10,6 @@ import {
     LogoImage,
     LoadingLabel,
     LoadingLabelContainer,
-    cor2,
     ErrorTouchable,
     ErrorLabel,
     ErrorTitle,
@@ -53,12 +52,13 @@ const LogoutPage: React.FC = () => {
             <ErrorTitle>Deseja realmente sair?</ErrorTitle>
 
             <ErrorTouchableContainer>
-                <Button onPress={handleLogout}>
-                    <ButtonLabel>Sim</ButtonLabel>
+                
+                <Button invert onPress={handleLogout}>
+                    <ButtonLabel invert>Sim</ButtonLabel>
                 </Button>
 
-                <Button onPress={handleGoBack}>
-                    <ButtonLabel>Não</ButtonLabel>
+                <Button invert onPress={handleGoBack}>
+                    <ButtonLabel invert>Não</ButtonLabel>
                 </Button>
 
             </ErrorTouchableContainer>

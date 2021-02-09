@@ -6,7 +6,7 @@ import ShoppingList from './schemas/ShoppingList'
 import Provision from './schemas/Provision'
 import ShoppingItem from './schemas/ShoppingItem'
 
-const SCHEMA_VERSION = 52
+const SCHEMA_VERSION = 53
 
 export default new Realm({
     schema: [Pantry, Item, Provision, ShoppingList, ShoppingItem],

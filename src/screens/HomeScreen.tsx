@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import DashboardError from "../components/DashboardError";
 import LoadingComponent from "../components/LoadingComponent";
 import { ME } from "../components/queries/meQuery";
-import { storePantries } from "../services/local/PantryLocalService";
+import { getPantries, storePantries } from "../services/local/PantryLocalService";
 
 import getInitialLabel from "../utils/initialLabel";
 
@@ -24,20 +24,34 @@ function HomeScreen() {
         setReadTimer(true)
     }, 4000)
 
-    async function handleUpdateUserData(user: any) {
-        await AsyncStorage.setItem('@despensa:User', JSON.stringify(user))
+    async function handleUpdateUserData(user: any) {        
+
+        let newUser = {
+            ...user,
+            pantries: null
+        }
+
+        await AsyncStorage.setItem('@despensa:User', JSON.stringify(newUser))
     }
 
     useEffect(() => {
         console.log({data})
 
         if(data && readtimer){
-            
-            handleUpdateUserData(data.me.user)
-            storePantries(data.me.pantries)
+            const { me } = data            
+
+            if(me){               
+                handleUpdateUserData(me)
+                storePantries(me.pantries)
+            }
+
+            getPantries()
+                .then((p) => {
+                    console.log({p})
+                })
 
             navigation.dispatch(
-                StackActions.replace('DashBoard',)
+                StackActions.replace('DashBoard')
             );
         }
     }, [data, readtimer])
@@ -48,7 +62,7 @@ function HomeScreen() {
     
     useEffect(() => {
         if (networkStatus === NetworkStatus.refetch){
-            meQuery()
+        meQuery()
         }        
     }, [networkStatus])
 

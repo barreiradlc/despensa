@@ -55,8 +55,8 @@ const Login: React.FC = () => {
     useEffect(() => {
         if(__DEV__){
             setLoginData({
-                username: "lerigou@gmail.com",
-                password: "123123"
+                "username": "lerigou@gmail.com",
+                "password": "123123"
             })
         }
     }, [])

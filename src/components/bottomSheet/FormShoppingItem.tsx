@@ -23,11 +23,21 @@ interface FormShoppingListProps {
     // index: number;
 }
 
+interface InputInterface{
+    focus(): void;
+}
+
+
+// export interface ModalShowFormElement {
+// 	show(id?: string): void
+// }
+
+
 function FormShoppingItem({ close, shoppingList }: FormShoppingListProps, ref: ((instance: unknown) => void) | React.RefObject<unknown> | null | undefined) {
     const tooltpRef = useRef()
     const provisionOfflineRef = useRef()
     const provisionRef = useRef()
-    const quantidadeRef = useRef()
+    const quantidadeRef = useRef<InputInterface>()
     const [query, setQuery] = useState('')
     const [selectProvision, setSelectProvision] = useState(false)
     const [queryProvision, setQueryProvision] = useState(false)
@@ -42,7 +52,9 @@ function FormShoppingItem({ close, shoppingList }: FormShoppingListProps, ref: (
             }
         },
     });
-    const [itemData, setItemData] = useState<ShoppingItemInterface>({} as ShoppingItemInterface)
+    const [itemData, setItemData] = useState<ShoppingItemInterface>({
+        quantity: 1
+    } as ShoppingItemInterface)
     const navigation = useNavigation()
     // const route = useRoute()
 
@@ -273,7 +285,8 @@ function FormShoppingItem({ close, shoppingList }: FormShoppingListProps, ref: (
         </ButtonAdd>
         <Container
             style={{
-                paddingTop: 25
+                paddingTop: 25,
+                flex: 1
             }}
         >
             <KeyBoardListener hide={hideKeyBoard} show={() => console.log("SHOW")} />
@@ -294,13 +307,14 @@ function FormShoppingItem({ close, shoppingList }: FormShoppingListProps, ref: (
                         onChangeText={(e: any) => { setQuery(e), setSelectProvision(false) }}
                         autoCapitalize='none'
                         />
-                </ContainerInput>
+                {/* </ContainerInput>
 
-                <ContainerInput>
+                <ContainerInput> */}
                     <Input
+                        style={{ right : 60 }}
                         ref={quantidadeRef}
-                        placeholder='Quantidade'
-                        value={String(itemData.quantity || 1)}
+                        placeholder='Qtd.'
+                        value={String(itemData.quantity)}
                         onChange={(e: any) => handleChange(e, 'quantity')}
                         autoCapitalize='none'
                         />
