@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
 import realm from '../../config/realmConfig/realm';
 import { CreateConfigItemOptions } from '@babel/core';
+import { database, pantryCollection } from '../../config/waterMelonDBConfig/schema';
+import { Pantry } from '../../config/waterMelonDBConfig/schemas/Pantry';
 
 export interface ProvisionInterface {
     _id?: string;
@@ -258,6 +260,34 @@ export async function storePantries(pantries: PantryInterface[]) {
 
     console.log("Pantries")
     console.log(JSON.stringify(pantries))
+    
+    const localPantries = await pantryCollection.query().fetch()
+    
+    console.log("Pantries Local")
+    console.log(localPantries)
+
+
+    try {
+        await database.action(async () => {
+            pantries.map(async (pantry: PantryInterface) => {
+
+                const savedPantry = await pantryCollection.create((localPantry : Pantry) => {
+                    localPantry.name = pantry.name
+                    localPantry.description = pantry.description
+                  })
+
+        //         let savedPantry = await getPantry(pantry)
+
+                return savedPantry
+            })
+        })
+    } catch (error) {
+        console.log({ error })
+        throw new Error("Error saving patries");
+
+    }
+
+    return;
     // return realm.write(() => realm.deleteAll() ) 
     try {
         pantries.map(async (pantry: PantryInterface) => {

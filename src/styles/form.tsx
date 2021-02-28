@@ -45,7 +45,8 @@ export const ContainerInput = styled.View`
   flex-direction: row;
   padding-left: 20px;
   padding-right: 40px;
-  padding-vertical: 5px;
+  /* padding-vertical: 5px; */
+  padding-vertical: ${Platform.OS === 'ios' ? `10px` : '5px'};
   border-radius: 10px;
   border: 1px ${cor3} solid;
   margin-top: 10px;
@@ -53,8 +54,12 @@ export const ContainerInput = styled.View`
 
 export const Form = styled.SafeAreaView``
 
-export const Input = styled.TextInput`
-  margin-vertical: ${Platform.OS === 'ios' ? `10px` : '0'};
+interface TextInputInterface {
+  noIconStart: boolean;
+}
+
+export const Input = styled.TextInput<TextInputInterface>`
+  /* margin-vertical: ${Platform.OS === 'ios' ? `10px` : '0'}; */
   padding-left: ${props => props.noIconStart ? '0px' : '20px'};
   width: 100%;
   color: ${cor2};

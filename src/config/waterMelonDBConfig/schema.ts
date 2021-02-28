@@ -1,10 +1,10 @@
-import { appSchema, Database, tableSchema } from '@nozbe/watermelondb'
-import { Pantry, pantryTable } from './schemas/Pantry'
 import SQLiteAdapter from "@nozbe/watermelondb/adapters/sqlite";
+import { appSchema, Database, tableSchema } from '@nozbe/watermelondb'
 
+import { Pantry, pantryTable } from './schemas/Pantry'
 
 export const Schema = appSchema({
-  version: 1,
+  version: 2,
   tables: [
     pantryTable,
   ]
@@ -20,5 +20,8 @@ export const database = new Database({
     modelClasses: [Pantry],
     actionsEnabled: true
 })
+
+export const pantryCollection = database.collections.get('pantries')
+
 
 export const { collections } = database

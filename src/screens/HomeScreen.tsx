@@ -43,23 +43,20 @@ function HomeScreen() {
 
             const { me } = data            
             
-            console.log("ME")
-            console.log(me.pantries)
-            console.log(me)
+            // console.log("ME")
+            // console.log(me.pantries)
+            // console.log(me)
 
             if(me){
+                // TODO, Barreira - Refatorar store pantries
                 storePantries(me.pantries)
                 handleUpdateUserData(me)
 
-                navigation.dispatch(
-                    StackActions.replace('DashBoard')
-                );
+                // navigation.dispatch(
+                //     StackActions.replace('DashBoard')
+                // );
             }
-
-            getPantries()
-                .then((p) => {
-                    console.log({p})
-                })
+            
         }
     }, [data, readtimer])
     

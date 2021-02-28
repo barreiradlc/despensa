@@ -31,7 +31,7 @@ export class Pantry extends Model {
 
 
 export const pantryTable = tableSchema({
-    name: 'pantry',
+    name: 'pantries',
     columns: [
       { name: 'name', type: 'string' },
       { name: 'description', type: 'string' },
