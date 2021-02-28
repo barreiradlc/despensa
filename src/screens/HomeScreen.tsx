@@ -17,15 +17,16 @@ function HomeScreen() {
     const [ readtimer, setReadTimer ] = useState(false)
 
     useEffect(() => {
+
         meQuery()
+        
+        setTimeout(() => {
+            setReadTimer(true)
+        }, 4000)
+
     }, [])
 
-    setTimeout(() => {
-        setReadTimer(true)
-    }, 4000)
-
-    async function handleUpdateUserData(user: any) {        
-
+    async function handleUpdateUserData(user: any) {
         let newUser = {
             ...user,
             pantries: null
@@ -35,24 +36,30 @@ function HomeScreen() {
     }
 
     useEffect(() => {
-        console.log({data})
-
+        
         if(data && readtimer){
-            const { me } = data            
+            console.log("data")
+            console.log(data)
 
-            if(me){               
-                handleUpdateUserData(me)
+            const { me } = data            
+            
+            console.log("ME")
+            console.log(me.pantries)
+            console.log(me)
+
+            if(me){
                 storePantries(me.pantries)
+                handleUpdateUserData(me)
+
+                navigation.dispatch(
+                    StackActions.replace('DashBoard')
+                );
             }
 
             getPantries()
                 .then((p) => {
                     console.log({p})
                 })
-
-            navigation.dispatch(
-                StackActions.replace('DashBoard')
-            );
         }
     }, [data, readtimer])
     
@@ -60,11 +67,11 @@ function HomeScreen() {
         console.log({error})
     }, [error])
     
-    useEffect(() => {
-        if (networkStatus === NetworkStatus.refetch){
-        meQuery()
-        }        
-    }, [networkStatus])
+    // useEffect(() => {
+    //     if (networkStatus === NetworkStatus.refetch){
+    //         meQuery()
+    //     }        
+    // }, [networkStatus])
 
     const reload = useCallback(() => {
         meQuery()

@@ -62,6 +62,7 @@
 		9586C3C24D2319050D69C6E3 /* Pods-Despensa-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Despensa-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Despensa-tvOS/Pods-Despensa-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		A8AAB0343A2162799E9FD6D5 /* Pods-Despensa-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Despensa-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Despensa-tvOS/Pods-Despensa-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		B2A12B6733E47A4D2535A62C /* libPods-Despensa-DespensaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Despensa-DespensaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B341AAD325EAA73300213742 /* Despensa-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Despensa-Bridging-Header.h"; sourceTree = "<group>"; };
 		B384AE0625B3B722000E52CD /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		B384AE0725B3B723000E52CD /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		B384AE0825B3B723000E52CD /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -197,6 +198,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				28D41C2D80605A445AD75F3A /* Pods */,
+				B341AAD325EAA73300213742 /* Despensa-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -333,7 +335,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1200;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -769,6 +771,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Despensa;
+				SWIFT_OBJC_BRIDGING_HEADER = "Despensa-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -791,6 +794,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Despensa;
+				SWIFT_OBJC_BRIDGING_HEADER = "Despensa-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

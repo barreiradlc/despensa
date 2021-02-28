@@ -173,9 +173,9 @@ export async function getPantry(pantry: PantryInterface, local = false) {
     }
 
     realm.write(async () => {
-
         try {
-
+            
+            // console.log({ pantry })
             console.log({ _id, uuid })
 
             if (pantry.deletedAt) {
@@ -183,8 +183,7 @@ export async function getPantry(pantry: PantryInterface, local = false) {
                 return
             };
 
-
-            if (savedPantry) {
+            if (pantry.uuid || pantry._id) {
                 // savedPantry.id = pantry.id
                 // console.log(pantry.items)
                 // console.log(local)
@@ -198,6 +197,7 @@ export async function getPantry(pantry: PantryInterface, local = false) {
                 savedPantry.updatedAt = pantry.updatedAt
 
             } else {
+
                 console.log({pantry})
                 console.log({local: savedPantry})
 
@@ -380,7 +380,10 @@ export async function deletePantry(uuid: string) {
 }
 
 export async function getQueuedPantries() {
-    const pantries = await realm.objects('Pantry').filtered('queue = $0', true)
+    const pantries = await realm.objects<PantryInterface>('Pantry').filtered('queue = $0', true)
+    
+    console.log({ send : pantries })
+    
     return pantries.map((pantry: PantryInterface) => {
         const items = pantry.items?.filter((item: ItemInterface) => item.queue === true)
         return {

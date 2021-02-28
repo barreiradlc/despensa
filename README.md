@@ -1,9 +1,11 @@
 > # PENDENCIAS
+
+yarn dev
+
+
 <br>
 
 ## ANÁLISE DE LAYOUT
-
-
 <br>
 
 ## OUTRAS PENDENCIAS

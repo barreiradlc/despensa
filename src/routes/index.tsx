@@ -28,29 +28,26 @@ import ShowShoppingList from '../screens/shoppingList/Show';
 
 const Stack = createStackNavigator();
 
-async function getJWT() {
-    try {
-        return await AsyncStorage.getItem('@despensaJWT')
-    } catch (error) {
-        throw new Error("Erro ao buscar JWT");
-    }
-}
 
 function App() {
-    const [jwt, setJwt] = useState()
+    
+    const [jwt, setJwt] = useState<string | null>()
     const { loading } = useContext(LoadingOverlayContext)
-
-    getJWT()
-        .then((token) => {
-            console.log(token)
-
-            setJwt(!!token)
-        })
-
-    if (jwt == undefined) {
-        return null
+    
+    async function getJWT() {
+        try {
+            const token = await AsyncStorage.getItem('@despensaJWT')
+            
+            setJwt(token)
+        } catch (error) {
+            throw new Error("Erro ao buscar JWT");
+        }
     }
-
+    
+    useEffect(() => {
+        getJWT()    
+    }, [])
+    
     return (
         <>
             <Stack.Navigator initialRouteName={!!jwt ? 'Home' : 'Login'}>

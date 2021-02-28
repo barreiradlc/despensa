@@ -79,6 +79,9 @@ const Form: React.FC = () => {
     }
 
     async function handleSavePantry() {
+
+        console.log(" SAVE PANTRY ")
+
         getPantry(pantryData, true)
         
         if(edit){

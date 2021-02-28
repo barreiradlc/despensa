@@ -1,4 +1,4 @@
-import Realm from 'realm'
+// import Realm from 'realm'
 
 import Pantry from './schemas/Pantry'
 import Item from './schemas/Item'
@@ -8,7 +8,8 @@ import ShoppingItem from './schemas/ShoppingItem'
 
 const SCHEMA_VERSION = 53
 
-export default new Realm({
-    schema: [Pantry, Item, Provision, ShoppingList, ShoppingItem],
-    schemaVersion: SCHEMA_VERSION
-});
+export default {}
+// export default new Realm({
+//     schema: [Pantry, Item, Provision, ShoppingList, ShoppingItem],
+//     schemaVersion: SCHEMA_VERSION
+// });

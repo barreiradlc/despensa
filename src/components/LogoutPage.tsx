@@ -1,23 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { View } from 'react-native';
 import realm from '../config/realmConfig/realm';
 import ApolloClient from '../services/ApolloClient';
 import {
     Container,
-    TopContainer,
-    LogoImage,
-    LoadingLabel,
-    LoadingLabelContainer,
-    ErrorTouchable,
-    ErrorLabel,
     ErrorTitle,
     ErrorTouchableContainer
 } from "../styles/components"
 import { Button, ButtonLabel } from "../styles/form"
 
-const logo = '../assets/logo.png'
 
 const LogoutPage: React.FC = () => {
     const navigation = useNavigation()
