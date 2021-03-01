@@ -33,8 +33,8 @@ const MockPage: React.FC = ({ navigation }) => {
 }
 
 
-function DrawerNavigation({ navigation }) {
-    const navigationRN = useNavigation()    
+function DrawerNavigation({ navigation }) {    
+    console.log("xablau2")
 
     return (
         <Drawer.Navigator

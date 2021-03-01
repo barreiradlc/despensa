@@ -39,6 +39,8 @@ const TabRoutes: React.FC = () => {
     const route = useRoute()
     const navigation = useNavigation()
 
+    console.log("xablau")
+
     return (
         <RecipeProvider>
 

@@ -18,9 +18,9 @@ target 'Despensa' do
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable these next few lines.
-  # use_flipper!
+  use_flipper!
   post_install do |installer|
-    # flipper_post_install(installer)
+    flipper_post_install(installer)
     # PROCURA POR "IPHONEOS_DEPLOYMENT_TARGET"
     # EM VERSÕES DESATUALIZADAS E AS CORRIGE PARA A MÏNIMA ACEITA
     fix_deployment_target(installer)

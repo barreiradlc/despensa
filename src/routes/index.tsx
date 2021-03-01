@@ -32,13 +32,14 @@ const Stack = createStackNavigator();
 function App() {
     
     const [jwt, setJwt] = useState<string | null>()
-    const { loading } = useContext(LoadingOverlayContext)
+    const { loading, toggleOverlay } = useContext(LoadingOverlayContext)
     
     async function getJWT() {
         try {
-            const token = await AsyncStorage.getItem('@despensaJWT')
             
-            setJwt(token)
+            setJwt(                
+                await AsyncStorage.getItem('@despensaJWT') + ''
+            )
         } catch (error) {
             throw new Error("Erro ao buscar JWT");
         }
@@ -48,6 +49,8 @@ function App() {
         getJWT()    
     }, [])
     
+    if(loading || jwt == null) return null;
+
     return (
         <>
             <Stack.Navigator initialRouteName={!!jwt ? 'Home' : 'Login'}>

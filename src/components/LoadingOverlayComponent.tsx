@@ -15,6 +15,9 @@ interface LoadingData {
 }
 
 const LoadingOverlayComponent: React.FC = ({ label }: LoadingData) => {
+
+    console.log("xablau3")
+
   return (
     <ContainerOverlay>
         <TopContainer>            

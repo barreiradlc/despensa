@@ -1,9 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Text, View } from 'react-native';
+import { Pantry } from '../config/waterMelonDBConfig/schemas/Pantry';
 import { CardContainer, Label, Title } from '../styles/components';
 
-const CardPantry: React.FC = ({ pantry }) => {
+interface CardPantryInterface{
+    pantry: Pantry
+}
+
+const CardPantry: React.FC<CardPantryInterface> = ({ pantry }) => {
     const navigation = useNavigation()
 
     function handleNavigateShow(){

@@ -38,23 +38,16 @@ function HomeScreen() {
     useEffect(() => {
         
         if(data && readtimer){
-            console.log("data")
-            console.log(data)
 
             const { me } = data            
             
-            // console.log("ME")
-            // console.log(me.pantries)
-            // console.log(me)
-
-            if(me){
-                // TODO, Barreira - Refatorar store pantries
+            if(me){            
                 storePantries(me.pantries)
                 handleUpdateUserData(me)
 
-                // navigation.dispatch(
-                //     StackActions.replace('DashBoard')
-                // );
+                navigation.dispatch(
+                    StackActions.replace('DashBoard')
+                );
             }
             
         }
