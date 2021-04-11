@@ -1,4 +1,4 @@
-package br.com.despensa;
+package com.despensa;
 
 import com.facebook.react.ReactActivity;
 
