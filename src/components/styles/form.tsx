@@ -97,6 +97,18 @@ export const Button = styled.TouchableOpacity`
   border-radius: 10px;
 `
 
+export const ButtonFixed = styled.TouchableOpacity`
+  position: absolute;
+  bottom: 8px;
+  align-items: center;
+  width: ${width - 20}px;
+  justify-content: center;
+  margin: 15px 0px;
+  padding: 15px 0px;
+  background-color: ${ props => !props.invert ? cor1 : 'transparent'};
+  border-radius: 10px;
+`
+
 
 export const ButtonLabel = styled.Text`
   color: ${ props => !props.invert ? cor5 : cor3};

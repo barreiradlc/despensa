@@ -41,17 +41,19 @@ function HomeScreen() {
 
             const { me } = data            
 
+            console.log({ me })
+
             if(me){            
                 if(!!me.pantries){
                     storePantries(me.pantries)
                 }
                 handleUpdateUserData(me)
 
-                // navigation.navigate('Dashboard')
+                navigation.navigate('Dashboard')
 
-                navigation.dispatch(
-                    StackActions.replace('Dashboard')
-                )
+                // navigation.dispatch(
+                //     StackActions.replace('Dashboard')
+                // )
             }
             
         }

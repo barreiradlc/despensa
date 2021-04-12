@@ -22,8 +22,6 @@ function List(){
     return(
         <View style={{ flex: 1 }}>
 
-            <Text>{JSON.stringify(pantries)}</Text>
-
             <MyComponent pantries={pantries} />
 
             <FormBottomSheet />

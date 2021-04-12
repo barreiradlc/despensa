@@ -14,7 +14,7 @@ export interface User { }
 
 export interface Pantry {
     uuid: string;
-    id: string;
+    _id: string;
     name: string;
     description: string;
     items: Item[];
@@ -26,9 +26,14 @@ export interface Pantry {
 
 export async function storePantries(pantries: Pantry[]) {    
 
-    for (let pantry of pantries) {
-        const { uuid, id } = pantry
-        const localpantry = await realm.objects<Pantry[]>('Pantry').filtered('uuid = $0 or _id = $1', uuid, id)[0]
+    console.log({ pantries })
+
+    // for (let pantry of pantries) {
+    pantries.map(( pantry) => {
+        const { uuid, _id } = pantry
+        const localpantry = realm.objects<Pantry[]>('Pantry').filtered('uuid = $0 or _id = $1', uuid, _id)[0]
+
+        console.log({ localpantry })
 
         if (!!localpantry) {
             updateLocalPantry(pantry)
@@ -45,15 +50,15 @@ export async function storePantries(pantries: Pantry[]) {
         //         // return updateLocalItem(item)                
         //     }
         // }
-    }
+    })
 
 }
 
 
 export async function updateLocalPantry(pantry: Pantry) {
-    const { uuid, id } = pantry
+    const { uuid, _id } = pantry
     try {
-        const localpantry = await realm.objects<Pantry>('Pantry').filtered('uuid = $0 or _id = $1', uuid, id)[0]
+        const localpantry = await realm.objects<Pantry>('Pantry').filtered('uuid = $0 or _id = $1', uuid, _id)[0]
         realm.write(() => {
             localpantry.name = pantry.name
             localpantry.description = pantry.description
@@ -65,12 +70,12 @@ export async function updateLocalPantry(pantry: Pantry) {
 
 export function createLocalPantry(pantry: Pantry) {
     try {
-        const { id, name, description } = pantry
+        const { _id, name, description } = pantry
         
         realm.write(async () => {
             await realm.create('Pantry', {
                 uuid: getUuid.v4(),
-                _id: id,
+                _id,
                 name,
                 description
             })
