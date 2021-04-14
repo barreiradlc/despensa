@@ -13,13 +13,13 @@ import { Button } from '../../components/styles/form';
 interface MyComponentInterface {
   pantries: Pantry[]
 }
-interface TipRefInterface extends MutableRefObject<any | undefined> {
+interface TipRefInterface extends RefObject<any | undefined> {
   toggleTooltip(): void
 }
 
 const MyComponent = ({ pantries }: MyComponentInterface) => {
   const [expanded, setExpanded] = useState(false);
-  const pantriesRefs = useMemo(() => Array(pantries.length).fill().map(() => createRef()), [pantries] )
+  const pantriesRefs = useMemo<TipRefInterface[]>(() => Array(pantries.length).fill().map(() => createRef()), [pantries] )
   const handlePress = () => setExpanded(!expanded);
 
   return (

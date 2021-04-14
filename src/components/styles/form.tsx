@@ -98,8 +98,10 @@ export const Button = styled.TouchableOpacity`
 `
 
 export const ButtonFixed = styled.TouchableOpacity`
+  align-self: center;
   position: absolute;
   bottom: 8px;
+  text-align: center;
   align-items: center;
   width: ${width - 20}px;
   justify-content: center;

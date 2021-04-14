@@ -32,7 +32,7 @@ const TooltipComponent: React.FC<ToolipInterface> = ({ content, children }, ref)
       // contentStyle={{ position: 'absolute', top: 20 }}
       placement='bottom'
       onClose={() => setTip(false)}
-      // useInteractionManager={true} // need this prop to wait for react navigation
+    // useInteractionManager={true} // need this prop to wait for react navigation
     // below is for the status bar of react navigation bar
     // topAdjustment={Platform.OS === 'android' ? -StatusBar.currentHeight : 0}
     >
@@ -41,4 +41,4 @@ const TooltipComponent: React.FC<ToolipInterface> = ({ content, children }, ref)
   );
 }
 
-export default  forwardRef(TooltipComponent);
+export default forwardRef(TooltipComponent);

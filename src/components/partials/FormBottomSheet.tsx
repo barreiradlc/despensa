@@ -4,36 +4,17 @@ import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { ButtonLabel, Button, ButtonClose, ButtonFixed } from '../styles/form';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { forwardRef, useImperativeHandle } from 'react';
 
-function FormBottomSheet() {
-    const renderContent = () => (
-      <View
-        style={{
-          backgroundColor: 'white',
-          padding: 16,
-          height: 450,
-        }}
-      >      
-      <View 
-        style={{
-            bottom: 20,
-            flexDirection:'row',
-            alignContent:'center',
-            justifyContent: 'center'
-        }}
-      >
-        <ButtonClose
-            title="Close Bottom Sheet"
-            onPress={() => sheetRef?.current?.snapTo(1)}
-          >
-              <Icon name='times'/>
-          </ButtonClose>
-      </View>
-      </View>
-    );
-  
+function FormBottomSheet({ content }, ref) {    
     const sheetRef = React.useRef(null);
   
+    useImperativeHandle(ref, () => ({
+      toggle: (action : number) => {
+        sheetRef?.current?.snapTo(action)        
+      }
+    }));
+
     return (
       <>
         <View
@@ -45,11 +26,7 @@ function FormBottomSheet() {
           }}
         >
 
-            <ButtonFixed
-                onPress={() => sheetRef?.current?.snapTo(0)}    
-            >
-                <ButtonLabel>Criar nova despensa</ButtonLabel>
-            </ButtonFixed>
+            
   
         </View>
         <BottomSheet        
@@ -57,11 +34,11 @@ function FormBottomSheet() {
           initialSnap={1}
           snapPoints={[450, 0]}
           borderRadius={10}
-          renderContent={renderContent}
+          renderContent={content}
         />
       </>
     );
   }
 
 
-  export default FormBottomSheet
+  export default forwardRef(FormBottomSheet)
