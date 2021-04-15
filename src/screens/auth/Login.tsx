@@ -131,12 +131,6 @@ const Login: React.FC = () => {
                     <ButtonLabel invert>Ainda não é cadastrado? Cadastrar-me</ButtonLabel>
                 </Button>                
             </FormContainer>
-
-            {/* <TouchableOpacity                
-                onPress={() => handleLogin(loginData)}
-            >
-                <Text>Login</Text>
-            </TouchableOpacity> */}
         </Container>
     );
 }

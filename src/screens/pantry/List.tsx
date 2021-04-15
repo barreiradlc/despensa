@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BottomSheet from 'reanimated-bottom-sheet';
 import FormBottomSheet from '../../components/partials/FormBottomSheet';
 import { ButtonClose, ButtonFixed, ButtonLabel } from '../../components/styles/form';
 import { getPantries, Pantry, storePantries } from '../../services/local/realm/PantryLocalService';
+import FormPantry from './Form';
 import MyComponent from './MyComponent';
 
 function List() {
@@ -31,31 +32,7 @@ function List() {
 
     function renderContent() {
         return (
-            <View
-                style={{
-                    backgroundColor: 'white',
-                    padding: 16,
-                    height: 450,
-                }}
-            >
-
-                <View
-                    style={{
-                        bottom: 20,
-                        flexDirection: 'row',
-                        alignContent: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <ButtonClose
-                        title="Close Bottom Sheet"
-                        onPress={handleClose}
-                    >
-                        <Icon name='times' />
-                    </ButtonClose>
-                </View>
-            </View>
-
+            <FormPantry close={handleClose} />
         )
     };
 
@@ -63,7 +40,9 @@ function List() {
         <View style={{ flex: 1, flexDirection: 'column' }}>
 
             {/* TODO, Rever nome e funcionaliades */}
-            <MyComponent pantries={pantries} />
+            <ScrollView style={{ marginBottom: 80 }}>
+                <MyComponent pantries={pantries} />
+            </ScrollView>
 
             <ButtonFixed
                 style={{ zIndex: 45 }}
@@ -71,8 +50,7 @@ function List() {
                 >
                 <ButtonLabel>Adicionar uma nova despensa</ButtonLabel>
             </ButtonFixed>
-
-            {/* TODO, Extrair form de outro component */}
+            
             <FormBottomSheet ref={formRef} content={renderContent} />
         </View>
     )

@@ -23,7 +23,7 @@ const MyComponent = ({ pantries }: MyComponentInterface) => {
   const handlePress = () => setExpanded(!expanded);
 
   return (
-    <List.AccordionGroup>
+    <List.AccordionGroup >
 
       {!!pantries.length && pantries.map((pantry: Pantry, index: number) => (
         <List.Accordion

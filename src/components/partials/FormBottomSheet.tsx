@@ -16,19 +16,6 @@ function FormBottomSheet({ content }, ref) {
     }));
 
     return (
-      <>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            paddingVertical: 10
-          }}
-        >
-
-            
-  
-        </View>
         <BottomSheet        
           ref={sheetRef}
           initialSnap={1}
@@ -36,7 +23,6 @@ function FormBottomSheet({ content }, ref) {
           borderRadius={10}
           renderContent={content}
         />
-      </>
     );
   }
 

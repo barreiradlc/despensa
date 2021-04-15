@@ -4,13 +4,19 @@ import realm from "../../../config/realmConfig/realm"
 // import { v4 as uuidv4 } from 'uuid';
 import getUuid from 'react-native-uuid';
 
-
 export interface Item {
     uuid: string;
     id?: string;
 }
 
 export interface User { }
+
+export interface CreatePantryDTO {
+    _id?: string;
+    name: string;
+    description: string;
+    queue: boolean
+}
 
 export interface Pantry {
     uuid: string;
@@ -19,6 +25,7 @@ export interface Pantry {
     description: string;
     items: Item[];
     users: User[];
+    queue: boolean
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date;
@@ -26,31 +33,36 @@ export interface Pantry {
 
 export async function storePantries(pantries: Pantry[]) {    
 
-    console.log({ pantries })
+    // console.log({ pantries })
 
     // for (let pantry of pantries) {
-    pantries.map(( pantry) => {
+    for (let pantry of pantries) {
         const { uuid, _id } = pantry
         const localpantry = realm.objects<Pantry[]>('Pantry').filtered('uuid = $0 or _id = $1', uuid, _id)[0]
 
-        console.log({ localpantry })
-
+        
         if (!!localpantry) {
             updateLocalPantry(pantry)
         } else {
             createLocalPantry(pantry)
         }
+        
+        
+        console.log({ items: pantry.items })
 
-        // for (let item of pantry.items) {
-        //     const localItem = realm.objects<Item>('Item').filtered('uuid = $0 or id = $1', item.uuid, item.id)[0]
+        for (let item of pantry.items) {
+            const localItem = realm.objects<Item>('Item').filtered('uuid = $0 or _id = $1', item.uuid, item._id)[0]
 
-        //     if (!!localItem) {
-        //         // return createLocalItem(item)
-        //     } else {
-        //         // return updateLocalItem(item)                
-        //     }
-        // }
-    })
+            console.log({ item })
+            console.log({ localItem })
+
+            if (!!localItem) {
+                // return createLocalItem(item)
+            } else {
+                // return updateLocalItem(item)                
+            }
+        }
+    }
 
 }
 
@@ -68,16 +80,19 @@ export async function updateLocalPantry(pantry: Pantry) {
     }    
 }
 
-export function createLocalPantry(pantry: Pantry) {
+export function createLocalPantry(pantry: Pantry | CreatePantryDTO) {
     try {
-        const { _id, name, description } = pantry
+        const { _id, name, description, queue = false } = pantry
         
+        // console.log({createLocalPantry})
+
         realm.write(async () => {
             await realm.create('Pantry', {
                 uuid: getUuid.v4(),
                 _id,
                 name,
-                description
+                description,
+                queue
             })
         })
     } catch (error) {        

@@ -19,12 +19,20 @@ export const Container = styled.SafeAreaView`
 `
 export const ContainerScroll = styled.ScrollView``
 
-
 export const FormContainer = styled.View`
-  flex: 1;
-  justify-content: center;
+flex: 1;
+justify-content: center;
+align-items: center;
+margin: 20px;
+`
+
+export const FormContainerAutoComplete = styled.View`
+  flex-direction: column;
+  height:100%;
+  zIndex: 55;
+  justify-content: flex-end;
   align-items: center;
-  margin: 20px;
+  background-color: ${cor5};
 `
 
 export const FormItemContainer = styled.SafeAreaView`
@@ -66,6 +74,17 @@ export const Input = styled.TextInput<TextInputInterface>`
   flex-direction: row;
   justify-content: flex-start;
   font-size:18px;
+`
+
+export const InputMultiline = styled.TextInput<TextInputInterface>`
+  /* margin-vertical: ${Platform.OS === 'ios' ? `10px` : '0'}; */
+  padding-left: ${props => props.noIconStart ? '0px' : '20px'};
+  width: 100%;
+  color: ${cor2};
+  flex-direction: row; 
+  justify-content: flex-start;
+  font-size:18px;
+  height: 120px
 `
 
 export const InputEnd = styled.TextInput`
