@@ -9,6 +9,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import TooltipComponent from '../../components/utils/TooltipComponent';
 import ListAccordionGroup from 'react-native-paper/lib/typescript/components/List/ListAccordionGroup';
 import { Button } from '../../components/styles/form';
+import PantryOptions from '../../components/pantry/PantryOptions';
 
 interface MyComponentInterface {
   pantries: Pantry[]
@@ -19,11 +20,11 @@ interface TipRefInterface extends RefObject<any | undefined> {
 
 const MyComponent = ({ pantries }: MyComponentInterface) => {
   const [expanded, setExpanded] = useState(false);
-  const pantriesRefs = useMemo<TipRefInterface[]>(() => Array(pantries.length).fill().map(() => createRef()), [pantries] )
+  const pantriesRefs = useMemo<TipRefInterface[]>(() => Array(pantries.length).fill().map(() => createRef()), [pantries])
   const handlePress = () => setExpanded(!expanded);
 
   return (
-    <List.AccordionGroup >
+    <List.AccordionGroup>
 
       {!!pantries.length && pantries.map((pantry: Pantry, index: number) => (
         <List.Accordion
@@ -36,11 +37,13 @@ const MyComponent = ({ pantries }: MyComponentInterface) => {
             console.log(pantriesRefs)
           }}
           titleStyle={{ color: "#C72828" }}
-          left={props =>
-            <TooltipComponent ref={pantriesRefs[index]}>
-              <List.Icon {...props} icon="folder" />
-            </TooltipComponent>
-          }
+          left={(props) => {
+            return (
+              <TooltipComponent content={<PantryOptions />} ref={pantriesRefs[index]}>
+                <List.Icon {...props} icon="folder" />
+              </TooltipComponent>
+            )
+          }}
           expanded={expanded}
           onPress={handlePress}>
           <List.Item title="First item" />

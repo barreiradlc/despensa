@@ -10,6 +10,22 @@ import { cor1, cor2, cor3, cor4, cor5, cor6 } from '../../constants/CORES'
 export const cor7 = '#000'
 
 
+// OPTIONS
+
+export const ButtonOptions = styled.TouchableOpacity`
+  margin: 4px 0;
+  align-items: center;  
+  justify-content: center;    
+  background-color: ${ props => !props.invert ? cor1 : 'transparent'};  
+`
+
+export const ButtonOptionsLabel = styled.Text`
+  color: ${ props => !props.invert ? cor5 : cor3};
+  font-weight: bold;
+  font-size:17px;
+  align-items: center;
+`
+
 // GERAL
 export const Container = styled.View`
   flex: 1;

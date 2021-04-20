@@ -15,3 +15,16 @@ export default {
         thumbnail: 'string?',
     }
 }
+
+export interface PantryInterface {
+    uuid: string;
+    _id: string;
+    name: string;
+    description: string;
+    items: any[]; // Item
+    users: any[]; // User
+    queue: boolean
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
+}
