@@ -10,23 +10,41 @@ import TooltipComponent from '../../components/utils/TooltipComponent';
 import ListAccordionGroup from 'react-native-paper/lib/typescript/components/List/ListAccordionGroup';
 import { Button } from '../../components/styles/form';
 import PantryOptions from '../../components/pantry/PantryOptions';
+import { useCallback } from 'react';
+import { PantryInterface } from '../../config/realmConfig/schemas/Pantry';
+import ItemPantry from './ItemPantry';
+import NewItemTab from './NewItemTab';
+import ItemContent from './ItemContent';
 
-interface MyComponentInterface {
-  pantries: Pantry[]
+interface PantriesComponentInterface {
+  pantries: PantryInterface[],
+  editPantry(pantry: PantryInterface): void
 }
+
 interface TipRefInterface extends RefObject<any | undefined> {
-  toggleTooltip(): void
+  toggleTooltip(value?: boolean): void
 }
 
-const MyComponent = ({ pantries }: MyComponentInterface) => {
+const PantriesComponent = ({ pantries, editPantry }: PantriesComponentInterface) => {
   const [expanded, setExpanded] = useState(false);
-  const pantriesRefs = useMemo<TipRefInterface[]>(() => Array(pantries.length).fill().map(() => createRef()), [pantries])
   const handlePress = () => setExpanded(!expanded);
+  const pantriesRefs = useMemo<TipRefInterface[]>(() => Array(pantries.length).fill().map(() => createRef()), [pantries])
+
+  const handleEditPantry = useCallback((pantry: PantryInterface, index: number) => {
+
+    // TODO, Barreira - Rever esse coiso chato
+    pantriesRefs[index]?.current.toggleTooltip(false)
+    pantriesRefs[index]?.current.toggleTooltip(false)
+
+    setTimeout(() => {
+      editPantry(pantry)
+    }, 50)
+  }, [])
 
   return (
     <List.AccordionGroup>
 
-      {!!pantries.length && pantries.map((pantry: Pantry, index: number) => (
+      {!!pantries.length && pantries.map((pantry: PantryInterface, index: number) => (
         <List.Accordion
           key={pantry.uuid}
           id={pantry.uuid}
@@ -37,17 +55,19 @@ const MyComponent = ({ pantries }: MyComponentInterface) => {
             console.log(pantriesRefs)
           }}
           titleStyle={{ color: "#C72828" }}
+          style={{ borderTopColor: "#555", borderTopWidth: 1 }}
           left={(props) => {
             return (
-              <TooltipComponent content={<PantryOptions />} ref={pantriesRefs[index]}>
-                <List.Icon {...props} icon="folder" />
+              <TooltipComponent content={<PantryOptions index={index} pantry={pantry} handleEditPantry={handleEditPantry} />} ref={pantriesRefs[index]}>
+                <List.Icon icon="fridge" />
               </TooltipComponent>
             )
           }}
           expanded={expanded}
           onPress={handlePress}>
-          <List.Item title="First item" />
-          <List.Item title="Second item" />
+
+          <ItemContent items={pantry.items} uuidPantry={pantry.uuid} />
+
         </List.Accordion>
       ))}
 
@@ -55,4 +75,4 @@ const MyComponent = ({ pantries }: MyComponentInterface) => {
   );
 };
 
-export default MyComponent;
+export default PantriesComponent;

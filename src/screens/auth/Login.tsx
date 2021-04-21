@@ -4,7 +4,7 @@ import { Alert, Keyboard } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
 
-import { Button, ButtonLabel, Container,  FormContainer, Input, LogoImage, ContainerInput } from "../../components/styles/form"
+import { Button, ButtonLabel, Container, FormContainer, Input, LogoImage, ContainerInput } from "../../components/styles/form"
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../../components/gql/mutations/loginMutation';
 
@@ -14,10 +14,11 @@ import { LoadingOverlayContext } from '../../components/context/LoadingProvider'
 
 import Toast from 'react-native-simple-toast';
 import { toastWithGravity } from '../../utils/toastUtils';
+import { RectButton } from 'react-native-gesture-handler';
 
 const logo = '../../assets/logo.png'
 
-export interface LoginDTO{
+export interface LoginDTO {
     username: string;
     password: string;
 }
@@ -40,13 +41,13 @@ const Login: React.FC = () => {
 
     function handleLogin() {
         const { username, password } = loginData
-        
+
         if (username && password) {
             Keyboard.dismiss()
-            
-            login({ 
-                variables: { 
-                    loginData 
+
+            login({
+                variables: {
+                    loginData
                 }
             });
 
@@ -56,7 +57,7 @@ const Login: React.FC = () => {
     }
 
     useEffect(() => {
-        if(__DEV__){
+        if (__DEV__) {
             setLoginData({
                 "username": "lerigou@gmail.com",
                 "password": "123123"
@@ -65,22 +66,22 @@ const Login: React.FC = () => {
     }, [])
 
     useEffect(() => {
-        if (error) {            
+        if (error) {
             toastWithGravity('Credenciais inválidas, por favor tente novamente', 500, Toast.CENTER)
         }
     }, [error])
-    
+
     useEffect(() => {
         toggleOverlay(loading)
     }, [loading])
-    
+
     useEffect(() => {
         if (data) {
             handleSaveLoginData()
         }
     }, [data])
-    
-    async function handleSaveLoginData() {        
+
+    async function handleSaveLoginData() {
         const { signIn } = data
 
         console.log("signIn")
@@ -110,9 +111,9 @@ const Login: React.FC = () => {
                         value={loginData.username}
                         onChange={(e: any) => handleChange(e, 'username')}
                         autoCapitalize='none'
-                        />
+                    />
                 </ContainerInput>
-                
+
                 <ContainerInput>
                     <Icon size={25} name="lock" color={cor2} />
                     <Input
@@ -122,6 +123,7 @@ const Login: React.FC = () => {
                         onChange={(e: any) => handleChange(e, 'password')}
                         autoCapitalize='none'
                     />
+
                 </ContainerInput>
 
                 <Button onPress={handleLogin}>
@@ -129,7 +131,7 @@ const Login: React.FC = () => {
                 </Button>
                 <Button invert onPress={handleGoToSignUp}>
                     <ButtonLabel invert>Ainda não é cadastrado? Cadastrar-me</ButtonLabel>
-                </Button>                
+                </Button>
             </FormContainer>
         </Container>
     );

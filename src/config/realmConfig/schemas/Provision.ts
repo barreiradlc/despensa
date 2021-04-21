@@ -5,3 +5,9 @@ export default {
         name: 'string',
     }
 }
+
+
+export interface ProvisionInterface {
+    _id?: string;
+    name: string;
+}

@@ -10,16 +10,16 @@ import { storePantries } from "../services/local/realm/PantryLocalService";
 
 
 function HomeScreen() {
-    const [ meQuery,  { loading, error, data, refetch, client, networkStatus }] = useLazyQuery(ME, {
-            notifyOnNetworkStatusChange: true,
+    const [meQuery, { loading, error, data, refetch, client, networkStatus }] = useLazyQuery(ME, {
+        notifyOnNetworkStatusChange: true,
     });
     const navigation = useNavigation()
-    const [ readtimer, setReadTimer ] = useState(false)
+    const [readtimer, setReadTimer] = useState(false)
 
     useEffect(() => {
 
         meQuery()
-        
+
         setTimeout(() => {
             setReadTimer(true)
         }, 4000)
@@ -36,15 +36,15 @@ function HomeScreen() {
     }
 
     useEffect(() => {
-        
-        if(data && readtimer){
 
-            const { me } = data            
+        if (data && readtimer) {
+
+            const { me } = data
 
             console.log({ me })
 
-            if(me){            
-                if(!!me.pantries){
+            if (me) {
+                if (!!me.pantries) {
                     storePantries(me.pantries)
                 }
                 handleUpdateUserData(me)
@@ -55,18 +55,18 @@ function HomeScreen() {
                 //     StackActions.replace('Dashboard')
                 // )
             }
-            
+
         }
     }, [data, readtimer])
-    
+
     useEffect(() => {
-        console.log({error})
+        console.log({ error })
     }, [error])
-    
+
     useEffect(() => {
-        if (networkStatus === NetworkStatus.refetch){
+        if (networkStatus === NetworkStatus.refetch) {
             meQuery()
-        }        
+        }
     }, [networkStatus])
 
     const reload = useCallback(() => {

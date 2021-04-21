@@ -11,8 +11,8 @@ const TooltipComponent: React.FC<ToolipInterface> = ({ content, children }, ref)
   const [showTip, setTip] = useState(false);
 
   useImperativeHandle(ref, () => ({
-    toggleTooltip: () => {
-      setTip((prevData: boolean) => !prevData)
+    toggleTooltip: (value?: boolean) => {
+      setTip((prevData: boolean) => value || !prevData)
     }
   }));
 

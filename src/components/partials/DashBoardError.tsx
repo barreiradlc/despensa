@@ -17,7 +17,7 @@ import {
 
 const quoteBackground = '../../assets/board-near-ingredients-for-pasta.jpg'
 
-interface DashboardErrorInterface{
+interface DashboardErrorInterface {
     refetch(): void
 }
 
@@ -25,34 +25,36 @@ const DashboardError: React.FC<DashboardErrorInterface> = ({ refetch }) => {
     const navigation = useNavigation()
 
     function handleGoOffline() {
-        navigation.dispatch(
-            StackActions.replace('DashBoard',)
-        );     
+        // navigation.dispatch(
+        //     StackActions.replace('DashBoard',)
+        // );     
+
+        navigation.navigate('Dashboard')
     }
 
     return (
         <ImageBackground
-            style={{ flex: 1 }}            
+            style={{ flex: 1 }}
             imageStyle={{
                 opacity: 0.3
             }}
             source={require(quoteBackground)}
         >
 
-        <Container>
-            <Icon name="cloud-off" color={cor2} size={34} />
-            <ErrorTitle>Ocorreu um erro ao{`\n`} buscar seus dados</ErrorTitle>
+            <Container>
+                <Icon name="cloud-off" color={cor2} size={34} />
+                <ErrorTitle>Ocorreu um erro ao{`\n`} buscar seus dados</ErrorTitle>
 
-            <ErrorTouchableContainer>
-                <ErrorTouchable onPress={refetch}>
-                    <ErrorLabel>Tentar novamente </ErrorLabel>
-                </ErrorTouchable>
+                <ErrorTouchableContainer>
+                    <ErrorTouchable onPress={refetch}>
+                        <ErrorLabel>Tentar novamente </ErrorLabel>
+                    </ErrorTouchable>
 
-                <ErrorTouchable onPress={handleGoOffline}>
-                    <ErrorLabel>Continuar offline</ErrorLabel>
-                </ErrorTouchable>
-            </ErrorTouchableContainer>
-        </Container>        
+                    <ErrorTouchable onPress={handleGoOffline}>
+                        <ErrorLabel>Continuar offline</ErrorLabel>
+                    </ErrorTouchable>
+                </ErrorTouchableContainer>
+            </Container>
         </ImageBackground>
     );
 }

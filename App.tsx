@@ -9,7 +9,7 @@ import { client } from './src/utils/gqlUtils';
 const App = () => (
   <LoadingOverlayProvider>
     <ApolloProvider client={client}>
-      <Routes /> 
+      <Routes />
     </ApolloProvider>
   </LoadingOverlayProvider>
 );

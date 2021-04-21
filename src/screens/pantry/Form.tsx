@@ -14,43 +14,82 @@ import { LoadingOverlayContext } from '../../components/context/LoadingProvider'
 
 import Toast from 'react-native-simple-toast';
 import { toastWithGravity } from '../../utils/toastUtils';
-import { createLocalPantry, CreatePantryDTO } from '../../services/local/realm/PantryLocalService';
+import { createLocalPantry, CreatePantryDTO, editLocalPantry } from '../../services/local/realm/PantryLocalService';
+import { PantryInterface } from '../../config/realmConfig/schemas/Pantry';
 
-function Form({ close }) {
+interface FormInterface {
+    close(): void;
+    data: PantryInterface
+}
+
+function Form({ close, data }: FormInterface) {
     const [pantryData, setPantryData] = useState<CreatePantryDTO>({} as CreatePantryDTO)
+    const [edit, setEdit] = useState<boolean>(false)
+
 
     function handleChange(event: any, attr: string) {
-        setPantryData({ ...pantryData, [attr]: event.nativeEvent.text.trim().toLowerCase() })
+        setPantryData({ ...pantryData, [attr]: event.nativeEvent.text })
     }
 
-    async function handleSavePantry() {
-        console.log('CREATE')
+    useEffect(() => {
 
-        if(!pantryData.name){
+        setEdit(!!data.uuid)
+
+        if (data) {
+            setPantryData({
+                name: data.name,
+                description: data.description,
+                queue: data.queue,
+                uuid: data.uuid
+            })
+        }
+    }, [data])
+
+    useEffect(() => {
+        console.log({ pantryData })
+    }, [])
+
+    async function handleSavePantry() {
+
+        if (!pantryData.name) {
             toastWithGravity("É necessário dar um nome à sua despensa")
         }
-        
-        await createLocalPantry({
-            ...pantryData,
-            queue: true
-        })     
 
+        Keyboard.dismiss()
 
+        if (edit) {
+            console.log('EDIT')
+            await editLocalPantry({
+                ...pantryData,
+                queue: true
+            })
+        } else {
+            console.log('CREATE')
+            await createLocalPantry({
+                ...pantryData,
+                queue: true
+            })
+        }
+
+        handleCloseBottomSheet()
+    }
+    function handleCloseBottomSheet() {
         close()
         setPantryData({} as CreatePantryDTO)
     }
-    
+
     function handleDeletePantry() {
         console.log('Delete')
         // navigation.navigate('SignUp')
         // createLocalPantry(pantryData)
     }
 
-
     return (
         <FormContainerAutoComplete>
-            <ButtonLabel invert>Nova Despensa</ButtonLabel>
-            <ContainerInput >
+            <ButtonLabel invert>
+                {edit ? 'Editar Despensa' : 'Nova Despensa'}
+            </ButtonLabel>
+            <ContainerInput>
                 <Input
                     noIconStart
                     placeholder='Nome'
@@ -70,14 +109,13 @@ function Form({ close }) {
             </ContainerInput>
 
             <Button onPress={handleSavePantry}>
-                <ButtonLabel>Cadastrar</ButtonLabel>
+                <ButtonLabel>{edit ? "Editar" : "Cadastrar"}</ButtonLabel>
             </Button>
 
-            <Button invert onPress={handleSavePantry}>
+            <Button invert onPress={handleDeletePantry}>
                 <ButtonLabel invert>Deletar</ButtonLabel>
             </Button>
         </FormContainerAutoComplete>
-        // </Container>
     );
 }
 

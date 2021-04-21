@@ -1,3 +1,4 @@
+import { ItemInterface } from "./Item";
 
 export default {
     name: 'Pantry',
@@ -7,7 +8,7 @@ export default {
         _id: 'string?',
         name: 'string?',
         description: 'string?',
-        items: 'Item[]',        
+        items: 'Item[]',
         createdAt: 'date?',
         updatedAt: 'date?',
         deletedAt: 'date?',
@@ -18,10 +19,10 @@ export default {
 
 export interface PantryInterface {
     uuid: string;
-    _id: string;
+    _id?: string;
     name: string;
     description: string;
-    items: any[]; // Item
+    items: ItemInterface[]; // Item
     users: any[]; // User
     queue: boolean
     createdAt: Date;

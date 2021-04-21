@@ -1,9 +1,9 @@
 import styled from 'styled-components/native'
 import { Dimensions, Platform } from 'react-native'
+const { width, height } = Dimensions.get('screen')
+
 
 import { cor1, cor2, cor3, cor4, cor5, cor6 } from '../../constants/CORES'
-
-const { width, height } = Dimensions.get('screen')
 
 export const BottomSheetContainer = styled.SafeAreaView`
   padding-top: 20px;
@@ -36,7 +36,7 @@ export const FormContainerAutoComplete = styled.View`
 `
 
 export const FormItemContainer = styled.SafeAreaView`
-  justify-content: ${ props => props.keyboardOpen ? 'flex-end' : 'center' };  
+  justify-content: ${props => props.keyboardOpen ? 'flex-end' : 'center'};  
   flex-direction: column;
   margin: 0 10px;
   flex:1;
@@ -102,7 +102,7 @@ export const ButtonClose = styled.TouchableOpacity`
   justify-content: center;
   margin: 15px 0px;
   padding: 5px;
-  background-color: ${ props => !props.invert ? cor1 : 'transparent'};
+  background-color: ${props => !props.invert ? cor1 : 'transparent'};
   border-radius: 10px;
 `
 
@@ -112,7 +112,7 @@ export const Button = styled.TouchableOpacity`
   justify-content: center;
   margin: 15px 0px;
   padding: 15px 0px;
-  background-color: ${ props => !props.invert ? cor1 : 'transparent'};
+  background-color: ${props => !props.invert ? cor1 : 'transparent'};
   border-radius: 10px;
 `
 
@@ -126,13 +126,13 @@ export const ButtonFixed = styled.TouchableOpacity`
   justify-content: center;
   margin: 15px 0px;
   padding: 15px 0px;
-  background-color: ${ props => !props.invert ? cor1 : 'transparent'};
+  background-color: ${props => !props.invert ? cor1 : 'transparent'};
   border-radius: 10px;
 `
 
 
 export const ButtonLabel = styled.Text`
-  color: ${ props => !props.invert ? cor5 : cor3};
+  color: ${props => !props.invert ? cor5 : cor3};
   font-weight: bold;
   font-size:17px;
   align-items: center;
@@ -161,7 +161,7 @@ export const TouchableItem = styled.TouchableOpacity`
   elevation: 30;
   padding: 20px 35px;
   /* height: 15px; */
-  color: ${ props => !props.invert ? cor5 : cor2};
+  color: ${props => !props.invert ? cor5 : cor2};
 `
 
 export const TouchableItemLabel = styled.Text`
