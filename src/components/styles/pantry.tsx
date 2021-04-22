@@ -3,13 +3,13 @@ import { cor1, cor2, cor3, cor4, cor5, cor6 } from '../../constants/CORES'
 
 // OPTIONS
 export const ItemContainer = styled.TouchableOpacity`
-    margin: 0px 16px;
-    padding: 8px 4px;
-    align-items: center;  
-    justify-content: center;    
-    background-color: ${props => !props.invert ? cor1 : 'transparent'};  
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
+margin: 0px 16px;
+padding: 8px 4px;
+align-items: center;  
+justify-content: center;    
+background-color: ${props => !props.invert ? cor1 : 'transparent'};  
+border-bottom-right-radius: 4px;
+border-bottom-left-radius: 4px;
 `
 
 export const ItemTab = styled.View`

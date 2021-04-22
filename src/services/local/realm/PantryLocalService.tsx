@@ -5,6 +5,7 @@ import realm from "../../../config/realmConfig/realm"
 import getUuid from 'react-native-uuid';
 import { PantryInterface } from "../../../config/realmConfig/schemas/Pantry";
 import { ProvisionInterface } from "../../../config/realmConfig/schemas/Provision";
+import { ItemInterface } from "../../../config/realmConfig/schemas/Item";
 
 export interface Item {
     uuid: string;
@@ -27,6 +28,11 @@ export interface CreateItemDTO {
     quantity: number;
     queue: boolean;
     provision: ProvisionInterface
+}
+
+export interface FindOrCreateProvisionDTO {
+    _id: string;
+    name: string
 }
 
 export interface Pantry {
@@ -126,6 +132,79 @@ export async function editLocalPantry(pantry: Pantry | CreatePantryDTO) {
     } catch (error) {
         console.error(`Error while updating pantry ${error}`)
     }
+}
+
+
+export async function getLocalProvision({ name, _id }: ProvisionInterface) {
+    try {
+        let localProvision
+
+        if (name) {
+            localProvision = await realm.objects<ProvisionInterface>('Provision').filtered('name = $0', name)[0]
+        } else if (_id) {
+            localProvision = await realm.objects<ProvisionInterface>('Provision').filtered('_id = $0', _id)[0]
+        } else {
+            throw new Error(`No data provided`)
+        }
+
+        console.log(localProvision)
+
+        if (!!localProvision) return localProvision;
+
+        console.log("new localProvision")
+
+        realm.write(async () => {
+            const newProvision = await realm.create('Provision', {
+                name,
+                _id
+            })
+
+            console.log({ newProvision })
+            return newProvision
+        })
+    } catch (error) {
+        throw new Error(`Error while fetching provision ${error}`)
+    }
+}
+
+export async function createLocalItem(item: ItemInterface | CreateItemDTO, uuidPantry: string) {
+    let localpantry = await realm.objects<PantryInterface>('Pantry').filtered('uuid = $0', uuidPantry)[0]
+
+    try {
+        realm.write(() => {
+            const newItem = realm.create<ItemInterface>('Item', {
+                ...item,
+                uuid: String(getUuid.v4()),
+                quantity: Number(item.quantity),
+            })
+
+            localpantry.items.push(newItem)
+
+        })
+    } catch (error) {
+        throw new Error(`Error while creating item ${error}`)
+    }
+
+}
+
+export async function updateLocalItem(item: ItemInterface | CreateItemDTO) {
+    let localItem = await realm.objects<ItemInterface>('Item').filtered('uuid = $0', item.uuid)[0]
+
+    console.log(item)
+    console.log(item.uuid)
+    console.log({ localItem })
+
+    const { provision, quantity } = item
+
+    try {
+        realm.write(() => {
+            localItem.provision = provision
+            localItem.quantity = quantity
+        })
+    } catch (error) {
+        throw new Error(`Error while updating item ${error}`)
+    }
+
 }
 
 export async function getPantries() {

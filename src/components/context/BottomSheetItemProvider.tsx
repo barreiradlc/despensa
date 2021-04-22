@@ -34,7 +34,7 @@ export const BottomSheetItemProvider: React.FC = ({ children }) => {
 
     function handleOpen(uuiPantry: string, item?: ItemInterface) {
         setPantry(uuiPantry)
-        setItemSelected({} as ItemInterface)
+        setItemSelected(item || {} as ItemInterface)
         formRef.current.toggle(0)
     }
 

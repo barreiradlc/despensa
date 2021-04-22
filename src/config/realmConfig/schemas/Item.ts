@@ -17,12 +17,12 @@ export default {
 }
 
 export interface ItemInterface {
-    uuid: string;
+    uuid?: string;
     _id?: string;
     quantity: number;
     expiresAt?: Date;
     provision: ProvisionInterface;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedAt?: Date;
 }

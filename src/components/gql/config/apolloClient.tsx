@@ -4,8 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const httpLink = createHttpLink({
   // uri: 'http://192.168.0.116:4000/graphql'
-  // uri: 'https://despensa-back-app.herokuapp.com/graphql'
-  uri: 'http://192.168.0.39:4000/graphql'
+  uri: 'https://despensa-back-app.herokuapp.com/graphql'
+  // uri: 'http://192.168.0.39:4000/graphql'
 });
 
 const authLink = setContext(async (_, { headers }) => {
@@ -23,7 +23,7 @@ const authLink = setContext(async (_, { headers }) => {
   // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZGY4ZDZhMWY5YTIzMTAxMjRlMjEzNyIsImlhdCI6MTYwODQ4NjYyNiwiZXhwIjoxNjk0ODkyNjA2fQ.ibPOWrjqa_Fe63nTIxyacJQCTrjLw7EmsFMc40dVbIg";
   // const token = localStorage.getItem('token');
   // return the headers to the context so httpLink can read them
-  
+
   return await {
     headers: {
       ...headers,
@@ -36,7 +36,7 @@ const authLink = setContext(async (_, { headers }) => {
 const cache = new InMemoryCache({
   typePolicies: {
     Query: {
-      fields: {        
+      fields: {
         recipes: {
           // read(existing, { args: { offset, limit }}) {
           //   // A read function should always return undefined if existing is

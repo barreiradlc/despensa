@@ -14,10 +14,11 @@ import { LoadingOverlayContext } from '../../components/context/LoadingProvider'
 
 import Toast from 'react-native-simple-toast';
 import { toastWithGravity } from '../../utils/toastUtils';
-import { CreateItemDTO, createLocalPantry, CreatePantryDTO, editLocalPantry } from '../../services/local/realm/PantryLocalService';
+import { CreateItemDTO, createLocalItem, createLocalPantry, CreatePantryDTO, editLocalPantry, getLocalProvision, updateLocalItem } from '../../services/local/realm/PantryLocalService';
 import { PantryInterface } from '../../config/realmConfig/schemas/Pantry';
 import { ItemInterface } from '../../config/realmConfig/schemas/Item';
 import { RectButton } from 'react-native-gesture-handler';
+import { ProvisionInterface } from '../../config/realmConfig/schemas/Provision';
 
 interface FormItemDataInterface {
     item: ItemInterface
@@ -31,6 +32,7 @@ interface FormInterface {
 
 function FormItem({ close, data }: FormInterface) {
     const [itemData, setItemData] = useState<CreateItemDTO>({} as CreateItemDTO)
+    const [provisionData, setProvisionData] = useState<ProvisionInterface>()
     const [query, setQuery] = useState<string>('')
     const [edit, setEdit] = useState<boolean>(false)
 
@@ -39,8 +41,38 @@ function FormItem({ close, data }: FormInterface) {
     }
 
     useEffect(() => {
-        console.log({ data })
-    }, [data])
+        console.log("BOTTOM SHEET")
+        console.log(data)
+        console.log(data.item.uuid)
+
+
+        if (!!data.item.uuid) {
+            const { item } = data
+
+            setEdit(true)
+            setItemData({
+                provision: item.provision,
+                uuid: item.uuid,
+                _id: item._id,
+                quantity: 1,
+            })
+
+
+
+            setQuery(item.provision.name)
+        } else {
+            setEdit(false)
+            setItemData({ quantity: 1 } as CreateItemDTO)
+            setQuery('')
+        }
+    }, [data.item])
+
+    useEffect(() => {
+
+        console.log("{ itemData }")
+        console.log({ itemData })
+
+    }, [itemData])
 
     // useEffect(() => {
 
@@ -60,40 +92,50 @@ function FormItem({ close, data }: FormInterface) {
     //     console.log({ itemData })
     // }, [])
 
-    // async function handleSavePantry() {
+    async function handleSaveItem() {
 
-    //     if (!itemData.name) {
-    //         toastWithGravity("É necessário dar um nome à sua despensa")
-    //     }
+        const pantry = data.uuidPantry
 
-    //     Keyboard.dismiss()
+        if (!query) {
+            toastWithGravity("É necessário dar um nome à seu item")
+        }
+        Keyboard.dismiss()
 
-    //     if (edit) {
-    //         console.log('EDIT')
-    //         await editLocalPantry({
-    //             ...itemData,
-    //             queue: true
-    //         })
-    //     } else {
-    //         console.log('CREATE')
-    //         await createLocalPantry({
-    //             ...itemData,
-    //             queue: true
-    //         })
-    //     }
+        const provision = provisionData || await getLocalProvision({ name: query })
 
-    //     handleCloseBottomSheet()
-    // }
-    // function handleCloseBottomSheet() {
-    //     close()
-    //     itemData({} as CreatePantryDTO)
-    // }
+        if (!provision) return handleSaveItem()
 
-    // function handleDeletePantry() {
-    //     console.log('Delete')
-    //     // navigation.navigate('SignUp')
-    //     // createLocalPantry(itemData)
-    // }
+        const item = {
+            ...itemData,
+            provision,
+            queue: true
+        }
+
+        if (edit) {
+            console.log('EDIT')
+            console.log(item.uuid)
+            console.log(item)
+            console.log({ itemData })
+
+            await updateLocalItem({ ...item, queue: true })
+        } else {
+            console.log('CREATE')
+            await createLocalItem({ ...item, queue: true }, pantry)
+        }
+
+        handleCloseBottomSheet()
+    }
+    function handleCloseBottomSheet() {
+        close()
+        setItemData({} as CreateItemDTO)
+        setQuery('')
+    }
+
+    function handleDeletePantry() {
+        console.log('Delete')
+        // navigation.navigate('SignUp')
+        // createLocalPantry(itemData)
+    }
 
     const handleChangeQuantity = useCallback((action: 'more' | 'less') => {
 
@@ -123,7 +165,7 @@ function FormItem({ close, data }: FormInterface) {
                 <Input
                     noIconStart
                     placeholder='Quantidade'
-                    value={itemData.quantity || String('1')}
+                    value={`${itemData.quantity}`}
                     onChange={(e: any) => handleChange(e, 'quantity')}
                 />
 
@@ -136,7 +178,7 @@ function FormItem({ close, data }: FormInterface) {
                 </RectButton> */}
             </ContainerInput>
 
-            <Button onPress={() => console.log("alou")}>
+            <Button onPress={handleSaveItem}>
                 <ButtonLabel>{edit ? "Editar" : "Cadastrar"}</ButtonLabel>
             </Button>
 

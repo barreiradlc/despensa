@@ -24,8 +24,9 @@ const ItemContent: React.FC<ItemContentInterface> = ({ items, uuidPantry }) => {
 
     return (
         <>
-            {/* TODO, MAP DE ITEMS */}
-            <ItemPantry />
+            {items.map(i =>
+                <ItemPantry key={i.uuid} data={i} uuidPantry={uuidPantry} />
+            )}
 
             {/* TODO, CREATE ITEM */}
             <NewItemTab handleOpen={handleOpenBottomSheet} />
