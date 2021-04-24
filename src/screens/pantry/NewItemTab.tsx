@@ -11,10 +11,6 @@ const NewItemTab: React.FC<NewItemTabInterface> = ({ handleOpen }) => {
     return (
         <NewItemContainer
             onPress={handleOpen}
-            onLongPress={() => {
-
-                console.log("LONG PRESS")
-            }}
         >
             <NewItemTabContainer>
                 <NewItemTabLabel>

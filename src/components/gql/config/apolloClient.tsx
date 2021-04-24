@@ -2,7 +2,7 @@ import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const httpLink = createHttpLink({
+export const httpLink = createHttpLink({
   // uri: 'http://192.168.0.116:4000/graphql'
   uri: 'https://despensa-back-app.herokuapp.com/graphql'
   // uri: 'http://192.168.0.39:4000/graphql'

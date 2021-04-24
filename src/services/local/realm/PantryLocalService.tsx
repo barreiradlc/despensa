@@ -207,7 +207,31 @@ export async function updateLocalItem(item: ItemInterface | CreateItemDTO) {
 
 }
 
+export async function findPantryByUuid(uuid: string) {
+    return await realm.objects<PantryInterface>('Pantry').filtered('uuid = $0', uuid)[0]
+}
+
+export async function findItemPantryByUuid(uuid: string) {
+    return await realm.objects<ItemInterface>('Item').filtered('uuid = $0', uuid)[0]
+}
+
+export async function deletePantry(uuid: string) {
+    let localpantry = await findPantryByUuid(uuid)
+
+    realm.write(() => {
+        realm.delete(localpantry)
+    })
+}
+
+export async function deleteItemPantry(uuid: string) {
+    let localItem = await findItemPantryByUuid(uuid)
+
+    realm.write(() => {
+        realm.delete(localItem)
+    })
+}
+
 export async function getPantries() {
-    const localPantries = await realm.objects<Pantry[]>('Pantry')
-    return localPantries as unknown as Pantry[]
+    const localPantries = await realm.objects<PantryInterface[]>('Pantry')
+    return localPantries as unknown as PantryInterface[]
 }

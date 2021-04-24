@@ -20,20 +20,20 @@ const ItemPantry: React.FC<ItemPantryInterface> = ({ data, uuidPantry }) => {
     }
 
     return (
-        <TooltipComponent content={<ItemOptions item={data} uuidPantry={uuidPantry} close={handleCloseToolTip} />} ref={itemRef}>
-            <ItemContainer
-                onLongPress={() => {
-                    itemRef.current.toggleTooltip()
-                }}
-            >
+        <ItemContainer
+            onLongPress={() => {
+                itemRef.current.toggleTooltip()
+            }}
+        >
+            <TooltipComponent content={<ItemOptions item={data} uuidPantry={uuidPantry} close={handleCloseToolTip} />} ref={itemRef}>
                 <ItemTab>
                     <ItemTabLabel>
                         {data.provision ? data.provision.name : 'PROVIMENTO INVÄLIDO'}
                     </ItemTabLabel>
                 </ItemTab>
 
-            </ItemContainer>
-        </TooltipComponent>
+            </TooltipComponent>
+        </ItemContainer>
     );
 }
 

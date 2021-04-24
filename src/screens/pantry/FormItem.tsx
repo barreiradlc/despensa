@@ -14,11 +14,12 @@ import { LoadingOverlayContext } from '../../components/context/LoadingProvider'
 
 import Toast from 'react-native-simple-toast';
 import { toastWithGravity } from '../../utils/toastUtils';
-import { CreateItemDTO, createLocalItem, createLocalPantry, CreatePantryDTO, editLocalPantry, getLocalProvision, updateLocalItem } from '../../services/local/realm/PantryLocalService';
+import { CreateItemDTO, createLocalItem, createLocalPantry, CreatePantryDTO, deleteItemPantry, editLocalPantry, getLocalProvision, updateLocalItem } from '../../services/local/realm/PantryLocalService';
 import { PantryInterface } from '../../config/realmConfig/schemas/Pantry';
 import { ItemInterface } from '../../config/realmConfig/schemas/Item';
 import { RectButton } from 'react-native-gesture-handler';
 import { ProvisionInterface } from '../../config/realmConfig/schemas/Provision';
+import { LocalDataContext } from '../../components/context/LocalDataProvider';
 
 interface FormItemDataInterface {
     item: ItemInterface
@@ -31,6 +32,7 @@ interface FormInterface {
 }
 
 function FormItem({ close, data }: FormInterface) {
+    const { refreshPantries } = useContext(LocalDataContext)
     const [itemData, setItemData] = useState<CreateItemDTO>({} as CreateItemDTO)
     const [provisionData, setProvisionData] = useState<ProvisionInterface>()
     const [query, setQuery] = useState<string>('')
@@ -55,9 +57,8 @@ function FormItem({ close, data }: FormInterface) {
                 uuid: item.uuid,
                 _id: item._id,
                 quantity: 1,
+                queue: true
             })
-
-
 
             setQuery(item.provision.name)
         } else {
@@ -129,6 +130,7 @@ function FormItem({ close, data }: FormInterface) {
         close()
         setItemData({} as CreateItemDTO)
         setQuery('')
+        refreshPantries()
     }
 
     function handleDeletePantry() {
@@ -143,10 +145,32 @@ function FormItem({ close, data }: FormInterface) {
 
     }, [data])
 
+    const handleDeleteItemPantry = useCallback(() => {
+        Alert.alert(
+            "Tem certeza que deseja deletar este item?",
+            '',
+            [
+                {
+                    text: "Deletar",
+                    onPress: () => {
+                        deleteItemPantry(String(itemData.uuid)),
+                            handleCloseBottomSheet()
+                    }
+                },
+                {
+                    text: "Cancelar",
+                    onPress: () => console.log("Cancelar"),
+                    style: "cancel"
+                }
+            ]
+        )
+    }, [itemData])
+
     return (
         <FormContainerAutoComplete>
 
             {/* <ProvisionFetchComponent /> */}
+            <ButtonLabel invert>{edit ? "Editar item" : "Novo Item"}</ButtonLabel>
 
             <ContainerInput>
                 <Input
@@ -182,7 +206,7 @@ function FormItem({ close, data }: FormInterface) {
                 <ButtonLabel>{edit ? "Editar" : "Cadastrar"}</ButtonLabel>
             </Button>
 
-            <Button invert onPress={() => console.log("alou")}>
+            <Button invert onPress={handleDeleteItemPantry}>
                 <ButtonLabel invert>{edit ? "Deletar" : "Cancelar"}</ButtonLabel>
             </Button>
         </FormContainerAutoComplete>

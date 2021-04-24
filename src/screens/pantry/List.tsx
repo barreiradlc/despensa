@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { BottomSheetItemProvider } from '../../components/context/BottomSheetItemProvider';
+import { LocalDataContext } from '../../components/context/LocalDataProvider';
 import FormBottomSheet from '../../components/partials/FormBottomSheet';
 import { ButtonClose, ButtonFixed, ButtonLabel } from '../../components/styles/form';
 import { PantryInterface } from '../../config/realmConfig/schemas/Pantry';
@@ -14,12 +15,11 @@ import PantriesComponent from './PantriesComponent';
 
 function List() {
     const formRef = useRef(null);
-    const [pantries, setPantries] = useState<Pantry[]>([] as Pantry[])
     const [pantrySelected, setPantrySelected] = useState<Pantry>({} as Pantry)
+    const { pantries, refreshPantries } = useContext(LocalDataContext)
 
     async function init() {
-        const data = await getPantries()
-        setPantries(data)
+        refreshPantries()
     }
 
     useEffect(() => {
