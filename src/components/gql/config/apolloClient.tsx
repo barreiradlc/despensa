@@ -4,8 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const httpLink = createHttpLink({
   // uri: 'http://192.168.0.116:4000/graphql'
-  uri: 'https://despensa-back-app.herokuapp.com/graphql'
-  // uri: 'http://192.168.0.39:4000/graphql'
+  // uri: 'https://despensa-back-app.herokuapp.com/graphql'
+  uri: 'http://192.168.0.39:4000/graphql'
 });
 
 const authLink = setContext(async (_, { headers }) => {

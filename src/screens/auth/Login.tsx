@@ -4,7 +4,7 @@ import { Alert, Keyboard } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
 
-import { Button, ButtonLabel, Container, FormContainer, Input, LogoImage, ContainerInput } from "../../components/styles/form"
+import { Button, ButtonLabel, Container, FormContainer, Input, LogoImage, ContainerInput, InputProps } from "../../components/styles/form"
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../../components/gql/mutations/loginMutation';
 
@@ -59,8 +59,8 @@ const Login: React.FC = () => {
     useEffect(() => {
         if (__DEV__) {
             setLoginData({
-                "username": "lerigou@gmail.com",
-                "password": "123123"
+                "username": "gustin",
+                "password": "123123",
             })
         }
     }, [])
@@ -107,7 +107,8 @@ const Login: React.FC = () => {
                 <ContainerInput >
                     <Icon size={25} name="user" color={cor2} />
                     <Input
-                        placeholder='Usuário'
+                        {...InputProps}
+                        placeholder='Usuário/email'
                         value={loginData.username}
                         onChange={(e: any) => handleChange(e, 'username')}
                         autoCapitalize='none'
@@ -117,6 +118,7 @@ const Login: React.FC = () => {
                 <ContainerInput>
                     <Icon size={25} name="lock" color={cor2} />
                     <Input
+                        {...InputProps}
                         placeholder='Senha'
                         value={loginData.password}
                         secureTextEntry

@@ -13,13 +13,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createStackNavigator();
 
 function Routes() {
-    const { loading } = useContext(LoadingOverlayContext)    
-    const [ jwt, setJwt ] = useState<boolean | string>()
+    const { loading } = useContext(LoadingOverlayContext)
+    const [jwt, setJwt] = useState<boolean | string>()
 
-    async function getJwt(){
+    async function getJwt() {
         const userData = await AsyncStorage.getItem('@despensaUserData')
-        if(userData){
-            const { token } = JSON.parse(userData)                
+        if (userData) {
+            const { token } = JSON.parse(userData)
             setJwt(token)
         }
         setJwt(false)
@@ -28,9 +28,9 @@ function Routes() {
     useEffect(() => {
         getJwt()
     }, [])
-        
 
-    if(jwt === undefined) return null;
+
+    if (jwt === undefined) return null;
 
     return (
         <>
@@ -41,7 +41,7 @@ function Routes() {
 
                     <Stack.Screen name="Auth" component={AuthRoutes} />
                     <Stack.Screen name="Home" component={HomeScreen} />
-                    <Stack.Screen name="Dashboard" component={TabNavigation}   />
+                    <Stack.Screen name="Dashboard" component={TabNavigation} />
 
                 </Stack.Navigator>
             </NavigationContainer>

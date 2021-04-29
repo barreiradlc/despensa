@@ -1,5 +1,5 @@
 import { StackActions, useNavigation } from '@react-navigation/native';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Alert, Keyboard } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
@@ -32,6 +32,8 @@ interface FormInterface {
 }
 
 function FormItem({ close, data }: FormInterface) {
+    const nameRef = useRef();
+    const qtdRef = useRef();
     const { refreshPantries } = useContext(LocalDataContext)
     const [itemData, setItemData] = useState<CreateItemDTO>({} as CreateItemDTO)
     const [provisionData, setProvisionData] = useState<ProvisionInterface>()
@@ -43,9 +45,10 @@ function FormItem({ close, data }: FormInterface) {
     }
 
     useEffect(() => {
-        console.log("BOTTOM SHEET")
-        console.log(data)
-        console.log(data.item.uuid)
+
+        if (data) {
+            // nameRef.current.focus()
+        }
 
 
         if (!!data.item.uuid) {
@@ -133,12 +136,6 @@ function FormItem({ close, data }: FormInterface) {
         refreshPantries()
     }
 
-    function handleDeletePantry() {
-        console.log('Delete')
-        // navigation.navigate('SignUp')
-        // createLocalPantry(itemData)
-    }
-
     const handleChangeQuantity = useCallback((action: 'more' | 'less') => {
 
         console.log(action)
@@ -146,6 +143,11 @@ function FormItem({ close, data }: FormInterface) {
     }, [data])
 
     const handleDeleteItemPantry = useCallback(() => {
+
+        if (!edit) {
+            return handleCloseBottomSheet()
+        }
+
         Alert.alert(
             "Tem certeza que deseja deletar este item?",
             '',
@@ -174,6 +176,8 @@ function FormItem({ close, data }: FormInterface) {
 
             <ContainerInput>
                 <Input
+                    ref={nameRef}
+                    onSubmitEditing={() => { qtdRef?.current.focus(); }}
                     noIconStart
                     placeholder='Nome'
                     value={query}
@@ -187,6 +191,8 @@ function FormItem({ close, data }: FormInterface) {
 
             <ContainerInput>
                 <Input
+                    ref={qtdRef}
+                    onSubmitEditing={() => { handleSaveItem }}
                     noIconStart
                     placeholder='Quantidade'
                     value={`${itemData.quantity}`}

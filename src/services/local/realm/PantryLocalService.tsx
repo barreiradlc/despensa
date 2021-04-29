@@ -219,6 +219,10 @@ export async function deletePantry(uuid: string) {
     let localpantry = await findPantryByUuid(uuid)
 
     realm.write(() => {
+        if (localpantry._id) {
+            return localpantry.deletedAt = new Date()
+        }
+
         realm.delete(localpantry)
     })
 }
@@ -227,6 +231,10 @@ export async function deleteItemPantry(uuid: string) {
     let localItem = await findItemPantryByUuid(uuid)
 
     realm.write(() => {
+        if (localItem._id) {
+            return localItem.deletedAt = new Date()
+        }
+
         realm.delete(localItem)
     })
 }

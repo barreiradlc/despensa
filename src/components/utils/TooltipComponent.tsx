@@ -11,8 +11,11 @@ const TooltipComponent: React.FC<ToolipInterface> = ({ content, children }, ref)
   const [showTip, setTip] = useState(false);
 
   useImperativeHandle(ref, () => ({
+    changeTooltip: (value: boolean) => {
+      setTip(value)
+    },
     toggleTooltip: (value?: boolean) => {
-      setTip((prevData: boolean) => value || !prevData)
+      setTip((prevData: boolean) => prevData !== undefined ? !prevData : false)
     }
   }));
 
@@ -24,9 +27,7 @@ const TooltipComponent: React.FC<ToolipInterface> = ({ content, children }, ref)
       content={
         content ||
         <View>
-          <Text> Editar </Text>
-          <Text> Deletar </Text>
-          <Text> Cancelar </Text>
+          <Text> Placeholder </Text>
         </View>
       }
       // contentStyle={{ position: 'absolute', top: 20 }}

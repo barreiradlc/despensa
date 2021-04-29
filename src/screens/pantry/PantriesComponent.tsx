@@ -22,7 +22,7 @@ interface PantriesComponentInterface {
 }
 
 interface TipRefInterface extends RefObject<any | undefined> {
-  toggleTooltip(value?: boolean): void
+  toggleTooltip?(value?: boolean): void
 }
 
 const PantriesComponent = ({ pantries, editPantry }: PantriesComponentInterface) => {
@@ -31,15 +31,22 @@ const PantriesComponent = ({ pantries, editPantry }: PantriesComponentInterface)
   const pantriesRefs = useMemo<TipRefInterface[]>(() => Array(pantries.length).fill().map(() => createRef()), [pantries])
 
   const handleEditPantry = useCallback((pantry: PantryInterface, index: number) => {
+    // TODO, rever esse coiso que está zuadaço
+    pantriesRefs[index]?.current.toggleTooltip(true)
+    pantriesRefs[index]?.current.toggleTooltip(true)
+    pantriesRefs[index]?.current.toggleTooltip(true)
 
-    // TODO, Barreira - Rever esse coiso chato
-    pantriesRefs[index]?.current.toggleTooltip(false)
-    pantriesRefs[index]?.current.toggleTooltip(false)
 
     setTimeout(() => {
       editPantry(pantry)
     }, 50)
   }, [])
+
+  useEffect(() => {
+    pantriesRefs.map((_, i) => {
+      pantriesRefs[i]?.current.changeTooltip(false)
+    })
+  }, [pantries])
 
   return (
     <List.AccordionGroup>

@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { RefObject, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import Animated from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BottomSheet from 'reanimated-bottom-sheet';
@@ -13,9 +14,14 @@ import { getPantries, Pantry, storePantries } from '../../services/local/realm/P
 import FormPantry from './Form';
 import PantriesComponent from './PantriesComponent';
 
+interface IFormRef extends RefObject<any | undefined> {
+    focus(): void
+    toggle(snap: number): void
+}
+
 function List() {
-    const formRef = useRef(null);
-    const [pantrySelected, setPantrySelected] = useState<Pantry>({} as Pantry)
+    const formRef = useRef<IFormRef>({} as IFormRef);
+    const [pantrySelected, setPantrySelected] = useState<PantryInterface>({} as PantryInterface)
     const { pantries, refreshPantries } = useContext(LocalDataContext)
 
     async function init() {
@@ -32,7 +38,7 @@ function List() {
     }
 
     function handleOpen() {
-        setPantrySelected({} as Pantry)
+        setPantrySelected({} as PantryInterface)
         formRef.current.toggle(0)
     }
 
@@ -47,9 +53,13 @@ function List() {
         formRef.current.toggle(0)
     }, [pantries])
 
+    useEffect(() => {
+        formRef.current.toggle(1)
+    }, [pantries])
+
     return (
         <BottomSheetItemProvider>
-            <View style={{ flex: 1, flexDirection: 'column' }}>
+            <View style={{ flex: 1, flexDirection: 'column', marginTop: getStatusBarHeight() + 12 }}>
 
                 {/* TODO, Rever nome e funcionaliades */}
                 <ScrollView style={{ marginBottom: 80 }}>

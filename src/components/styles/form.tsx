@@ -87,6 +87,10 @@ export const InputMultiline = styled.TextInput<TextInputInterface>`
   height: 120px
 `
 
+export const InputProps = {
+  placeholderTextColor: "#dedede"
+}
+
 export const InputEnd = styled.TextInput`
   padding-left: 0px;
   width: 100%;

@@ -1,5 +1,5 @@
 import { StackActions, useNavigation } from '@react-navigation/native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Alert, Keyboard } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
@@ -14,8 +14,9 @@ import { LoadingOverlayContext } from '../../components/context/LoadingProvider'
 
 import Toast from 'react-native-simple-toast';
 import { toastWithGravity } from '../../utils/toastUtils';
-import { createLocalPantry, CreatePantryDTO, editLocalPantry } from '../../services/local/realm/PantryLocalService';
+import { createLocalPantry, CreatePantryDTO, deletePantry, editLocalPantry } from '../../services/local/realm/PantryLocalService';
 import { PantryInterface } from '../../config/realmConfig/schemas/Pantry';
+import { LocalDataContext } from '../../components/context/LocalDataProvider';
 
 interface FormInterface {
     close(): void;
@@ -23,6 +24,9 @@ interface FormInterface {
 }
 
 function Form({ close, data }: FormInterface) {
+    const { refreshPantries } = useContext(LocalDataContext)
+    const nameRef = useRef();
+    const descriptionRef = useRef();
     const [pantryData, setPantryData] = useState<CreatePantryDTO>({} as CreatePantryDTO)
     const [edit, setEdit] = useState<boolean>(false)
 
@@ -36,6 +40,8 @@ function Form({ close, data }: FormInterface) {
         setEdit(!!data.uuid)
 
         if (data) {
+            // nameRef.current.focus()
+
             setPantryData({
                 name: data.name,
                 description: data.description,
@@ -43,6 +49,7 @@ function Form({ close, data }: FormInterface) {
                 uuid: data.uuid
             })
         }
+
     }, [data])
 
     useEffect(() => {
@@ -78,11 +85,35 @@ function Form({ close, data }: FormInterface) {
         setPantryData({} as CreatePantryDTO)
     }
 
-    function handleDeletePantry() {
-        console.log('Delete')
-        // navigation.navigate('SignUp')
-        // createLocalPantry(pantryData)
-    }
+    const handleDeletePantry = useCallback(() => {
+
+        handleCloseBottomSheet()
+
+        console.log({ uuid: pantryData.uuid })
+
+        if (!edit) {
+            return
+        }
+
+        Alert.alert(
+            "Tem certeza que deseja deletar estar despensa?",
+            'A exclusão desta despensa implica na deleção de todos os itens vinculados a ela',
+            [
+                {
+                    text: "Deletar",
+                    onPress: () => {
+                        deletePantry(String(pantryData.uuid)),
+                            refreshPantries()
+                    }
+                },
+                {
+                    text: "Cancelar",
+                    onPress: () => console.log("Cancelar"),
+                    style: "cancel"
+                }
+            ]
+        )
+    }, [pantryData])
 
     return (
         <FormContainerAutoComplete>
@@ -91,20 +122,24 @@ function Form({ close, data }: FormInterface) {
             </ButtonLabel>
             <ContainerInput>
                 <Input
+                    ref={nameRef}
                     noIconStart
                     placeholder='Nome'
                     value={pantryData.name}
+                    onSubmitEditing={() => { descriptionRef?.current.focus(); }}
                     onChange={(e: any) => handleChange(e, 'name')}
                 />
             </ContainerInput>
 
             <ContainerInput>
                 <InputMultiline
+                    ref={descriptionRef}
                     multiline
                     noIconStart
                     placeholder='Descrição'
                     value={pantryData.description}
                     onChange={(e: any) => handleChange(e, 'description')}
+                    onSubmitEditing={handleSavePantry}
                 />
             </ContainerInput>
 
@@ -113,7 +148,7 @@ function Form({ close, data }: FormInterface) {
             </Button>
 
             <Button invert onPress={handleDeletePantry}>
-                <ButtonLabel invert>Deletar</ButtonLabel>
+                <ButtonLabel invert>{edit ? "Deletar" : "Cancelar"}</ButtonLabel>
             </Button>
         </FormContainerAutoComplete>
     );
