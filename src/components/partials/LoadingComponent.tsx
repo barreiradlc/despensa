@@ -1,55 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ImageBackground } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, Dimensions, ImageBackground} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { cor4 } from '../../constants/CORES';
+import {cor4} from '../../constants/CORES';
 import {
-    Container,
-    TopContainer,
-    LogoImage,
-    LoadingLabel,
-    LoadingLabelContainer,
-} from "../styles/components"
+  Container,
+  TopContainer,
+  LogoImage,
+  LoadingLabel,
+  LoadingLabelContainer,
+} from '../styles/components';
+export const {width, height} = Dimensions.get('screen');
 
 import getInitialLabel from '../../utils/labelUtils';
 
-const quoteBackground = '../../assets/board-near-ingredients-for-pasta.jpg'
+const quoteBackground = '../../assets/board-near-ingredients-for-pasta.jpg';
 
 interface LoadingData {
-    label: string
+  label: string;
 }
 
 const LoadingComponent: React.FC = () => {
-    const [label, setLabel] = useState('')
+  const [label, setLabel] = useState('');
 
-    useEffect(() => {
-        const labelFetched = getInitialLabel()
-        setLabel(labelFetched)
-    }, [])
+  useEffect(() => {
+    const labelFetched = getInitialLabel();
+    setLabel(labelFetched);
+  }, []);
 
-    if (!label) return null;
+  if (!label) {
+    return null;
+  }
 
-    return (
-        <ImageBackground
-            style={{ flex: 1 }}            
-            imageStyle={{
-                opacity: 0.3
-            }}
-            source={require(quoteBackground)}
-        >
-            <Container>
+  return (
+    <ImageBackground
+      style={{flex: 1, width, height}}
+      imageStyle={{
+        opacity: 0.3,
+      }}
+      source={require(quoteBackground)}>
+      <Container>
+        <LoadingLabelContainer>
+          <Icon name="quote-left" color={cor4} size={26} />
+          <LoadingLabel>{`${label}`}</LoadingLabel>
+        </LoadingLabelContainer>
 
-                <LoadingLabelContainer>
-                    <Icon name="quote-left" color={cor4} size={26} />
-                    <LoadingLabel>{`${label}`}</LoadingLabel>
-                </LoadingLabelContainer>
-
-                {/* <TopContainer>
+        {/* <TopContainer>
                     <ActivityIndicator size='large' color={cor4} />
                 </TopContainer> */}
-
-            </Container>
-        </ImageBackground>
-    );
-}
+      </Container>
+    </ImageBackground>
+  );
+};
 
 export default LoadingComponent;

@@ -1,84 +1,111 @@
-
-
-import { List } from 'react-native-paper';
-import { Pantry } from '../../services/local/realm/PantryLocalService';
-import React, { useState, useEffect, useRef, createRef, RefObject, MutableRefObject, useMemo } from "react";
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Platform, StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {List} from 'react-native-paper';
+import React, {useState, useEffect, createRef, RefObject, useMemo} from 'react';
 import TooltipComponent from '../../components/utils/TooltipComponent';
-import ListAccordionGroup from 'react-native-paper/lib/typescript/components/List/ListAccordionGroup';
-import { Button } from '../../components/styles/form';
 import PantryOptions from '../../components/pantry/PantryOptions';
-import { useCallback } from 'react';
-import { PantryInterface } from '../../config/realmConfig/schemas/Pantry';
-import ItemPantry from './ItemPantry';
-import NewItemTab from './NewItemTab';
+import {useCallback} from 'react';
+import {PantryInterface} from '../../config/realmConfig/schemas/Pantry';
 import ItemContent from './ItemContent';
+import {ButtonFixed, ButtonLabel} from '../../components/styles/form';
+import {ScrollView} from 'react-native';
+import {
+  IOpenBottomSheetOptions,
+  useLocalPantry,
+} from '../../components/context/BottomSheetLocalPantryProvider';
 
 interface PantriesComponentInterface {
-  pantries: PantryInterface[],
-  editPantry(pantry: PantryInterface): void
+  pantries: PantryInterface[];
+  editPantry(pantry: IOpenBottomSheetOptions): void;
 }
 
-interface TipRefInterface extends RefObject<any | undefined> {
-  toggleTooltip?(value?: boolean): void
+export interface TipRefInterface extends RefObject<any | undefined> {
+  toggleTooltip?(value?: boolean): void;
 }
 
-const PantriesComponent = ({ pantries, editPantry }: PantriesComponentInterface) => {
+const PantriesComponent = ({pantries}: PantriesComponentInterface) => {
+  const {handleOpen} = useLocalPantry();
   const [expanded, setExpanded] = useState(false);
   const handlePress = () => setExpanded(!expanded);
-  const pantriesRefs = useMemo<TipRefInterface[]>(() => Array(pantries.length).fill().map(() => createRef()), [pantries])
+  const pantriesRefs = useMemo<TipRefInterface[]>(
+    () =>
+      Array(pantries.length)
+        .fill('')
+        .map(() => createRef()),
+    [pantries],
+  );
 
-  const handleEditPantry = useCallback((pantry: PantryInterface, index: number) => {
-    // TODO, rever esse coiso que está zuadaço
-    pantriesRefs[index]?.current.toggleTooltip(true)
-    pantriesRefs[index]?.current.toggleTooltip(true)
-    pantriesRefs[index]?.current.toggleTooltip(true)
+  const handleEditPantry = useCallback(
+    (pantry: PantryInterface, index: number) => {
+      // TODO, rever esse coiso que está zuadaço
+      pantriesRefs[index]?.current.toggleTooltip(true);
 
-
-    setTimeout(() => {
-      editPantry(pantry)
-    }, 50)
-  }, [])
+      setTimeout(() => {
+        handleOpen({
+          type: 'pantry',
+          args: pantry,
+        });
+      }, 50);
+    },
+    [handleOpen, pantriesRefs],
+  );
 
   useEffect(() => {
     pantriesRefs.map((_, i) => {
-      pantriesRefs[i]?.current.changeTooltip(false)
-    })
-  }, [pantries])
+      pantriesRefs[i]?.current.changeTooltip(false);
+    });
+  }, [pantries, pantriesRefs]);
+
+  const handleCreatePantryBottomSheet = useCallback(() => {
+    handleOpen({
+      type: 'pantry',
+      args: {} as PantryInterface,
+    });
+  }, [handleOpen]);
 
   return (
-    <List.AccordionGroup>
-
-      {!!pantries.length && pantries.map((pantry: PantryInterface, index: number) => (
-        <List.Accordion
-          key={pantry.uuid}
-          id={pantry.uuid}
-          title={pantry.name}
-          description={pantry.description}
-          onLongPress={() => {
-            pantriesRefs[index]?.current.toggleTooltip()
-            console.log(pantriesRefs)
-          }}
-          titleStyle={{ color: "#C72828" }}
-          style={{ borderTopColor: "#555", borderTopWidth: 1 }}
-          left={(props) => {
-            return (
-              <TooltipComponent content={<PantryOptions index={index} pantry={pantry} handleEditPantry={handleEditPantry} />} ref={pantriesRefs[index]}>
-                <List.Icon icon="fridge" />
-              </TooltipComponent>
-            )
-          }}
-          expanded={expanded}
-          onPress={handlePress}>
-
-          <ItemContent items={pantry.items} uuidPantry={pantry.uuid} />
-
-        </List.Accordion>
-      ))}
-
-    </List.AccordionGroup>
+    <>
+      <ScrollView style={{marginBottom: 80}}>
+        <List.AccordionGroup>
+          {!!pantries.length &&
+            pantries.map((pantry: PantryInterface, index: number) => (
+              <List.Accordion
+                key={pantry.uuid}
+                id={pantry.uuid}
+                title={pantry.name}
+                description={pantry.description}
+                onLongPress={() => {
+                  pantriesRefs[index]?.current.toggleTooltip();
+                  console.log(pantriesRefs);
+                }}
+                titleStyle={{color: '#C72828'}}
+                style={{borderTopColor: '#555', borderTopWidth: 1}}
+                left={() => {
+                  return (
+                    <TooltipComponent
+                      content={
+                        <PantryOptions
+                          index={index}
+                          pantry={pantry}
+                          handleEditPantry={() =>
+                            handleEditPantry(pantry, index)
+                          }
+                        />
+                      }
+                      ref={pantriesRefs[index]}>
+                      <List.Icon icon="fridge" />
+                    </TooltipComponent>
+                  );
+                }}
+                expanded={expanded}
+                onPress={handlePress}>
+                <ItemContent items={pantry.items} uuidPantry={pantry.uuid} />
+              </List.Accordion>
+            ))}
+        </List.AccordionGroup>
+      </ScrollView>
+      <ButtonFixed style={{zIndex: 45}} onPress={handleCreatePantryBottomSheet}>
+        <ButtonLabel>Adicionar uma nova despensa</ButtonLabel>
+      </ButtonFixed>
+    </>
   );
 };
 

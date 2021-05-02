@@ -1,23 +1,23 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+import {ApolloClient, createHttpLink, InMemoryCache} from '@apollo/client';
+import {setContext} from '@apollo/client/link/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const httpLink = createHttpLink({
   // uri: 'http://192.168.0.116:4000/graphql'
   // uri: 'https://despensa-back-app.herokuapp.com/graphql'
-  uri: 'http://192.168.0.39:4000/graphql'
+  uri: 'http://192.168.0.39:4000/graphql',
 });
 
-const authLink = setContext(async (_, { headers }) => {
+const authLink = setContext(async (_, {headers}) => {
   // get the authentication token from local storage if it exists
-  let JWTtoken
-  const jwt = await AsyncStorage.getItem('@despensaUserData')
+  let JWTtoken;
+  const jwt = await AsyncStorage.getItem('@despensaUserData');
 
-  console.log({ jwt })
+  console.log({jwt});
 
   if (jwt) {
-    const { token } = JSON.parse(jwt)
-    JWTtoken = token
+    const {token} = JSON.parse(jwt);
+    JWTtoken = token;
   }
 
   // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZGY4ZDZhMWY5YTIzMTAxMjRlMjEzNyIsImlhdCI6MTYwODQ4NjYyNiwiZXhwIjoxNjk0ODkyNjA2fQ.ibPOWrjqa_Fe63nTIxyacJQCTrjLw7EmsFMc40dVbIg";
@@ -28,9 +28,9 @@ const authLink = setContext(async (_, { headers }) => {
     headers: {
       ...headers,
       credentials: 'include',
-      authorization: JWTtoken ? `Bearer ${JWTtoken}` : "",
-    }
-  }
+      authorization: JWTtoken ? `Bearer ${JWTtoken}` : '',
+    },
+  };
 });
 
 const cache = new InMemoryCache({
@@ -53,14 +53,13 @@ const cache = new InMemoryCache({
           merge(existing = [], incoming) {
             return [...existing, ...incoming];
           },
-        }
-      }
-    }
-  }
-})
-
+        },
+      },
+    },
+  },
+});
 
 export default new ApolloClient({
   link: authLink.concat(httpLink),
-  cache
+  cache,
 });
